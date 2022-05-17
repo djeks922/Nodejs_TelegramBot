@@ -1,24 +1,14 @@
-import { Telegraf,Scenes,session } from "telegraf";
-import {config} from 'dotenv'
-import startComposer from './Composers/start.composer.js'
+import bot from './config/bot.config.js'
+import start from './Composers/start.composer.js'
 import stage from './Scenes/index.js'
-config()
-const user = []
-const bot = new Telegraf(process.env.TOKEN)
-bot.telegram.setMyCommands([
-    {command: 'start', description: 'Start the bot'},
-    {command: 'help', description: 'Be aware of what you can do with bot'},
-    {command: 'add', description: 'Add proposal'}
-])
+import commands from './Composers/commands/index.js'
 
-bot.context.user = user
-bot.use(session())
 bot.use(stage.middleware())
-bot.use(startComposer)
+bot.use(start)
 
-bot.command('add', (ctx)=> {
-    ctx.scene.enter('cid')
-})
+
+bot.use(commands)
+
 
 
 bot.launch()

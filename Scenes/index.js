@@ -1,7 +1,7 @@
 import {Scenes} from 'telegraf'
-import consumer from './consumer.scene.js'
+import tokenInfo from './consumerToken.js'
 const {Stage} = Scenes
 
-const stage = new Stage([consumer])
+const stage = new Stage([tokenInfo])
 
 export default stage

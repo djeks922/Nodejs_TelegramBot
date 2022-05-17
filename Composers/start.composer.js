@@ -1,21 +1,32 @@
-import {Composer ,Telegram} from 'telegraf'
+import { Composer, Telegram } from "telegraf";
+import { createConsumer } from "../api/service/consumer.js";
+const composer = new Composer();
 
-const composer = new Composer()
+composer.start(async (ctx) => {
+  try {
+    await ctx.reply(`Hello, ${ctx.message.from.first_name}`);
+    // console.log(ctx.message)
+    createConsumer({
+      name: ctx.message.from.first_name,
+      username: ctx.message.from.username,
+      userID: ctx.message.from.id,
+      chatID: ctx.chat.id,
+    });
+  } catch (error) {
+    throw error;
+  }
 
-composer.start((ctx) => {
-    ctx.reply(`Hello, ${ctx.message.from.first_name}`)
-    ctx.user.push({
-        username: ctx.message.from.first_name,
-        userId: ctx.message.from.id,
-        chatId: ctx.chat.id
-    })
-})
+  // console.log(ctx.user)
+});
 
 composer.help((ctx) => {
+  try {
     ctx.replyWithHTML(
-        `<strong>/start - initialize bot</strong>\n<strong>/help - get information about commands</strong>`
-        )
-    ctx.tg.sendMessage(ctx.user[0].chatId,`User ${ctx.message.from.first_name} pressed /help`)  
-})
+      `<strong>/start</strong>- initialize bot\n<strong>/help</strong> - get information about commands\n<strong>/add</strong> - add proposal for promotion`
+    );
+  } catch (error) {
+    throw error;
+  }
+});
 
-export default composer
+export default composer;

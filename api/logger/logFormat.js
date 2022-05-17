@@ -1,0 +1,54 @@
+import { format } from "winston";
+
+const { combine, timestamp, colorize, printf, uncolorize } = format;
+
+const Colorize = colorize();
+
+const timeFormat = timestamp({
+  format: "YYYY-MM-DD HH:mm:ss",
+});
+
+const message = printf((info) => {
+  return Colorize.colorize(
+    info.level,
+    `${info.timestamp} - [${info.level.toUpperCase().padEnd(2)}] - ${
+      info.message
+    } ${
+      info.level === "error"
+        ? info.error
+          ? " - " + info.error.message
+          : ""
+        : ""
+    } ${
+      info.level === "error"
+        ? info.error 
+          ? "\n - " +
+            info.stack?.substr(0, 300) +
+            "\n" +
+            '\n - ' + info.error?.stack?.substr(0, 300)
+          : " - " + info.stack?.substr(0, 300)
+        : ""
+    }`
+  );
+});
+
+export const formatProduction = combine(timeFormat, message);
+
+export const errorFormat = combine(
+  format((info, opts) => {
+    return info.level === "error" ? info : false;
+  })(),
+  uncolorize()
+);
+export const infoFormat = combine(
+  format((info, opts) => {
+    return info.level === "info" ? info : false;
+  })(),
+  uncolorize()
+);
+export const combineFormat = combine(
+  format((info,opt) => {
+    return info.level === 'info' || 'error' || 'warn' ? info : false;
+  })(),
+  uncolorize()
+) 
