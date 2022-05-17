@@ -1,10 +1,14 @@
-import { Telegraf, Markup } from "telegraf";
-import {config} from 'dotenv'
-import startComposer from './Composers/start.composer.js'
-config()
+import bot from './config/bot.config.js'
+import start from './Composers/start.composer.js'
+import stage from './Scenes/index.js'
+import commands from './Composers/commands/index.js'
 
-const bot = new Telegraf(process.env.TOKEN)
-bot.use(startComposer)
+bot.use(stage.middleware())
+bot.use(start)
+
+
+bot.use(commands)
+
 
 
 bot.launch()
