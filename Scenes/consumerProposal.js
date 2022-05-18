@@ -83,7 +83,7 @@ const descriptionStep = async (ctx) => {
 };
 
 const consumerScene = new WizardScene(
-  "cid",
+  "consumer-scene-id",
   nameStep,
   websiteStep,
   contractStep,

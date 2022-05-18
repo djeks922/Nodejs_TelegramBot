@@ -1,5 +1,5 @@
 import {Scenes} from 'telegraf'
-import tokenInfo from './consumerToken.js'
+import tokenInfo from './consumerProposal.js'
 const {Stage} = Scenes
 
 const stage = new Stage([tokenInfo])

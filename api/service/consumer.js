@@ -1,5 +1,5 @@
 import logger from '../logger/index.js'
-import Consumer from '../models/consumer.js'
+import Consumer from '../models/tg-consumer.js'
 
 export const createConsumer = async (consumer) => {
     try {

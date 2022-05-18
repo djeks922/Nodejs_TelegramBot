@@ -14,4 +14,4 @@ const consumerSchema = new Schema(
 
 
 
-export default model('consumer', consumerSchema)
+export default model('tg-consumer', consumerSchema)
