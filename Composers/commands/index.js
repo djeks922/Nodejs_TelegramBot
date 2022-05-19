@@ -9,9 +9,9 @@ composer.command('add', (ctx)=> {
 composer.command('register', (ctx) => {
     // ctx.scene.enter('influencer-scene-id')
 })
-composer.command('info', (ctx) => {
-    ctx.reply(`your token details: ${JSON.stringify(ctx.session?.tokenDetails)}`)
-})
+// composer.command('info', (ctx) => {
+//     ctx.reply(`your token details: ${JSON.stringify(ctx.session?.tokenDetails)}`)
+// })
 
 
 export default composer

@@ -8,7 +8,8 @@ const consumerSchema = new Schema(
         name: String,
         username: String,
         userID: Number,
-        chatID: Number
+        chatID: Number,
+        isAdmin: {type: Boolean, default: false}
     }
 )
 

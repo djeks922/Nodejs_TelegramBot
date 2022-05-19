@@ -24,7 +24,7 @@ export default async () => {
   const dbAddress = process.env.DB_URL;
   mongoose.set("bufferCommands", false);
   const options = {
-    autoCreate: false,
+    // autoCreate: false,
     // autoIndex: false, // Don't build indexes
     maxPoolSize: 100, // Maintain up to 100 socket connections
     serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds

@@ -9,10 +9,11 @@ const influencerSchema = new Schema(
         username: String,
         userID: Number,
         chatID: Number,
-        status: {type: Boolean, default: false}
+        price: Number,
+        status: {type: String,enum: ['active','inbetween','inactive'], default: 'inactive'}
     }
 )
 
 
 
-export default model('tg-consumer', influencerSchema)
+export default model('tg-influencer', influencerSchema)

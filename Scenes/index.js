@@ -1,7 +1,8 @@
 import {Scenes} from 'telegraf'
-import tokenInfo from './consumerProposal.js'
+import proposal from './consumerProposal.js'
+import registry from './influencerRegistry.js'
 const {Stage} = Scenes
 
-const stage = new Stage([tokenInfo])
+const stage = new Stage([proposal,registry])
 
 export default stage
