@@ -14,7 +14,9 @@ const proposalSchema = new Schema(
         description: String,
         influencers: [{type: Schema.Types.ObjectId, ref: 'tg-influencer'}],
         consumer: {type: Schema.Types.ObjectId,ref: 'tg-consumer'},
-        status: {type: String, enum: ['staged','approved','accepted'], default: 'staged'}
+        status: {type: String, enum: ['staged','approved','accepted', 'rejected'], default: 'staged'},
+        acceptedBy: [{type: Schema.Types.ObjectId, ref: 'tg-influencer'}],
+        approvedBy: {type: Schema.Types.ObjectId, ref: 'tg-consumer'}
     },
     {timestamps: true}
 )

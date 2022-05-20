@@ -40,15 +40,6 @@ export const getInfluencerByChatID = async (id) => {
         logger.error(error)
     }
 }
-export const getAdmins = async () => {
-    try {
-       const influencer = await Influencer.findOne({isAdmin: true}).select({chatID: 1}).lean()
-
-       return influencer
-    } catch (error) {
-        logger.error(error)
-    }
-}
 
 export const deleteInfluencerByChatID = async (id) => {
     try {
