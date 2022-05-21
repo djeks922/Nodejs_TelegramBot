@@ -11,7 +11,7 @@ composer.on('callback_query', async (ctx) => {
     const pID = ctx.callbackQuery.data.split(' ')[1]
     const refID = ctx.callbackQuery.data.split(' ')[2]
 
-    const proposal = await getProposalByID(pID,{populate: false}) // the main proposal
+    const proposal = await getProposalByID(pID,{lean: false,populate: false}) // the main proposal
 
     if(!proposal) return await ctx.answerCbQuery('Proposal does not exits or deleted!')
 
