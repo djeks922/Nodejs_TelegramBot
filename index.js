@@ -1,17 +1,21 @@
 import bot from './config/bot.config.js'
-import start from './Composers/start.composer.js'
-import stage from './Scenes/index.js'
+import start from './Composers/start/index.js'
+import scenes from './Scenes/index.js'
 import commands from './Composers/commands/index.js'
 import actions from './Composers/actions/index.js'
 
-bot.use(stage.middleware())
 bot.use(start)
 
-
+bot.use(scenes)
 bot.use(commands)
 bot.use(actions)
 
 
+
+bot.catch((err,ctx)=> {
+    console.log(err)
+    console.log(ctx)
+})
 
 bot.launch()
 

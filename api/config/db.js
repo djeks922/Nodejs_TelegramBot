@@ -22,7 +22,7 @@ process.on("SIGINT", async () => {
 
 export default async () => {
   const dbAddress = process.env.DB_URL;
-  mongoose.set("bufferCommands", false);
+  // mongoose.set("bufferCommands", false);
   const options = {
     // autoCreate: false,
     // autoIndex: false, // Don't build indexes

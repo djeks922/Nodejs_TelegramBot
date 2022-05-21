@@ -1,8 +1,14 @@
-import {Scenes} from 'telegraf'
-import proposal from './consumerProposal.js'
-import registry from './influencerRegistry.js'
+import {Scenes, Composer, session} from 'telegraf'
+import proposal from './Proposal/index.js'
+import registry from './Registry/index.js'
+
 const {Stage} = Scenes
+
+const composer = new Composer()
 
 const stage = new Stage([proposal,registry])
 
-export default stage
+composer.use(session())
+composer.use(stage.middleware())
+
+export default composer

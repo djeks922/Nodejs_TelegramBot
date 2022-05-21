@@ -1,11 +1,13 @@
-import { Telegraf, session } from "telegraf";
-import { config } from "dotenv";
+import { Telegraf } from "telegraf";
 import dbConnect from "../api/config/db.js";
+
+import { config } from "dotenv";
 config();
 
 dbConnect();
+
 const bot = new Telegraf(process.env.TOKEN);
-bot.use(session());
+
 
 bot.telegram.setMyCommands([
   { command: "start", description: "Start the bot" },

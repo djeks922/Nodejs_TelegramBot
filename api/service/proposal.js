@@ -33,13 +33,13 @@ proposalListener.on("change", async (data) => {
         : undefined;
     }
     if (data.operationType === "update") {
-      console.log("updated", data);
+      // console.log("updated", data);
       if (data.updateDescription.updatedFields.status === "approved") {
         const proposal = await getProposalByID(data.documentKey._id, true);
         // console.log(proposal)
         await bot.telegram.sendMessage(
           proposal.consumer.chatID,
-          `Your proposal for token ${proposal.name} is approved by admin, waiting for influencer(s) response :)`
+          `Your proposal for token: '${proposal.name}' was approved by Cryptoencer team, waiting for influencer(s) response :)`
         );
         for (let inf of proposal.influencers) {
           await bot.telegram.sendMessage(
@@ -155,7 +155,7 @@ export const getProposalByID = async (id, {lean = false, populate = true}) => {
 export const deleteProposalByID = async (id) => {
   try {
     const proposal = await Proposal.deleteOne({ _id: id });
-    console.log(proposal);
+    // console.log(proposal);
     return proposal;
   } catch (error) {
     logger.error(error);
@@ -165,7 +165,7 @@ export const deleteProposalByID = async (id) => {
 export const updateProposalByID = async (id, updates) => {
   try {
     const proposal = await Proposal.updateOne({ _id: id }, updates);
-    console.log(proposal);
+    // console.log(proposal);
     return proposal;
   } catch (error) {
     logger.error(error);
