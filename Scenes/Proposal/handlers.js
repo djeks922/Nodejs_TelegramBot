@@ -10,7 +10,7 @@ export const nameStep = async (ctx) => {
     await ctx.wizard.next();
   } catch (error) {
     ctx.scene.leave();
-    console.log(error);
+    throw error;
   }
 };
 
@@ -22,7 +22,7 @@ export const websiteStep = async (ctx) => {
     ctx.wizard.next();
   } catch (error) {
     ctx.scene.leave();
-    console.log(error);
+    throw error;
   }
 };
 export const contractStep = async (ctx) => {
@@ -32,7 +32,7 @@ export const contractStep = async (ctx) => {
     await ctx.wizard.next();
   } catch (error) {
     ctx.scene.leave();
-    console.log(error);
+    throw error;
   }
 };
 export const twitterStep = async (ctx) => {
@@ -42,7 +42,7 @@ export const twitterStep = async (ctx) => {
     ctx.wizard.next();
   } catch (error) {
     ctx.scene.leave();
-    console.log(error);
+    throw error;
   }
 };
 export const telegramStep = async (ctx) => {
@@ -52,7 +52,7 @@ export const telegramStep = async (ctx) => {
     ctx.wizard.next();
   } catch (error) {
     ctx.scene.leave();
-    console.log(error);
+    throw error;
   }
 };
 export const developerUsernameStep = async (ctx) => {
@@ -62,7 +62,7 @@ export const developerUsernameStep = async (ctx) => {
     ctx.wizard.next();
   } catch (error) {
     ctx.scene.leave();
-    console.log(error);
+    throw error;
   }
 };
 export const descriptionStep = async (ctx) => {
@@ -75,7 +75,7 @@ export const descriptionStep = async (ctx) => {
     );
   } catch (error) {
     ctx.scene.leave();
-    console.log(error);
+    throw error;
   }
 };
 
@@ -86,7 +86,7 @@ export const enter = async (ctx) => {
       leaveButton()
     );
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 
