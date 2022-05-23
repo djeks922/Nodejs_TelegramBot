@@ -4,9 +4,7 @@ const composer = new Composer()
 
 composer.on('group_chat_created', ctx => {
     console.log('group chat created')
-    if(ctx.message.chat.id !== -581116482){
-        ctx.leaveChat()
-    }
+
 })
 
 composer.on('my_chat_member', ctx => {

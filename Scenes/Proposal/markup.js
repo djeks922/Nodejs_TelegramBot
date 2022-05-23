@@ -1,7 +1,13 @@
 import { Markup } from "telegraf";
 
+
 export const leaveButton = () => {
    return  Markup.inlineKeyboard([Markup.button.callback("leave", "leave")])
+}
+
+export const leaveButtonEdited = () => {
+   
+   return  Markup.inlineKeyboard([[Markup.button.callback("leaved", "leaved")]])
 }
 
 export const influencerButtons = (influencers) => {
@@ -18,3 +24,7 @@ export const influencerButtons = (influencers) => {
       [Markup.button.callback("done", "done")],
     ]);
 };
+
+export const sentProposalButton = () => {
+  return Markup.inlineKeyboard([Markup.button.callback('sent', 'sent')])
+}

@@ -1,4 +1,4 @@
-import { influencerButtons, leaveButton } from "./markup.js";
+import { influencerButtons, leaveButton, leaveButtonEdited ,sentProposalButton} from "./markup.js";
 import { createProposal } from "../../api/service/proposal.js";
 import { getInfluencers } from "../../api/service/influencer.js";
 
@@ -92,8 +92,9 @@ export const enter = async (ctx) => {
 
 export const leave = async (ctx) => {
   try {
+    // console.log(ctx.callbackQuery)
     await ctx.scene.leave();
-    ctx.deleteMessage(ctx.callbackQuery.message.messageId);
+    await ctx.editMessageReplyMarkup(leaveButtonEdited().reply_markup)
     await ctx.answerCbQuery("Come back when you feel ready :)");
   } catch (error) {
     throw error;
@@ -110,6 +111,7 @@ export const done = async (ctx) => {
     await ctx.reply(
       "Thanks for taken time, we will inform you as soon as possible :)"
     );
+    await ctx.editMessageReplyMarkup(sentProposalButton().reply_markup)
     await ctx.answerCbQuery("Nicee!");
 
     return ctx.scene.leave();
@@ -122,6 +124,7 @@ export const chooseInfluencer_callback = async (ctx) => {
   try {
     if (ctx.wizard.state.influencers.indexOf(ctx.callbackQuery.data) === -1) {
       ctx.wizard.state.influencers.push(ctx.callbackQuery.data);
+      // await ctx
       await ctx.answerCbQuery("Nice chose :)");
     } else {
       await ctx.answerCbQuery("Already added", { show_alert: true });

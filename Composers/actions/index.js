@@ -13,7 +13,7 @@ composer.on('callback_query', async (ctx) => {
 
     const proposal = await getProposalByID(pID,{lean: false,populate: false}) // the main proposal
 
-    if(!proposal) return await ctx.answerCbQuery('Proposal does not exits or deleted!')
+    if(!proposal && pID && refID) return await ctx.answerCbQuery('Proposal does not exits or deleted!')
 
     switch (command) {
         case 'a-a':
