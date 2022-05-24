@@ -23,10 +23,10 @@ const message = printf((info) => {
       info.level === "error"
         ? info.error 
           ? "\n - " +
-            info.stack?.substr(0, 300) +
+            info.stack?.substr(0, 1000) +
             "\n" +
-            '\n - ' + info.error?.stack?.substr(0, 300)
-          : " - " + info.stack?.substr(0, 300)
+            '\n - ' + info.error?.stack?.substr(0, 1000)
+          : " - " + info.stack?.substr(0, 1000)
         : ""
     }`
   );
