@@ -2,9 +2,10 @@ import bot from "../../config/bot.config.js";
 import { getAdmins } from "../service/consumer.js";
 import { getProposalByID} from '../service/proposal.js'
 import {
-  acceptNotification,
+  acceptNotificationToConsumer,
   acceptNotification_admin,
-  approveNotification,
+  approveNotificationToConsumer,
+  approveNotificationToConsumerI,
   proposalToAdmin,
   proposalToInfluencer,
 } from "../utils/proposal/text.js";
@@ -19,7 +20,7 @@ const onStaged = async (data) => {
     const proposal = await getProposalByID(data.documentKey._id, {populate: true});
 
     const text = proposalToAdmin(proposal);
-    const buttons = adminButtons(data, admin);
+    const buttons = adminButtons(proposal, admin);
 
     admin
       ? await bot.telegram.sendMessage(admin.chatID, text, buttons)
@@ -33,7 +34,7 @@ const onApprove = async (data) => {
   try {
     const proposal = await getProposalByID(data.documentKey._id, {populate: true});
     
-    const text = approveNotification(proposal);
+    const text = approveNotificationToConsumer(proposal);
     await bot.telegram.sendMessage(proposal.consumer.chatID, text); // notify user **Token approved**
 
     for (let inf of proposal.influencers) {
@@ -46,12 +47,31 @@ const onApprove = async (data) => {
     throw error;
   }
 };
+const onApproveIndividual = async (data, approvedID) => {
+  try {
+    const proposal = await getProposalByID(data.documentKey._id, {populate: true});
+    if(approvedID instanceof Array) approvedID = approvedID[0]
+    const inf = proposal.influencers.find(inf => inf._id.toString() === approvedID.toString())
+    
+    const text = approveNotificationToConsumerI(proposal,inf);
+
+    await bot.telegram.sendMessage(proposal.consumer.chatID, text); // notify user **Token approved**
+    
+
+    let infText = proposalToInfluencer(proposal);
+    let buttons = influencerButtons(proposal, inf);
+    await bot.telegram.sendMessage(inf.chatID, infText, buttons);
+
+  } catch (error) {
+    throw error;
+  }
+};
 
 const onAccept = async (data) => {
   try {
     const proposal = await getProposalByID(data.documentKey._id, {populate: true});
 
-    let consumerText = acceptNotification(proposal); // Consumer notification when *influencers accept*
+    let consumerText = acceptNotificationToConsumer(proposal); // Consumer notification when *influencers accept*
     await bot.telegram.sendMessage(proposal.consumer.chatID, consumerText);
 
     let adminText = acceptNotification_admin(proposal); // Admin notification when *influencers accept*
@@ -63,20 +83,22 @@ const onAccept = async (data) => {
 
 proposalListener.on("change", async (data) => {
   try {
-    // console.log(data)
     if (data.operationType === "insert") {
       await onStaged(data);
     }
     if (data.operationType === "update") {
+
+      for (const field in data.updateDescription.updatedFields) {
+         field.includes('approvedFor')
+         ? await onApproveIndividual(data, data.updateDescription.updatedFields[field])
+         : ''
+
+         field.includes('acceptedBy')
+         ? await onAccept(data)
+         : "";
+      }
       data.updateDescription.updatedFields.status === "approved"
         ? await onApprove(data)
-        : "";
-
-      data.updateDescription.updatedFields.status === "accepted" ||
-      data.updateDescription.updatedFields[
-        `acceptedBy.${data.updateDescription.updatedFields.__v - 1}`
-      ]
-        ? await onAccept(data)
         : "";
     }
   } catch (error) {

@@ -19,7 +19,7 @@ export const websiteStep = async (ctx) => {
     await ctx.reply("Keep going...");
     await ctx.reply("Enter token Contract Address");
     ctx.wizard.state.website = ctx.message.text;
-    ctx.wizard.next();
+    await ctx.wizard.next();
   } catch (error) {
     ctx.scene.leave();
     throw error;
@@ -39,7 +39,7 @@ export const twitterStep = async (ctx) => {
   try {
     await ctx.reply("Enter your token telegram");
     ctx.wizard.state.twitter = ctx.message.text;
-    ctx.wizard.next();
+    await ctx.wizard.next();
   } catch (error) {
     ctx.scene.leave();
     throw error;
@@ -49,7 +49,7 @@ export const telegramStep = async (ctx) => {
   try {
     await ctx.reply("Enter your token developer telegram username");
     ctx.wizard.state.telegram = ctx.message.text;
-    ctx.wizard.next();
+    await ctx.wizard.next();
   } catch (error) {
     ctx.scene.leave();
     throw error;
@@ -59,7 +59,7 @@ export const developerUsernameStep = async (ctx) => {
   try {
     await ctx.reply("Enter your token description");
     ctx.wizard.state.developerUsername = ctx.message.text;
-    ctx.wizard.next();
+    await ctx.wizard.next();
   } catch (error) {
     ctx.scene.leave();
     throw error;
@@ -104,7 +104,7 @@ export const leave = async (ctx) => {
 export const done = async (ctx) => {
   try {
     if (ctx.wizard.state.influencers.length === 0)
-      return ctx.answerCbQuery("You must choose min. 1 Influencer!");
+      return await ctx.answerCbQuery("You must choose min. 1 Influencer!");
 
     await ctx.reply("Processing proposal...");
     await createProposal(ctx.wizard.state, ctx.chat.id);
@@ -121,9 +121,10 @@ export const done = async (ctx) => {
 };
 
 export const chooseInfluencer_callback = async (ctx) => {
+  const infID = ctx.callbackQuery.data.split(' ')[1]
   try {
-    if (ctx.wizard.state.influencers.indexOf(ctx.callbackQuery.data) === -1) {
-      ctx.wizard.state.influencers.push(ctx.callbackQuery.data);
+    if (ctx.wizard.state.influencers.indexOf(infID) === -1) {
+      await ctx.wizard.state.influencers.push(infID);
       // await ctx
       await ctx.answerCbQuery("Nice chose :)");
     } else {

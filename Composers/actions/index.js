@@ -1,31 +1,38 @@
 import {Composer} from 'telegraf'
 import {getProposalByID} from '../../api/service/proposal.js'
-import { approveProposal , rejectProposal} from './admin.js'
+import { approveProposal , rejectProposal ,approveIndividual} from './admin.js'
 import { acceptInfluencer } from './influencer.js'
 
 const composer = new Composer()
 
 // Add actions
 composer.on('callback_query', async (ctx) => {
-    const command = ctx.callbackQuery.data.split(' ')[0]
-    const pID = ctx.callbackQuery.data.split(' ')[1]
-    const refID = ctx.callbackQuery.data.split(' ')[2]
 
+    const command = ctx.callbackQuery.data.split(' ')[0] // Main action 
+
+    if(!['aa','aai','ra','ai','ri'].includes(command)) return await ctx.answerCbQuery('asds')
+
+    const pID = ctx.callbackQuery.data.split(' ')[1] // proposal ID
+    const refID = ctx.callbackQuery.data.split(' ')[2] // refers to influencers or admin
+    // console.log(command, pID,refID)
     const proposal = await getProposalByID(pID,{lean: false,populate: false}) // the main proposal
 
     if(!proposal && pID && refID) return await ctx.answerCbQuery('Proposal does not exits or deleted!')
 
     switch (command) {
-        case 'a-a':
-            await approveProposal(ctx, proposal, refID)
+        case 'aa':
+            await approveProposal(ctx, proposal, refID) // refID is admin ID
             break;
-        case 'r-a':
-            await rejectProposal(ctx, proposal, pID)
+        case 'aai':
+            await approveIndividual(ctx, proposal, refID) // refID is influencer ID
             break;
-        case 'a-i':
-            await acceptInfluencer(ctx, proposal, refID)
+        case 'ra':
+            await rejectProposal(ctx, proposal)
             break;
-        case 'r-a':
+        case 'ai':
+            await acceptInfluencer(ctx, proposal, refID) // refID is influencer ID
+            break;
+        case 'ra':
             // await rejectInfluencer(ctx, proposal, pID)
             break;
     
@@ -34,6 +41,10 @@ composer.on('callback_query', async (ctx) => {
     }    
 })
 
+// composer.action(/approvedFor+/, ctx => {
+//     const pID
+//     console.log(ctx, 'action approved for')
+// })
 
 
 export default composer

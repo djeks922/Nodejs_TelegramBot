@@ -14,11 +14,15 @@ export const proposalToAdmin = (proposal) => {
   return text;
 };
 
-export const approveNotification = (proposal) => {
-  return `Your proposal for token: '${proposal.name}' was approved by Cryptoencer team, waiting for influencer(s) response :)`;
+export const approveNotificationToConsumer = (proposal) => {
+  return `Your proposal for token: '${proposal.name}' was approved by Cryptoencer team for all influencers, waiting for influencers' response :)`;
 };
 
-export const acceptNotification = (proposal) => {
+export const approveNotificationToConsumerI = (proposal, influencer) => {
+  return `Your proposal for token: '${proposal.name}' was approved by Cryptoencer team to Influencer: ${influencer.username}, waiting for influencer response :)`;
+};
+
+export const acceptNotificationToConsumer = (proposal) => {
   return `Your proposal for token ${proposal.name} is accepted by ${
     proposal.acceptedBy[proposal.acceptedBy.length - 1].username
   }`;

@@ -28,10 +28,10 @@ const consumerScene = new WizardScene(
 
 consumerScene.enter(enter);
 
-consumerScene.action("leave", leave);
+consumerScene.action("ps leave", leave);
 
-consumerScene.action("done", done);
+consumerScene.action("ps done", done);
 
-consumerScene.action(/[0-9]+/g, chooseInfluencer_callback);
+consumerScene.action(/ps+/g, chooseInfluencer_callback);
 
 export default consumerScene;
