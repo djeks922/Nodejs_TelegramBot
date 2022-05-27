@@ -9,8 +9,9 @@ const influencerSchema = new Schema(
         username: String,
         userID: Number,
         chatID: Number,
-        price: Number,
-        status: {type: String,enum: ['active','inbetween','inactive'], default: 'inactive'}
+        packages: [{type: Schema.Types.ObjectId, ref: 'tg-package'}],
+        socials: [{type: Schema.Types.ObjectId, ref: 'tg-social'}],
+        status: {type: String, enum: ['active','inreview','inactive'], default: 'inactive'}
     }
 )
 
