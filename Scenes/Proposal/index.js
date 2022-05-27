@@ -27,11 +27,23 @@ const consumerScene = new WizardScene(
 );
 
 consumerScene.enter(enter);
+consumerScene.leave((ctx) => {
+  console.log('leaved proposal scene')
+});
+
+consumerScene.on('message', async(ctx,next) => {
+  if(ctx.message.text) await next()
+  else ctx.reply('not valid input')
+})
 
 consumerScene.action("ps leave", leave);
 
 consumerScene.action("ps done", done);
 
 consumerScene.action(/ps+/g, chooseInfluencer_callback);
+
+consumerScene.on('callback_query', async (ctx) => {
+  ctx.answerCbQuery()
+})
 
 export default consumerScene;
