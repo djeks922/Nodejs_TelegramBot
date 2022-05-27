@@ -6,9 +6,11 @@ import on from './composers/on/index.js'
 import scenes from './Scenes/index.js'
 import logger from './api/logger/index.js'
 
-bot.use(start)
 
 bot.use(scenes)
+bot.use(start)
+
+
 bot.use(commands)
 bot.use(on)
 bot.use(actions)

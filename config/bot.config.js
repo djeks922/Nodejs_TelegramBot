@@ -13,6 +13,7 @@ bot.telegram.setMyCommands([
   { command: "start", description: "Start the bot" },
   { command: "help", description: "Be aware of what you can do with bot" },
   { command: "add", description: "Add proposal" },
+  { command: "register", description: "Register as Influencer" },
 ]);
 
 export default bot;
