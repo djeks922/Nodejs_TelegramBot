@@ -20,25 +20,26 @@ const registryScene = new BaseScene("influencer-scene-id");
 registryScene.enter(enter);
 registryScene.leave((ctx) => {
   // console.log(ctx)
-  ctx.session.influencer.save()
   console.log("leaved registry scene");
+  // ctx.deleteMessage()
 });
-registryScene.on('edited_message', (ctx) => {
-  console.log(ctx)
-})
+// registryScene.on('edited_message', (ctx) => {
+//   console.log(ctx)
+// })
 registryScene.on("message", async (ctx) => {
   console.log(ctx.message)
-  if (ctx.message.text === undefined) ctx.reply("Not valid");
+  // if (ctx.message.text === undefined) ctx.reply("No such option");
   if(ctx.message.reply_to_message?.text === 'Add your requirement'){
     ctx.session.influencer.requirement = ctx.message.text
     await ctx.reply('Requirement saved!')
-    await ctx.scene.enter('influencer-scene-id')
+    return await ctx.scene.enter('influencer-scene-id')
   }
   if(ctx.message.reply_to_message?.text === 'Add your wallet address'){
     ctx.session.influencer.wallet = ctx.message.text
     await ctx.reply('Wallet address saved!')
-    await ctx.scene.enter('influencer-scene-id')
+    return await ctx.scene.enter('influencer-scene-id')
   }
+  return await ctx.reply("No such option");
 });
 
 registryScene.action("1", (ctx) => {

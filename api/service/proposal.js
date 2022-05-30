@@ -14,7 +14,7 @@ export const createProposal = async (proposal, consumerChatID) => {
 
     return _proposal;
   } catch (error) {
-    logger.error(error);
+    throw error;
   }
 };
 
@@ -29,7 +29,7 @@ export const getProposals = async (filter = {}) => {
 
     return proposal;
   } catch (error) {
-    logger.error(error);
+    throw error
   }
 };
 
@@ -54,7 +54,7 @@ export const getProposalByID = async (id, {lean = true, populate = false}) => {
 
     return proposal;
   } catch (error) {
-    logger.error(error);
+    throw error
   }
 };
 
@@ -64,7 +64,7 @@ export const deleteProposalByID = async (id) => {
     // console.log(proposal);
     return proposal;
   } catch (error) {
-    logger.error(error);
+    throw error
   }
 };
 
@@ -74,6 +74,6 @@ export const updateProposalByID = async (id, updates) => {
     // console.log(proposal);
     return proposal;
   } catch (error) {
-    logger.error(error);
+    throw error
   }
 };

@@ -8,7 +8,7 @@ export const registryButtons = () => {
       Markup.button.callback("Requirement", "3")
     ],
     [Markup.button.callback("Wallet address", "4"), Markup.button.callback("View profile", "5")],
-    [Markup.button.callback("Apply for review","7"),Markup.button.callback("Leave", '6')]
+    [Markup.button.callback("Apply for review","7"),Markup.button.callback("save&leave", '6')]
   ]).resize(false);
 };
 

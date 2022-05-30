@@ -33,7 +33,9 @@ export const enter = async (ctx) => {
 export const leave = async (ctx) => {
   try {
     await ctx.answerCbQuery("Come back when you feel ready :)");
+    await ctx.session.influencer.save()
     await ctx.scene.leave();
+    await ctx.deleteMessage()
   } catch (error) {
     throw error;
   }
