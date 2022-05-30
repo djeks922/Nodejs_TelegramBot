@@ -23,20 +23,28 @@ registryScene.leave((ctx) => {
   console.log("leaved registry scene");
   // ctx.deleteMessage()
 });
-// registryScene.on('edited_message', (ctx) => {
-//   console.log(ctx)
-// })
+
+registryScene.hears('back to registry', async(ctx) => {
+  await ctx.scene.enter('influencer-scene-id')
+  await ctx.deleteMessage()
+  await ctx.deleteMessage(ctx.message.message_id - 1)
+})
+
 registryScene.on("message", async (ctx) => {
-  // console.log(ctx.message)
+  console.log(ctx.message)
   // if (ctx.message.text === undefined) ctx.reply("No such option");
-  if(ctx.message.reply_to_message?.text === 'Add your requirement'){
+  if(ctx.message.reply_to_message?.text === 'Add your requirement(reply to this message)'){
     ctx.session.influencer.requirement = ctx.message.text
-    await ctx.reply('Requirement saved!')
+    await ctx.reply('Requirement saved!', {'reply_markup': {'remove_keyboard': true}})
+    await ctx.deleteMessage()
+    await ctx.deleteMessage(ctx.message.message_id - 1)
     return await ctx.scene.enter('influencer-scene-id')
   }
-  if(ctx.message.reply_to_message?.text === 'Add your wallet address'){
+  if(ctx.message.reply_to_message?.text === 'Add your wallet address(reply to this message)'){
     ctx.session.influencer.wallet = ctx.message.text
-    await ctx.reply('Wallet address saved!')
+    await ctx.reply('Wallet address saved!',{'reply_markup': {'remove_keyboard': true}})
+    await ctx.deleteMessage()
+    await ctx.deleteMessage(ctx.message.message_id - 1)
     return await ctx.scene.enter('influencer-scene-id')
   }
   return await ctx.reply("No such option");
@@ -50,11 +58,11 @@ registryScene.action("2", async (ctx)=>{
 });
 registryScene.action("3", async (ctx) => {
   await ctx.deleteMessage()
-  await ctx.reply('Add your requirement', {reply_markup: {force_reply: true}})
+  await ctx.reply('Add your requirement(reply to this message)', {reply_markup: {'force_reply': true,'keyboard':[['back to registry']],'one_time_keyboard': true,'resize_keyboard':true}})
 });
 registryScene.action("4", async (ctx) => {
   await ctx.deleteMessage()
-  await ctx.reply('Add your wallet address', {reply_markup: {force_reply: true}})
+  await ctx.reply('Add your wallet address(reply to this message)', {reply_markup: {'force_reply': true,'keyboard':[['back to registry']],'one_time_keyboard': true,'resize_keyboard':true}})
 });
 registryScene.action("5", viewProfile);
 registryScene.action("6", leave);
