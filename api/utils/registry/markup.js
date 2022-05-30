@@ -11,7 +11,7 @@ export const adminButtons = (_influencer) => {
       "refuse to activate",
       `admin-rejectedActivation-influencer ${_influencer._id}`
     ),
-  ])
+  ]).selective(true)
     .oneTime()
     .resize();
 };

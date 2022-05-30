@@ -28,7 +28,7 @@ const consumerScene = new WizardScene(
 
 consumerScene.enter(enter);
 consumerScene.leave((ctx) => {
-  console.log('leaved proposal scene')
+  // console.log('leaved proposal scene')
 });
 
 consumerScene.on('message', async(ctx,next) => {

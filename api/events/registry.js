@@ -15,7 +15,7 @@ influencerListener.on("change", async (data) => {
         // console.log(data,'new registry')
       }
       if (data.operationType === "update") {
-        console.log(data, 'update')
+        // console.log(data, 'update')
         
         if(data.updateDescription.updatedFields.status !== null && data.updateDescription.updatedFields.status === 'inreview'){
             const _influencer  = await getInfluencerByID(data.documentKey._id,{lean: true,populate:true})

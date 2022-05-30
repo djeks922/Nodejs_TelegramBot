@@ -1,6 +1,6 @@
 import { deleteProposalByID } from "../../api/service/proposal.js";
 import { getConsumerByChatID } from '../../api/service/consumer.js'
-import { getInfluencerByID,createOrUpdateInfluencer } from '../../api/service/influencer.js'
+import { updateInfluencer } from '../../api/service/influencer.js'
 
 
 export const approveProposal = async (ctx, proposal, refID) => {
@@ -50,10 +50,14 @@ export const rejectProposal = async (ctx, proposal) => {
 
 export const activateInfluencer = async(ctx) => {
   const id = ctx.callbackQuery.data.split(' ')[1]
-  await createOrUpdateInfluencer({_id:id}, {status: 'active'})
+  const res = await updateInfluencer(id, {status: 'active'})
+  if(!res.modifiedCount) return await ctx.answerCbQuery('Already activated!')
+  await ctx.answerCbQuery('activated!')
 }
 
 export const rejectActivationInfluencer = async(ctx) => {
   const id = ctx.callbackQuery.data.split(' ')[1]
-  await createOrUpdateInfluencer({_id:id}, {status: 'inactive'})
+  const res = await updateInfluencer(id, {status: 'inactive'})
+  if(!res.modifiedCount) return await ctx.answerCbQuery('Already refused!')
+  await ctx.answerCbQuery('refused!')
 }

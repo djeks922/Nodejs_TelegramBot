@@ -27,7 +27,7 @@ registryScene.leave((ctx) => {
 //   console.log(ctx)
 // })
 registryScene.on("message", async (ctx) => {
-  console.log(ctx.message)
+  // console.log(ctx.message)
   // if (ctx.message.text === undefined) ctx.reply("No such option");
   if(ctx.message.reply_to_message?.text === 'Add your requirement'){
     ctx.session.influencer.requirement = ctx.message.text

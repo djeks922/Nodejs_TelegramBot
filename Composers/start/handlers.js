@@ -7,10 +7,10 @@ export const startHandler = async (ctx) => {
     if(!ctx.session.consumer) {
       const _consumer = await getConsumerByChatID(ctx.message.chat.id)
       if(_consumer){
-        console.log('exist but not in session')
+        // console.log('exist but not in session')
         ctx.session.consumer = _consumer
       }else{
-        console.log('first time')
+        // console.log('first time')
         const  consumer = {
           name: ctx.message.from.first_name,
           username: ctx.message.from.username,

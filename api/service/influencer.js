@@ -15,11 +15,32 @@ export const createOrUpdateInfluencer = async (influencer, updates = {}) => {
     }
 }
 
-export const getInfluencers = async (filter = {}) => {
+export const updateInfluencer = async (id, updates = {}) => {
     try {
-       const influencer = await Influencer.find(filter).lean()
+        const updateInfo = await Influencer.updateOne({_id: id}, updates)
 
-       return influencer
+        return updateInfo
+    } catch (error) {
+        
+    }
+}
+
+export const getInfluencers = async (filter = {}, {lean =  true, populate = false}) => {
+    try {
+        const influencer = lean
+        ? populate
+          ? await Influencer.find(filter)
+              .populate("socials")
+              .populate('packages')
+              .lean()
+          : await Influencer.find(filter).lean()
+        : populate
+        ? await Influencer.find(filter)
+              .populate("socials")
+              .populate('packages')
+        : await Influencer.find(filter);
+  
+         return influencer
     } catch (error) {
         logger.error(error)
     }
@@ -103,7 +124,7 @@ export const createSocial = async (infID,social) => {
     try {
         const _social = await Social.create(social)
         // await _social.save()
-        console.log(_social, 'createSocial')
+        // console.log(_social, 'createSocial')
 
        return _social
     } catch (error) {

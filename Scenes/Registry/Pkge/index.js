@@ -40,7 +40,7 @@ packageScene.on('message', async (ctx, next) => {
 })  
 
 packageScene.action('2',async(ctx)=>{
-  console.log(ctx)
+  // console.log(ctx)
   await ctx.deleteMessage()
   await ctx.reply('Enter package name',{reply_markup: {'keyboard': [['exit']],'resize_keyboard': true, 'input_field_placeholder': 'ex: boost3x'}})
   await ctx.answerCbQuery()

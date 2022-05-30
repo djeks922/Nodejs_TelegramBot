@@ -1,6 +1,7 @@
 import { influencerButtons, leaveButton, leaveButtonEdited ,sentProposalButton} from "./markup.js";
 import { createProposal } from "../../api/service/proposal.js";
 import { getInfluencers } from "../../api/service/influencer.js";
+import {activeInfluencerChooseList} from '../../helpers/influencer.js'
 
 export const nameStep = async (ctx) => {
   try {
@@ -68,9 +69,10 @@ export const developerUsernameStep = async (ctx) => {
 export const descriptionStep = async (ctx) => {
   try {
     ctx.wizard.state.description = ctx.message.text;
-    const influencers = await getInfluencers();
-    await ctx.reply(
-      "Choose Influencers with whom you want to proceed promotion",
+    const influencers = await getInfluencers({status: 'active'},{populate: true});
+    // console.log(influencers)
+    await ctx.replyWithHTML(
+      activeInfluencerChooseList(influencers),
       influencerButtons(influencers),
     );
   } catch (error) {
