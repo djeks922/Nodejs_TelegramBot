@@ -45,3 +45,14 @@ export const rejectProposal = async (ctx, proposal) => {
 
   await ctx.answerCbQuery("Proposal deleted successfully!");
 };
+
+
+export const activateInfluencer = async(ctx) => {
+  ctx.session.influencer.status = 'active'
+  await ctx.session.influencer.save()
+}
+
+export const rejectActivationInfluencer = async(ctx, influencer) => {
+  ctx.session.influencer.status = 'inactive'
+  await ctx.session.influencer.save()
+}

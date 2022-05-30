@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import logger from "../logger/index.js"
 import '../events/proposal.js'
+import '../events/registry.js'
 
 mongoose.connection
   .once("connected", () => {
