@@ -25,19 +25,61 @@ export const getInfluencers = async (filter = {}) => {
     }
 }
 
-export const getInfluencerByUserID = async (id) => {
+export const getInfluencerByID = async (id, {lean = true,populate = false}) => {
     try {
-       const influencer = await Influencer.findOne({userID: id}).populate('tg-social').populate('tg-package').lean()
-
-       return influencer
+        const influencer = lean
+        ? populate
+          ? await Influencer.findOne({ _id: id })
+              .populate("socials")
+              .populate('packages')
+              .lean()
+          : await Influencer.findOne({ _id: id }).lean()
+        : populate
+        ? await Influencer.findOne({ _id: id })
+              .populate("socials")
+              .populate('packages')
+        : await Influencer.findOne({ _id: id });
+  
+         return influencer
+    } catch (error) {
+        logger.error(error)
+    }
+}
+export const getInfluencerByUserID = async (id, {lean = true,populate = false}) => {
+    try {
+        const influencer = lean
+        ? populate
+          ? await Influencer.findOne({ userID: id })
+              .populate("socials")
+              .populate('packages')
+              .lean()
+          : await Influencer.findOne({ userID: id }).lean()
+        : populate
+        ? await Influencer.findOne({ userID: id })
+              .populate("socials")
+              .populate('packages')
+        : await Influencer.findOne({ userID: id });
+  
+         return influencer
     } catch (error) {
         logger.error(error)
     }
 }
 
-export const getInfluencerByChatID = async (id) => {
+export const getInfluencerByChatID = async (id,{lean = true,populate = false}) => {
     try {
-       const influencer = await Influencer.findOne({chatID: id}).populate('tg-social').populate('tg-package').lean()
+        const influencer = lean
+      ? populate
+        ? await Influencer.findOne({ chatID: id })
+            .populate("socials")
+            .populate('packages')
+            .lean()
+        : await Influencer.findOne({ chatID: id }).lean()
+      : populate
+      ? await Influencer.findOne({ chatID: id })
+            .populate("socials")
+            .populate('packages')
+      : await Influencer.findOne({ chatID: id });
 
        return influencer
     } catch (error) {
@@ -59,10 +101,11 @@ export const deleteInfluencerByChatID = async (id) => {
 
 export const createSocial = async (infID,social) => {
     try {
-        const _social = await Social.findOneAndUpdate(social,{}, {new:true,upsert: true})
-        console.log(_social, infID)
-        const inf = await Influencer.updateOne({_id: infID}, {$addToSet: {socials: _social._id}})
-        console.log(inf)
+        const _social = await Social.create(social)
+        // await _social.save()
+        console.log(_social, 'createSocial')
+
+       return _social
     } catch (error) {
         throw error
     }
@@ -100,11 +143,14 @@ export const getSocial = async (id) => {
 
 // Package CRUD
 
-export const createPackage = async (infID,pkg) => {
+export const createPackage = async (pkg) => {
     try {
-        const _pkg = await Package.findOneAndUpdate(pkg,{}, {new:true,upsert: true})
+        const _pkg = await Package.create(pkg)
+
+        await  _pkg.save()
         
-        await Influencer.updateOne({_id: infID}, {$addToSet: {packages: _pkg._id}})
+        return _pkg
+        // await Influencer.updateOne({_id: infID}, {$addToSet: {packages: _pkg._id}})
     } catch (error) {
         throw error
     }

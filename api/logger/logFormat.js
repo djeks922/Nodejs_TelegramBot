@@ -25,8 +25,8 @@ const message = printf((info) => {
           ? "\n - " +
             info.stack?.substr(0, 1000) +
             "\n" +
-            '\n - ' + info.error?.stack?.substr(0, 1000)
-          : " - " + info.stack?.substr(0, 1000)
+            '\n - ' + info.error?.stack?.substr(0, 4000)
+          : " - " + info.stack?.substr(0, 4000)
         : ""
     }`
   );

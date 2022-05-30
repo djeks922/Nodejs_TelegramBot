@@ -1,19 +1,30 @@
 import { registryButtons } from "./markup.js";
-import { createOrUpdateInfluencer, createPackage, createSocial,getInfluencerByUserID } from "../../api/service/influencer.js";
+import { createOrUpdateInfluencer, createPackage, createSocial,getInfluencerByID,getInfluencerByChatID } from "../../api/service/influencer.js";
 
 export const enter = async (ctx) => {
   try {
+    if (!ctx.session.influencer) {
+      const _influencer = await getInfluencerByChatID(ctx.session.consumer.chatID, {lean: false,populate:true})
+      if(_influencer) {
+        console.log('exist in db but not chat')
+        ctx.session.influencer = _influencer
+      }else{
+        console.log('1st time registry')
+        const influencer = {
+          username: ctx.session.consumer.username,
+          chatID: ctx.session.consumer.chatID,
+          userID: ctx.session.consumer.userID,
+          name: ctx.session.consumer.name,
+        };
+        const _influencer = await createOrUpdateInfluencer(influencer);
+        ctx.session.influencer = _influencer
+      }
+    }
     await ctx.reply(
       `Hi again, ${ctx.message ? ctx.message.from.first_name: ''}\nAdd:`,
       registryButtons()
     );
-
-    if (!ctx.session.influencer) {
-      ctx.session.influencer = ctx.session.consumer;
-      ctx.session.influencer.socials = [];
-      ctx.session.influencer.packages = [];
-      ctx.session.influencer.status = 'inactive'
-    }
+    console.log(ctx.session.influencer)
   } catch (error) {
     throw error;
   }
@@ -56,7 +67,8 @@ export const addSocial = async (ctx) => {
 };
 export const addRequirement = async (ctx) => {
   try {
-    console.log("salam");
+    await ctx.reply('Add')
+    ctx.session.influencer.requirement = ctx.session.mes
   } catch (error) {
     throw error;
   }
@@ -70,32 +82,15 @@ export const addWalletAddress = async (ctx) => {
 };
 export const applyForReview = async (ctx) => {
   try {
-    let infl = await getInfluencerByUserID(ctx.callbackQuery.from.id) 
-    if(infl) return ctx.answerCbQuery('Already applied!')
-    if (ctx.session.influencer.socials.length === 0  || ctx.session.influencer.packages.length === 0)
+    const influencer = ctx.session.influencer
+    if(influencer.status === 'inreview') return ctx.answerCbQuery('Already applied!')
+    if (influencer.socials.length === 0  || influencer.packages.length === 0)
       return await ctx.answerCbQuery(
         "At least 1 social account and package need for review!"
       );
-    const influencer = {
-      username: ctx.session.influencer.username,
-      chatID: ctx.session.influencer.chatID,
-      userID: ctx.session.influencer.userID,
-      name: ctx.session.influencer.name,
-    };
-    const inf = await createOrUpdateInfluencer(influencer,{status:'inreview'});
 
-    ctx.session.influencer.id = inf._id
-
-    const socials = ctx.session.influencer.socials
-    for(let social of socials) {
-      const s = await createSocial(inf._id,social)
-    }
-
-    const packages = ctx.session.influencer.packages
-    for(let pkg of packages) {
-      const p = await createPackage(inf._id,pkg)
-    }
-    ctx.session.influencer.status = inf.status
+    influencer.status = 'inreview'
+    await influencer.save()
     await ctx.answerCbQuery("Application successfully sent!");
   } catch (error) {
     throw error;
