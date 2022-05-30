@@ -25,7 +25,7 @@ export const packageScene = new WizardScene(
       const _pkg = await createPackage(ctx.wizard.state)
       ctx.session.influencer.packages.push(_pkg)
       await ctx.reply("Package saved!", Markup.removeKeyboard())
-      await ctx.session.influencer.save()
+      // await ctx.session.influencer.save()
       ctx.scene.enter('influencer-scene-id')
     }
   );

@@ -20,7 +20,7 @@ influencerListener.on("change", async (data) => {
         if(data.updateDescription.updatedFields.status !== null && data.updateDescription.updatedFields.status === 'inreview'){
             const _influencer  = await getInfluencerByID(data.documentKey._id,{lean: true,populate:true})
             const admin = await getAdmins()
-            bot.telegram.sendMessage(admin.chatID, influencerRegistryText(_influencer), adminButtons())
+            bot.telegram.sendMessage(admin.chatID, influencerRegistryText(_influencer), adminButtons(_influencer))
         }
         if(data.updateDescription.updatedFields.status !== null && data.updateDescription.updatedFields.status === 'active'){
             const _influencer  = await getInfluencerByID(data.documentKey._id,{lean: true,populate:false})

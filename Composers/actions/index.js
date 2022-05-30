@@ -14,7 +14,7 @@ composer.on('callback_query', async (ctx) => {
 
     const command = ctx.callbackQuery.data.split(' ')[0] // Main action 
 
-    if(!['aa','aai','ra','ai','ri','raa','rar'].includes(command)) return await ctx.answerCbQuery('asds')
+    if(!['aa','aai','ra','ai','ri'].includes(command)) return await ctx.answerCbQuery('asds')
 
     const pID = ctx.callbackQuery.data.split(' ')[1] // proposal ID or registered influencer ID
     const refID = ctx.callbackQuery.data.split(' ')[2] // refers to influencers or admin
@@ -39,16 +39,6 @@ composer.on('callback_query', async (ctx) => {
         case 'ra':
             // await rejectInfluencer(ctx, proposal, pID)
             break;
-            /**
-             *  PROPOSAL ACTIONS ABOVE
-             *  INFLUENCER REGISTRY ACTIONS BELOW
-             */
-        case 'raa':
-            // admin accepts registry
-            break;
-        case 'rar':
-            //admin rejects registry
-            break;   
         default:
             break;
     }    

@@ -43,7 +43,7 @@ registryScene.on("message", async (ctx) => {
 });
 
 registryScene.action("1", (ctx) => {
-  ctx.editMessageReplyMarkup(socialButtonsForRegistry().reply_markup);
+  ctx.editMessageText('Select social platform',socialButtonsForRegistry());
 });
 registryScene.action("2", async (ctx)=>{
   ctx.scene.enter('influencer-scene-package-id')

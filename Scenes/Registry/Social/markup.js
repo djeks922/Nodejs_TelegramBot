@@ -6,6 +6,8 @@ export const socialButtonsForRegistry = () => {
         [
           Markup.button.callback("Facebook (Page)", "rs Facebook"),
           Markup.button.callback("Telegram (Channel)", "rs Telegram"),
+        ],
+        [
           Markup.button.callback("Instagram", "rs Instagram"),
           Markup.button.callback("Twitter", "rs Twitter"),
           Markup.button.callback("Youtube", "rs Youtube"),
@@ -18,6 +20,8 @@ export const socialButtonsForSocial = () => {
         [
           Markup.button.callback("Facebook (Page)", "ss Facebook"),
           Markup.button.callback("Telegram (Channel)", "ss Telegram"),
+        ],
+        [
           Markup.button.callback("Instagram", "ss Instagram"),
           Markup.button.callback("Twitter", "ss Twitter"),
           Markup.button.callback("Youtube", "ss Youtube"),

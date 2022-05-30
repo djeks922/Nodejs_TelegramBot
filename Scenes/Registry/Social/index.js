@@ -16,7 +16,7 @@ export const socialScene = new WizardScene(
       const _social = await createSocial(undefined, ctx.session.socialtmp);
       await ctx.reply("Saved!");
       ctx.session.influencer.socials.push(_social);
-      await ctx.session.influencer.save();
+      // await ctx.session.influencer.save();
       await ctx.scene.enter("influencer-scene-id");
     } else {
       await ctx.reply("Social already exist,enter valid url");

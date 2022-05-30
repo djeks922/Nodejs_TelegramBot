@@ -1,15 +1,15 @@
 import { Markup } from "telegraf";
 
-export const adminButtons = () => {
+export const adminButtons = (_influencer) => {
 
   return Markup.inlineKeyboard([
     Markup.button.callback(
       "activate",
-      "admin-activated-influencer"
+      `admin-activated-influencer ${_influencer._id}`
     ),
     Markup.button.callback(
       "refuse to activate",
-      "admin-rejectedActivation-influencer"
+      `admin-rejectedActivation-influencer ${_influencer._id}`
     ),
   ])
     .oneTime()

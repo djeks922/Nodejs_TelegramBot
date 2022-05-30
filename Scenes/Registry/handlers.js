@@ -1,5 +1,5 @@
 import { registryButtons } from "./markup.js";
-import { createOrUpdateInfluencer, createPackage, createSocial,getInfluencerByID,getInfluencerByChatID } from "../../api/service/influencer.js";
+import { createOrUpdateInfluencer,getInfluencerByChatID } from "../../api/service/influencer.js";
 
 export const enter = async (ctx) => {
   try {
@@ -21,7 +21,7 @@ export const enter = async (ctx) => {
       }
     }
     await ctx.reply(
-      `Hi again, ${ctx.message ? ctx.message.from.first_name: ''}\nAdd:`,
+      `Hi again, ${ctx.message ? ctx.message.from.first_name: ''}\nAdd account details, packages and socials. (Apply for review when you are done with your packages and social accaunts)`,
       registryButtons()
     );
     console.log(ctx.session.influencer)
@@ -33,7 +33,6 @@ export const enter = async (ctx) => {
 export const leave = async (ctx) => {
   try {
     await ctx.answerCbQuery("Come back when you feel ready :)");
-    await ctx.session.influencer.save()
     await ctx.scene.leave();
     await ctx.deleteMessage()
   } catch (error) {
@@ -101,18 +100,19 @@ export const applyForReview = async (ctx) => {
 
 export const viewProfile = async (ctx) => {
   try {
+    const influencer = ctx.session.influencer
     let socialText = ``;
-    for (let [i, social] of ctx.session.influencer.socials.entries()) {
+    for (let [i, social] of influencer.socials.entries()) {
       socialText = socialText.concat(
         `${i}. ${social.platform}: ${social.url}\n`
       );
     }
     let packageText = ``;
-    for (let [i, pkg] of ctx.session.influencer.packages.entries()) {
+    for (let [i, pkg] of influencer.packages.entries()) {
       packageText = packageText.concat(`${i}. ${pkg.name}: ${pkg.price}\n`);
     }
     await ctx.replyWithHTML(
-      `<b>username</b>: @${ctx.session.influencer.username}\n<b>Social Accounts</b>:\n ${socialText}\n<b>Packages</b>:\n ${packageText}\n`,
+      `<b>username</b>: @${influencer.username}\n<b>Social Accounts</b>:\n ${socialText}\n<b>Packages</b>:\n ${packageText}\nRequirement: ${influencer.requirement}\nWallet: ${influencer.wallet}\nAccount status: ${influencer.status}`,
       { disable_web_page_preview: true }
     );
     await ctx.answerCbQuery();
