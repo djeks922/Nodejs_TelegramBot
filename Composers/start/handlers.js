@@ -1,5 +1,5 @@
 import { createConsumer,getConsumerByChatID } from "../../api/service/consumer.js";
-
+import {getProposals} from '../../api/service/proposal.js'
 export const startHandler = async (ctx) => {
   try {
     await ctx.reply(`Hello, ${ctx.message.from.first_name}`);
@@ -9,6 +9,8 @@ export const startHandler = async (ctx) => {
       if(_consumer){
         // console.log('exist but not in session')
         ctx.session.consumer = _consumer
+        ctx.session.proposals = await getProposals({consumer:_consumer})
+        // console.log(ctx.session.proposals)
       }else{
         // console.log('first time')
         const  consumer = {
@@ -18,6 +20,7 @@ export const startHandler = async (ctx) => {
           chatID: ctx.chat.id,
         }
         ctx.session.consumer = consumer
+        ctx.session.proposals = []
         createConsumer(consumer);
       }
     }

@@ -21,7 +21,8 @@ export const createProposal = async (proposal, consumerChatID) => {
 export const getProposals = async (filter = {}) => {
   try {
     const proposal = await Proposal.find(filter)
-      .populate("packages.influencer", { chatID: 1 })
+      .populate("packages.influencer")
+      .populate("packages.package")
       .populate("consumer", { chatID: 1 })
       .populate("approvedBy", { chatID: 1, username: 1 })
       .populate("acceptedBy", { chatID: 1, username: 1 })

@@ -112,6 +112,8 @@ export const done = async (ctx) => {
     await ctx.reply("Processing proposal...");
     delete ctx.wizard.state.infstmp
     await createProposal(ctx.wizard.state, ctx.chat.id);
+    console.log(ctx.session.proposals)
+    ctx.session.proposals.push(ctx.wizard.state)
     await ctx.reply(
       "Thanks for taken time, we will inform you as soon as possible :)"
     );
