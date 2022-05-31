@@ -36,31 +36,33 @@ const onApprove = async (data) => {
     
     const text = approveNotificationToConsumer(proposal);
     await bot.telegram.sendMessage(proposal.consumer.chatID, text); // notify user **Token approved**
-
-    for (let inf of proposal.influencers) {
+    // console.log(proposal)
+    for (let pkg of proposal.packages) {
       //   notify influencers that ** NEW PROMO **
-      let text = proposalToInfluencer(proposal);
-      let buttons = influencerButtons(proposal, inf);
-      await bot.telegram.sendMessage(inf.chatID, text, buttons);
+      let text = proposalToInfluencer(proposal,pkg);
+      let buttons = influencerButtons(proposal, pkg.influencer);
+      await bot.telegram.sendMessage(pkg.influencer.chatID, text, buttons);
     }
   } catch (error) {
     throw error;
   }
 };
-const onApproveIndividual = async (data, approvedID) => {
+const onApproveIndividual = async (data, approvedForID) => {
   try {
     const proposal = await getProposalByID(data.documentKey._id, {populate: true});
-    if(approvedID instanceof Array) approvedID = approvedID[0]
-    const inf = proposal.influencers.find(inf => inf._id.toString() === approvedID.toString())
-    
-    const text = approveNotificationToConsumerI(proposal,inf);
+    if(approvedForID instanceof Array) approvedForID = approvedForID[0]
+    // console.log(approvedForID)
+    // console.log(proposal.packages)
+    const pkg = proposal.packages.find(pkg => pkg.influencer._id.toString() === approvedForID.toString())
+    // console.log(inf)
+    const text = approveNotificationToConsumerI(proposal,pkg.influencer);
 
     await bot.telegram.sendMessage(proposal.consumer.chatID, text); // notify user **Token approved**
     
 
-    let infText = proposalToInfluencer(proposal);
-    let buttons = influencerButtons(proposal, inf);
-    await bot.telegram.sendMessage(inf.chatID, infText, buttons);
+    let infText = proposalToInfluencer(proposal,pkg);
+    let buttons = influencerButtons(proposal, pkg.influencer);
+    await bot.telegram.sendMessage(pkg.influencer.chatID, infText, buttons);
 
   } catch (error) {
     throw error;

@@ -2,7 +2,7 @@ import { Markup } from "telegraf";
 
 export const adminButtons = (proposal, admin) => {
 
-  const approvedForButtons = approveInfluencersButtons(proposal.influencers, proposal._id, admin._id)
+  const approvedForButtons = approveInfluencersButtons(proposal.packages, proposal._id, admin._id)
 
   return Markup.inlineKeyboard([[
     Markup.button.callback(
@@ -18,12 +18,12 @@ export const adminButtons = (proposal, admin) => {
     .resize();
 };
 
-export const approveInfluencersButtons = (influencers,pID,aID) => {
+export const approveInfluencersButtons = (packages,pID,aID) => {
   const callbackArr = [];
   let counter = 0;
 
-  for (const inf of influencers) {
-    callbackArr.push(Markup.button.callback(`${counter}.approve for ${inf.username}`,`aai ${pID} ${inf._id}`));
+  for (const pkg of packages) {
+    callbackArr.push(Markup.button.callback(`${counter}.approve for ${pkg.influencer.username}`,`aai ${pID} ${pkg.influencer._id}`));
     counter++;
   }
 

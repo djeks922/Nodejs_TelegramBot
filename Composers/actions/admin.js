@@ -12,7 +12,7 @@ export const approveProposal = async (ctx, proposal, refID) => {
     await ctx.answerCbQuery("Approved!");
   } else {
     await ctx.answerCbQuery(
-      `Already approved by ${proposal.approvedBy.username} !`
+      `Already approved by ${proposal.approvedBy.username}, for all Influencers !`
     );
   }
 };

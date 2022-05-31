@@ -6,7 +6,7 @@ import {activeInfluencerChooseList} from '../../helpers/influencer.js'
 export const nameStep = async (ctx) => {
   try {
     await ctx.reply("Enter your token website");
-    ctx.wizard.state.influencers = [];
+    ctx.wizard.state.packages = [];
     ctx.wizard.state.name = ctx.message.text;
     await ctx.wizard.next();
   } catch (error) {
@@ -71,9 +71,10 @@ export const descriptionStep = async (ctx) => {
     ctx.wizard.state.description = ctx.message.text;
     const influencers = await getInfluencers({status: 'active'},{populate: true});
     // console.log(influencers)
+    ctx.wizard.state.infstmp = influencers
     await ctx.replyWithHTML(
       activeInfluencerChooseList(influencers),
-      influencerButtons(influencers),
+      influencerButtons(influencers,ctx.wizard.state.packages),
     );
   } catch (error) {
     ctx.scene.leave();
@@ -105,10 +106,11 @@ export const leave = async (ctx) => {
 
 export const done = async (ctx) => {
   try {
-    if (ctx.wizard.state.influencers.length === 0)
+    if (ctx.wizard.state.packages.length === 0)
       return await ctx.answerCbQuery("You must choose min. 1 Influencer!");
 
     await ctx.reply("Processing proposal...");
+    delete ctx.wizard.state.infstmp
     await createProposal(ctx.wizard.state, ctx.chat.id);
     await ctx.reply(
       "Thanks for taken time, we will inform you as soon as possible :)"
@@ -123,16 +125,24 @@ export const done = async (ctx) => {
 };
 
 export const chooseInfluencer_callback = async (ctx) => {
-  const infID = ctx.callbackQuery.data.split(' ')[1]
+ 
   try {
-    if (ctx.wizard.state.influencers.indexOf(infID) === -1) {
-      await ctx.wizard.state.influencers.push(infID);
-      // await ctx
-      await ctx.answerCbQuery("Nice chose :)");
-    } else {
-      await ctx.answerCbQuery("Already added", { show_alert: true });
-    }
+    
   } catch (error) {
     throw error;
   }
 };
+// export const chooseInfluencer_callback = async (ctx) => {
+//   const infID = ctx.callbackQuery.data.split(' ')[1]
+//   try {
+//     if (ctx.wizard.state.influencers.indexOf(infID) === -1) {
+//       await ctx.wizard.state.influencers.push(infID);
+//       // await ctx
+//       await ctx.answerCbQuery("Nice chose :)");
+//     } else {
+//       await ctx.answerCbQuery("Already added", { show_alert: true });
+//     }
+//   } catch (error) {
+//     throw error;
+//   }
+// };

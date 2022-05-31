@@ -10,12 +10,19 @@ export const leaveButtonEdited = () => {
    return  Markup.inlineKeyboard([[Markup.button.callback("leaved", "ps leaved")]])
 }
 
-export const influencerButtons = (influencers) => {
+export const influencerButtons = (influencers,packages) => {
     const callbackArr = [];
     let counter = 0;
-  
     for (const inf of influencers) {
-      callbackArr.push(Markup.button.callback(`${counter}`, `ps ${inf._id}`));
+      let name
+      if(packages.some(pkg => inf._id.toString() === pkg.influencer._id.toString())) {
+        name = `${inf.name}✅`
+        // console.log('exist',name)
+      }else{
+        name =  inf.name
+        // console.log('not exist', name)
+      }  
+      callbackArr.push(Markup.button.callback(name, `ps ${inf._id}`));
       counter++;
     }
   
@@ -24,6 +31,15 @@ export const influencerButtons = (influencers) => {
       [Markup.button.callback("done", "ps done")],
     ]);
 };
+export const packagesButtons = (influencer) => {
+    const callbackArr = []
+    
+    for (const pkg of influencer.packages) {
+      callbackArr.push(Markup.button.callback(`${pkg.name}`, `pp ${pkg._id}`))
+    }
+
+    return Markup.inlineKeyboard([callbackArr,[Markup.button.callback(`Go Back`, 'pp back')]])
+}
 
 export const sentProposalButton = () => {
   return Markup.inlineKeyboard([Markup.button.callback('sent', 'ps sent')])
