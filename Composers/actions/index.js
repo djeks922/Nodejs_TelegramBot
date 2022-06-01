@@ -14,6 +14,15 @@ composer.action('updateProposal', updateProposals)
 composer.action(/admin-activated-influencer+/, activateInfluencer)
 composer.action(/admin-rejectedActivation-influencer+/, rejectActivationInfluencer)
 
+composer.action(/oo+/, async(ctx) => {
+    const proposalID = ctx.callbackQuery.data.split(' ')[1]
+    const pkgID = ctx.callbackQuery.data.split(' ')[2]
+    // console.log(ctx)
+    await ctx.scene.enter('payment-scene-id',{proposalID,pkgID})
+    await ctx.answerCbQuery()
+})
+
+
 composer.on('callback_query', async (ctx) => {
 
     const command = ctx.callbackQuery.data.split(' ')[0] // Main action 

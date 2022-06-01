@@ -1,3 +1,6 @@
+import {paymentButtons} from './markup.js'
+
+
 export const add = async (ctx) => {
   await ctx.scene.enter("consumer-scene-id");
 };
@@ -39,5 +42,5 @@ export const myproposals = async (ctx) => {
     );
   }
 
-  await ctx.reply(proposalText);
+  await ctx.reply(proposalText, paymentButtons(ctx.session.proposals));
 };
