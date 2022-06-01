@@ -1,12 +1,14 @@
 import {Composer} from 'telegraf'
 import {getProposalByID} from '../../api/service/proposal.js'
 import { approveProposal , rejectProposal ,approveIndividual, activateInfluencer,rejectActivationInfluencer} from './admin.js'
-import { acceptInfluencer } from './influencer.js'
+import { acceptInfluencer,updateProfile } from './influencer.js'
 
 const composer = new Composer()
 
 // Add actions
 
+
+composer.action(/updateP/, updateProfile)
 composer.action(/admin-activated-influencer+/, activateInfluencer)
 composer.action(/admin-rejectedActivation-influencer+/, rejectActivationInfluencer)
 

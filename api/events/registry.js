@@ -3,7 +3,7 @@ import { getAdmins } from "../service/consumer.js";
 import { getInfluencerByID } from "../service/influencer.js";
 import Influencer from '../models/tg-influencer.js'
 
-import {adminButtons} from '../utils/registry/markup.js'
+import {adminButtons,updateProfile} from '../utils/registry/markup.js'
 import {influencerRegistryText} from '../utils/registry/text.js'
 
 const influencerListener = Influencer.watch();
@@ -24,11 +24,11 @@ influencerListener.on("change", async (data) => {
         }
         if(data.updateDescription.updatedFields.status !== null && data.updateDescription.updatedFields.status === 'active'){
             const _influencer  = await getInfluencerByID(data.documentKey._id,{lean: true,populate:false})
-            bot.telegram.sendMessage(_influencer.chatID,'Your registration approved by admin, good luck :)')
+            bot.telegram.sendMessage(_influencer.chatID,'Your registration approved by admin, good luck :)',updateProfile())
         }
         if(data.updateDescription.updatedFields.status !== null && data.updateDescription.updatedFields.status === 'inactive'){
             const _influencer  = await getInfluencerByID(data.documentKey._id,{lean: true,populate:false})
-            bot.telegram.sendMessage(_influencer.chatID,'Your account deactivated')
+            bot.telegram.sendMessage(_influencer.chatID,'Your account deactivated',updateProfile())
         }
       }
     } catch (error) {

@@ -16,6 +16,10 @@ export const adminButtons = (_influencer) => {
     .resize();
 };
 
+export const updateProfile = () => {
+  return Markup.inlineKeyboard([Markup.button.callback('Update profile', 'updateP')])
+}
+
 
 
 

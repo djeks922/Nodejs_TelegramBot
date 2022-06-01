@@ -1,3 +1,4 @@
+import { getInfluencerByID } from "../../api/service/influencer.js"
 
 
 export const acceptInfluencer = async (ctx,proposal,refID) => {
@@ -8,6 +9,9 @@ export const acceptInfluencer = async (ctx,proposal,refID) => {
         await ctx.answerCbQuery('Accepted!')
     }else {
         await ctx.answerCbQuery('Already accepted!')
-    }
-   
+    } 
+}
+export const updateProfile = async (ctx) => {
+    ctx.session.influencer = await getInfluencerByID(ctx.session.influencer._id,{lean:false,populate:true})
+    await ctx.answerCbQuery('Profile updated')
 }
