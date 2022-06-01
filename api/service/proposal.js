@@ -64,7 +64,7 @@ export const getProposalByID = async (id, {lean = true, populate = false}) => {
 export const deleteProposalByID = async (id) => {
   try {
     const proposal = await Proposal.deleteOne({ _id: id });
-    // console.log(proposal);
+    
     return proposal;
   } catch (error) {
     throw error
@@ -74,7 +74,7 @@ export const deleteProposalByID = async (id) => {
 export const updateProposalByID = async (id, updates) => {
   try {
     const proposal = await Proposal.updateOne({ _id: id }, updates);
-    // console.log(proposal);
+    
     return proposal;
   } catch (error) {
     throw error

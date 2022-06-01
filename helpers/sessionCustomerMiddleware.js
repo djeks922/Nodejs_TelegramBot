@@ -6,12 +6,12 @@ export default async (ctx, next)=> { // for all routes
         const {id} = ctx.callbackQuery?.message.chat || ctx.message?.chat
         const _consumer = await getConsumerByChatID(id)
         if(_consumer){
-          // console.log('exist but not in session')
+         
           ctx.session.consumer = _consumer
           ctx.session.proposals = await getProposals({consumer:_consumer})
-          // console.log(ctx.session.proposals)
+        
         }else{
-          // console.log('first time')
+        
           const  consumer = {
             name: ctx.message.from.first_name,
             username: ctx.message.from.username,

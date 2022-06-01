@@ -8,7 +8,7 @@ export const register = async (ctx) => {
 
 export const myproposals = async (ctx) => {
   ctx.session.proposals = await ctx.session.proposals;
-  console.log("myproposals", ctx.session.proposals);
+  // console.log("myproposals", ctx.session.proposals);
   let proposalText = `My proposals: \n`;
   if (ctx.session.proposals?.length === 0)
     return await ctx.reply("You do not have any proposal");
@@ -26,7 +26,7 @@ export const myproposals = async (ctx) => {
     );
     let packagesText = `  Applied packages: \n`;
     for (let [i, pkg] of proposal.packages?.entries()) {
-      console.log(pkg);
+     
       packagesText = packagesText.concat(
         `    ${i}. Influencer: ${pkg.influencer.name}, Package: ${
           pkg.package.name + `(${pkg.package.price})`

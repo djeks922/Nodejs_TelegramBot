@@ -123,8 +123,7 @@ export const deleteInfluencerByChatID = async (id) => {
 export const createSocial = async (infID,social) => {
     try {
         const _social = await Social.create(social)
-        // await _social.save()
-        // console.log(_social, 'createSocial')
+   
 
        return _social
     } catch (error) {

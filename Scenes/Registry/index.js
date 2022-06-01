@@ -20,14 +20,14 @@ const registryScene = new BaseScene("influencer-scene-id");
 
 registryScene.enter(enter);
 registryScene.leave((ctx) => {
-  // console.log(ctx)
+  
   console.log("leaved registry scene");
-  // ctx.deleteMessage()
+  
 });
 
 
 registryScene.on("message", async (ctx) => {
-  // console.log(ctx.message)
+  
   
   return await ctx.reply("No such option");
 });

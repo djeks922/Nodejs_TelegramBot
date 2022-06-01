@@ -38,3 +38,7 @@ export const influencerButtons = (proposal, inf) => {
     .oneTime()
     .resize();
 };
+
+export const updateProposal = () => {
+  return Markup.inlineKeyboard([Markup.button.callback('Update proposal', 'updateProposal')])
+}

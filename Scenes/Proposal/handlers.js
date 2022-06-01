@@ -70,7 +70,7 @@ export const descriptionStep = async (ctx) => {
   try {
     ctx.wizard.state.description = ctx.message.text;
     const influencers = await getInfluencers({status: 'active'},{populate: true});
-    // console.log(influencers)
+    
     ctx.wizard.state.infstmp = influencers
     await ctx.replyWithHTML(
       activeInfluencerChooseList(influencers),
@@ -95,7 +95,7 @@ export const enter = async (ctx) => {
 
 export const leave = async (ctx) => {
   try {
-    // console.log(ctx.callbackQuery)
+   
     await ctx.scene.leave();
     await ctx.editMessageReplyMarkup(leaveButtonEdited().reply_markup)
     await ctx.answerCbQuery("Come back when you feel ready :)");
@@ -112,7 +112,7 @@ export const done = async (ctx) => {
     await ctx.reply("Processing proposal...");
     delete ctx.wizard.state.infstmp
     await createProposal(ctx.wizard.state, ctx.chat.id);
-    console.log(ctx.session.proposals)
+   
     ctx.session.proposals = getProposals({consumer: ctx.session.consumer})
     await ctx.reply(
       "Thanks for taken time, we will inform you as soon as possible :)"

@@ -17,10 +17,10 @@ export const influencerButtons = (influencers,packages) => {
       let name
       if(packages.some(pkg => inf._id.toString() === pkg.influencer._id.toString())) {
         name = `${inf.name}✅`
-        // console.log('exist',name)
+       
       }else{
         name =  inf.name
-        // console.log('not exist', name)
+   
       }  
       callbackArr.push(Markup.button.callback(name, `ps ${inf._id}`));
       counter++;

@@ -14,7 +14,8 @@ const proposalSchema = new Schema(
     packages: [
       { 
         package: { type: Schema.Types.ObjectId, ref: "tg-package" }, 
-        influencer: {type: Schema.Types.ObjectId, ref: 'tg-influencer'}
+        influencer: {type: Schema.Types.ObjectId, ref: 'tg-influencer'},
+        paymentPhase: {type: String, enum: ['pending','ready-to-pay','payed'], default:'pending'}
       }
     ],
     consumer: { type: Schema.Types.ObjectId, ref: "tg-consumer" },

@@ -9,7 +9,7 @@ import {
   proposalToAdmin,
   proposalToInfluencer,
 } from "../utils/proposal/text.js";
-import { adminButtons, influencerButtons } from "../utils/proposal/markup.js";
+import { adminButtons, influencerButtons, updateProposal } from "../utils/proposal/markup.js";
 import Proposal from '../models/tg-consumerProposal.js'
 
 const proposalListener = Proposal.watch();
@@ -36,7 +36,7 @@ const onApprove = async (data) => {
     
     const text = approveNotificationToConsumer(proposal);
     await bot.telegram.sendMessage(proposal.consumer.chatID, text); // notify user **Token approved**
-    // console.log(proposal)
+    
     for (let pkg of proposal.packages) {
       //   notify influencers that ** NEW PROMO **
       let text = proposalToInfluencer(proposal,pkg);
@@ -51,10 +51,9 @@ const onApproveIndividual = async (data, approvedForID) => {
   try {
     const proposal = await getProposalByID(data.documentKey._id, {populate: true});
     if(approvedForID instanceof Array) approvedForID = approvedForID[0]
-    // console.log(approvedForID)
-    // console.log(proposal.packages)
+  
     const pkg = proposal.packages.find(pkg => pkg.influencer._id.toString() === approvedForID.toString())
-    // console.log(inf)
+
     const text = approveNotificationToConsumerI(proposal,pkg.influencer);
 
     await bot.telegram.sendMessage(proposal.consumer.chatID, text); // notify user **Token approved**
@@ -69,15 +68,19 @@ const onApproveIndividual = async (data, approvedForID) => {
   }
 };
 
-const onAccept = async (data) => {
+const onAccept = async (data, acceptedByID) => {
   try {
-    const proposal = await getProposalByID(data.documentKey._id, {populate: true});
+    const proposal = await getProposalByID(data.documentKey._id, {lean:false,populate: true});
 
     let consumerText = acceptNotificationToConsumer(proposal); // Consumer notification when *influencers accept*
-    await bot.telegram.sendMessage(proposal.consumer.chatID, consumerText);
+    await bot.telegram.sendMessage(proposal.consumer.chatID, consumerText,updateProposal());
 
     let adminText = acceptNotification_admin(proposal); // Admin notification when *influencers accept*
     await bot.telegram.sendMessage(proposal.approvedBy.chatID, adminText);
+    
+    let index = proposal.packages.findIndex(e => e.influencer._id.toString() === acceptedByID.toString())
+    proposal.packages[index].paymentPhase = 'ready-to-pay'
+    await proposal.save()
   } catch (error) {
     throw error;
   }
@@ -96,7 +99,7 @@ proposalListener.on("change", async (data) => {
          : ''
 
          field.includes('acceptedBy')
-         ? await onAccept(data)
+         ? await onAccept(data, data.updateDescription.updatedFields[field])
          : "";
       }
       data.updateDescription.updatedFields.status === "approved"

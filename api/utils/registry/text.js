@@ -7,5 +7,5 @@ export const influencerRegistryText = (influencer) => {
     for (let [i,pkg] of influencer.packages.entries()){
         packageText = packageText.concat(`  ${i}.Name: ${pkg.name}, Details: ${pkg.detail}, Price: ${pkg.price}\n`)
     }
-    return `NEW REGISTRY APPLICATON\nUsername: ${influencer.username}\n${socialText}${packageText}\nRequirement: ${influencer.requirement}\nWallet: ${influencer.wallet}`
+    return `NEW REGISTRY APPLICATON\nUsername: @${influencer.username}\n${socialText}${packageText}\nRequirement: ${influencer.requirement}\nWallet: ${influencer.wallet}`
 }

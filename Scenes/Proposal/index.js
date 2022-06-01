@@ -30,7 +30,7 @@ const consumerScene = new WizardScene(
 
 consumerScene.enter(enter);
 consumerScene.leave((ctx) => {
-  // console.log('leaved proposal scene')
+  
 });
 
 consumerScene.on('message', async(ctx,next) => {
@@ -43,7 +43,7 @@ consumerScene.action("ps leave", leave);
 consumerScene.action("ps done", done);
 
 consumerScene.action(/ps+/g, async (ctx) => {
-  // console.log('ps')
+ 
   const infID = ctx.callbackQuery.data.split(' ')[1]
 
   const isSelected = ctx.wizard.state.packages.some(e => e.influencer._id == infID)
@@ -65,10 +65,10 @@ consumerScene.action(/ps+/g, async (ctx) => {
 });
 
 consumerScene.action(/pp+/, async (ctx) => {
-  // console.log('pp')
+  
   const pkgID = ctx.callbackQuery.data.split(' ')[1]
   if(pkgID === 'back') return await ctx.editMessageText(activeInfluencerChooseList(ctx.wizard.state.infstmp),influencerButtons(ctx.wizard.state.infstmp,ctx.wizard.state.packages))
-  // console.log('not back')
+  
   // const pkg = await getPackage(pkgID)
   ctx.answerCbQuery()
   ctx.session.pkgtmp.package = pkgID

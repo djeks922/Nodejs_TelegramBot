@@ -6,10 +6,10 @@ export const enter = async (ctx) => {
     if (!ctx.session.influencer) {
       const _influencer = await getInfluencerByChatID(ctx.session.consumer.chatID, {lean: false,populate:true})
       if(_influencer) {
-        // console.log('exist in db but not chat')
+        
         ctx.session.influencer = _influencer
       }else{
-        // console.log('1st time registry')
+      
         const influencer = {
           username: ctx.session.consumer.username,
           chatID: ctx.session.consumer.chatID,
@@ -42,7 +42,7 @@ export const leave = async (ctx) => {
 export const socialAction = async (ctx,actionData) => {
   switch (actionData) {
     case "back":
-      await ctx.editMessageReplyMarkup(registryButtons().reply_markup);
+      await ctx.editMessageText(`Hi again, ${ctx.message ? ctx.message.from.first_name: ''}\nAdd account details, packages and socials. (Apply for review when you are done with your packages and social accaunts)`,registryButtons());
       break;
     default:
       ctx.scene.enter('influencer-scene-social-id',{platform : actionData})
@@ -52,7 +52,7 @@ export const socialAction = async (ctx,actionData) => {
 
 export const addPackage = async (ctx) => {
   try {
-    // console.log("salam");
+   
   } catch (error) {
     throw(error);
   }
@@ -60,7 +60,7 @@ export const addPackage = async (ctx) => {
 
 export const addSocial = async (ctx) => {
   try {
-    // console.log("salam");
+    
   } catch (error) {
     throw error;
   }
@@ -75,7 +75,7 @@ export const addRequirement = async (ctx) => {
 };
 export const addWalletAddress = async (ctx) => {
   try {
-    // console.log("salam");
+   
   } catch (error) {
     throw error;
   }

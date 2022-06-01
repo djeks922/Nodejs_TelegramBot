@@ -1,5 +1,4 @@
-import { createConsumer,getConsumerByChatID } from "../../api/service/consumer.js";
-import {getProposals} from '../../api/service/proposal.js'
+
 export const startHandler = async (ctx) => {
   try {
     await ctx.reply(`Hello, ${ctx.message.from.first_name}`);   
