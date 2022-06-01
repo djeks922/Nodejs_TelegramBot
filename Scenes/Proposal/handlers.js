@@ -1,5 +1,5 @@
 import { influencerButtons, leaveButton, leaveButtonEdited ,sentProposalButton} from "./markup.js";
-import { createProposal } from "../../api/service/proposal.js";
+import { createProposal, getProposals } from "../../api/service/proposal.js";
 import { getInfluencers } from "../../api/service/influencer.js";
 import {activeInfluencerChooseList} from '../../helpers/influencer.js'
 
@@ -113,7 +113,7 @@ export const done = async (ctx) => {
     delete ctx.wizard.state.infstmp
     await createProposal(ctx.wizard.state, ctx.chat.id);
     console.log(ctx.session.proposals)
-    ctx.session.proposals.push(ctx.wizard.state)
+    ctx.session.proposals = getProposals({consumer: ctx.session.consumer})
     await ctx.reply(
       "Thanks for taken time, we will inform you as soon as possible :)"
     );

@@ -83,7 +83,8 @@ export const addWalletAddress = async (ctx) => {
 export const applyForReview = async (ctx) => {
   try {
     const influencer = ctx.session.influencer
-    if(influencer.status === 'inreview') return ctx.answerCbQuery('Already applied!')
+    if(influencer.status === 'inreview') return await ctx.answerCbQuery('Already applied!')
+    if(influencer.status === 'active') return await ctx.answerCbQuery('Already active!')
     if (influencer.socials.length === 0  || influencer.packages.length === 0)
       return await ctx.answerCbQuery(
         "At least 1 social account and package need for review!"

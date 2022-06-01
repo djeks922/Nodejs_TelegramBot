@@ -5,9 +5,15 @@ import actions from './Composers/actions/index.js'
 import on from './composers/on/index.js'
 import scenes from './Scenes/index.js'
 import logger from './api/logger/index.js'
+import sessionMiddleware from './helpers/sessionCustomerMiddleware.js'
+
+
+
 
 
 bot.use(scenes)
+bot.use(sessionMiddleware)
+
 bot.use(start)
 
 

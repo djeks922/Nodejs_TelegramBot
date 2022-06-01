@@ -12,4 +12,7 @@ export const registryButtons = () => {
   ]).resize(false);
 };
 
+export const backToRegistryButtons = () => {
+  return Markup.keyboard([['Back to registry']]).resize().oneTime()
+}
 
