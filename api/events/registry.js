@@ -24,11 +24,11 @@ influencerListener.on("change", async (data) => {
         }
         if(data.updateDescription.updatedFields.status !== null && data.updateDescription.updatedFields.status === 'active'){
             const _influencer  = await getInfluencerByID(data.documentKey._id,{lean: true,populate:false})
-            bot.telegram.sendMessage(_influencer.chatID,'Your registration approved by admin, good luck :)',updateProfile())
+            bot.telegram.sendMessage(_influencer.chatID,'Your account activated, good luck :)',updateProfile())
         }
-        if(data.updateDescription.updatedFields.status !== null && data.updateDescription.updatedFields.status === 'inactive'){
+        if(data.updateDescription.updatedFields.status !== null && data.updateDescription.updatedFields.status === 'staged'){
             const _influencer  = await getInfluencerByID(data.documentKey._id,{lean: true,populate:false})
-            bot.telegram.sendMessage(_influencer.chatID,'Your account deactivated',updateProfile())
+            bot.telegram.sendMessage(_influencer.chatID,'Your account deactivated, come back when you feel ready :)',updateProfile())
         }
       }
     } catch (error) {

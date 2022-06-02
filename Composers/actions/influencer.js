@@ -1,4 +1,4 @@
-import { getInfluencerByID } from "../../api/service/influencer.js"
+import { getInfluencerByChatID } from "../../api/service/influencer.js"
 
 
 export const acceptInfluencer = async (ctx,proposal,refID) => {
@@ -12,6 +12,6 @@ export const acceptInfluencer = async (ctx,proposal,refID) => {
     } 
 }
 export const updateProfile = async (ctx) => {
-    ctx.session.influencer = await getInfluencerByID(ctx.session.influencer._id,{lean:false,populate:true})
+    ctx.session.influencer = await getInfluencerByChatID(ctx.callbackQuery.message.chat.id,{lean:false,populate:true})
     await ctx.answerCbQuery('Profile updated')
 }

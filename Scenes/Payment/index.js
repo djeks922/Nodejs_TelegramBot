@@ -21,7 +21,9 @@ paymentScene.on('text', async(ctx) => {
         console.log(ctx.scene.state)
         const admin = await getAdmins()
         const {proposal,pkg} = ctx.scene.state
-        ctx.telegram.sendMessage(admin.chatID, consumerPaymentText(ctx,proposal,pkg))
+        await ctx.telegram.sendMessage(admin.chatID, consumerPaymentText(ctx,proposal,pkg))
+        await ctx.reply('Great, after TXID verification we`ll update you.')
+        await ctx.scene.leave()
         return 
     } catch (error) {
         throw error

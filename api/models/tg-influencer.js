@@ -13,7 +13,7 @@ const influencerSchema = new Schema(
         socials: [{type: Schema.Types.ObjectId, ref: 'tg-social'}],
         requirement: {type: String , default: 'requirement'},
         wallet: {type: String, default: 'wallet address'},
-        status: {type: String, enum: ['active','inreview','inactive'], default: 'inactive'}
+        status: {type: String, enum: ['active','inreview','staged','inactive'], default: 'staged'}
     }
 )
 

@@ -48,6 +48,7 @@ export const getInfluencers = async (filter = {}, {lean =  true, populate = fals
 
 export const getInfluencerByID = async (id, {lean = true,populate = false}) => {
     try {
+        // console.log(lean,populate)
         const influencer = lean
         ? populate
           ? await Influencer.findOne({ _id: id })

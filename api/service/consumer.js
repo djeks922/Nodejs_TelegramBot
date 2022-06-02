@@ -3,7 +3,7 @@ import Consumer from '../models/tg-consumer.js'
 
 export const createConsumer = async (consumer) => {
     try {
-       const _consumer = await Consumer.findOneAndUpdate(consumer,{},{upsert:true})
+       const _consumer = await Consumer.findOneAndUpdate(consumer,{},{new:true,upsert:true})
      
        return _consumer
     } catch (error) {

@@ -57,7 +57,7 @@ export const activateInfluencer = async(ctx) => {
 
 export const rejectActivationInfluencer = async(ctx) => {
   const id = ctx.callbackQuery.data.split(' ')[1]
-  const res = await updateInfluencer(id, {status: 'inactive'})
+  const res = await updateInfluencer(id, {status: 'staged'})
   if(!res.modifiedCount) return await ctx.answerCbQuery('Already refused!')
   await ctx.answerCbQuery('refused!')
 }

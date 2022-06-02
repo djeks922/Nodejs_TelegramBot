@@ -1,15 +1,21 @@
-import { registryButtons } from "./markup.js";
+import { registryButtons ,accountButtons} from "./markup.js";
+import { registryText,accountText } from "../../helpers/influencer.js";
 import { createOrUpdateInfluencer,getInfluencerByChatID } from "../../api/service/influencer.js";
 
 export const enter = async (ctx) => {
   try {
+    let buttons;
+    let text;
     if (!ctx.session.influencer) {
       const _influencer = await getInfluencerByChatID(ctx.session.consumer.chatID, {lean: false,populate:true})
+      
       if(_influencer) {
-        
+        buttons = _influencer.status.includes('active') ? accountButtons() : registryButtons()
+        text = _influencer.status.includes('active') ? accountText(ctx,_influencer.status) : registryText(ctx)
         ctx.session.influencer = _influencer
       }else{
-      
+        buttons = registryButtons()
+        text = registryText(ctx)
         const influencer = {
           username: ctx.session.consumer.username,
           chatID: ctx.session.consumer.chatID,
@@ -19,11 +25,20 @@ export const enter = async (ctx) => {
         const _influencer = await createOrUpdateInfluencer(influencer);
         ctx.session.influencer = _influencer
       }
+      await ctx.reply(
+        text,
+        buttons
+      );
+    }else{
+      buttons = ctx.session.influencer.status.includes('active') ? accountButtons() : registryButtons()
+      text = ctx.session.influencer.status.includes('active') ? accountText(ctx,ctx.session.influencer.status) : registryText(ctx)
+
+      await ctx.reply(
+        text,
+        buttons
+      );
     }
-    await ctx.reply(
-      `Hi again, ${ctx.message ? ctx.message.from.first_name: ''}\nAdd account details, packages and socials. (Apply for review when you are done with your packages and social accaunts)`,
-      registryButtons()
-    );
+    
   } catch (error) {
     throw error;
   }
@@ -120,3 +135,47 @@ export const viewProfile = async (ctx) => {
     throw error;
   }
 };
+
+export const deactivate = async(ctx) => {
+  try {
+      console.log('salam')
+      if(ctx.session.influencer.status === 'active'){
+        console.log('icerde')
+        ctx.session.influencer.status = 'inactive'
+        await ctx.session.influencer.save()
+        return await ctx.answerCbQuery('Deactivated!')
+      }
+      
+      // await ctx.reply('You account deactivated!')
+      console.log('sagol')
+      await ctx.answerCbQuery('Already inactive')
+  } catch (error) {
+    throw error
+  }
+}
+export const activate = async(ctx) => {
+  try {
+    if(ctx.session.influencer.status === 'inactive'){
+      ctx.session.influencer.status = 'active'
+      await ctx.session.influencer.save()
+      return await ctx.answerCbQuery('Activated!')
+    }
+    
+    // await ctx.reply('You account deactivated!')
+
+    await ctx.answerCbQuery('Already active')
+  } catch (error) {
+    
+  }
+}
+export const updateProfile = async (ctx) => {
+  try {
+    ctx.session.influencer = await getInfluencerByChatID(ctx.callbackQuery.message.chat.id,{lean:false,populate:true})
+  await ctx.answerCbQuery('Profile updated')
+  } catch (error) {
+    throw error
+  }
+  
+}
+
+

@@ -1,17 +1,15 @@
 import { Scenes } from "telegraf";
 import {
   enter,
-  addSocial,
-  addPackage,
-  addRequirement,
-  addWalletAddress,
   viewProfile,
   leave,
   applyForReview,
-  socialAction
+  socialAction,
+  deactivate,
+  activate,
+  updateProfile
 } from "./handlers.js";
 import { socialButtonsForRegistry } from "./Social/markup.js";
-import { backToRegistryButtons } from "./markup.js";
 
 const { BaseScene } = Scenes;
 
@@ -49,6 +47,11 @@ registryScene.action("4", async (ctx) => {
 registryScene.action("5", viewProfile);
 registryScene.action("6", leave);
 registryScene.action("7", applyForReview);
+// registryScene.action("8", updateIProfile);
+registryScene.action("9", deactivate);
+registryScene.action("10", activate);
+
+registryScene.action('updateProfile', updateProfile)
 
 // Social callback actions
 registryScene.action(/rs +/, async (ctx) => {

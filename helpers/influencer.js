@@ -12,3 +12,10 @@ export const activeInfluencerChooseList = (influencers) => {
     
     return text
 }
+
+export const registryText = (ctx) => {
+ return `Hi again, ${ctx.message ? ctx.message.from.first_name: ''}\nAdd account details, packages and socials. (Apply for review when you are done with your packages and social accaunts)`
+}
+export const accountText = (ctx,status) => {
+ return `My account - status: ${status}`
+}

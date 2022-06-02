@@ -2,7 +2,8 @@ import {getConsumerByChatID,createConsumer} from '../api/service/consumer.js'
 import {getProposals} from '../api/service/proposal.js'
 
 export default async (ctx, next)=> { // for all routes
-    if(!ctx.session.consumer) {
+    try {
+      if(!ctx.session.consumer) {
         const {id} = ctx.callbackQuery?.message.chat || ctx.message?.chat
         const _consumer = await getConsumerByChatID(id)
         if(_consumer){
@@ -18,10 +19,15 @@ export default async (ctx, next)=> { // for all routes
             userID: ctx.message.from.id,
             chatID: ctx.chat.id,
           }
-          ctx.session.consumer = consumer
-          ctx.session.proposals = await getProposals({consumer:consumer})
-          createConsumer(consumer);
+          
+          const _consumer = await createConsumer(consumer);
+          ctx.session.consumer = _consumer
+          ctx.session.proposals = await getProposals({consumer:_consumer})
         }
       }
       await next()
+    } catch (error) {
+      throw error
+    }
+    
   }

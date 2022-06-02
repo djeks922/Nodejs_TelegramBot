@@ -5,10 +5,6 @@ const {WizardScene} = Scenes
 
 export const packageScene = new WizardScene(
     "influencer-scene-package-id",
-    // async (ctx) => {
-    //   await ctx.reply(`Enter package name`,{reply_markup:{force_reply:true}});
-    //   ctx.wizard.next();
-    // },
     async (ctx) => {
       ctx.wizard.state.name = ctx.message.text;
       await ctx.reply("Enter package detail",{reply_markup: {keyboard: [['exit']],resize_keyboard: true}});
@@ -30,6 +26,13 @@ export const packageScene = new WizardScene(
     }
   );
 
+packageScene.enter(async(ctx)=>{
+  
+    await ctx.deleteMessage()
+    await ctx.reply('Enter package name',{reply_markup: {'keyboard': [['exit']],'resize_keyboard': true, 'input_field_placeholder': 'ex: boost3x'}})
+    await ctx.answerCbQuery()
+})  
+
 // packageScene.on('text', async (ctx, next) => {
 //   await next()
 // })  
@@ -39,12 +42,7 @@ packageScene.on('message', async (ctx, next) => {
   await next()  
 })  
 
-packageScene.action('2',async(ctx)=>{
-  
-  await ctx.deleteMessage()
-  await ctx.reply('Enter package name',{reply_markup: {'keyboard': [['exit']],'resize_keyboard': true, 'input_field_placeholder': 'ex: boost3x'}})
-  await ctx.answerCbQuery()
-})
+
 
 packageScene.hears('exit', async (ctx) => {
   await ctx.scene.leave()
