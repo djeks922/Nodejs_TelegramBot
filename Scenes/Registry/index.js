@@ -7,7 +7,9 @@ import {
   socialAction,
   deactivate,
   activate,
-  updateProfile
+  updateProfile,
+  deleteProfile,
+  deleteAccVerStep
 } from "./handlers.js";
 import { socialButtonsForRegistry } from "./Social/markup.js";
 
@@ -20,7 +22,6 @@ registryScene.enter(enter);
 registryScene.leave((ctx) => {
   
   console.log("leaved registry scene");
-  
 });
 
 
@@ -52,6 +53,8 @@ registryScene.action("9", deactivate);
 registryScene.action("10", activate);
 
 registryScene.action('updateProfile', updateProfile)
+registryScene.action('deleteinfluenceraccaunt', deleteAccVerStep)
+registryScene.action(/Delete+/, deleteProfile)
 
 // Social callback actions
 registryScene.action(/rs +/, async (ctx) => {

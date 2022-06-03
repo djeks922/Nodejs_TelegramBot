@@ -1,4 +1,4 @@
-import {Scenes} from 'telegraf'
+import {Markup, Scenes} from 'telegraf'
 import {backToRegistryButtons} from '../markup.js'
 
 const {BaseScene} = Scenes
@@ -21,7 +21,7 @@ walletScene.hears('Back to registry', async (ctx) => {
 
 walletScene.on('text', async (ctx) => {
     ctx.session.influencer.wallet = ctx.message.text
-    await ctx.reply('Wallet saved!')
+    await ctx.reply('Wallet saved!', Markup.removeKeyboard())
     await ctx.scene.enter('influencer-scene-id')
 })
 walletScene.on('message', async (ctx) => {

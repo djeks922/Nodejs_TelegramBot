@@ -118,6 +118,15 @@ export const deleteInfluencerByChatID = async (id) => {
         logger.error(error)
     }
 }
+export const deleteInfluencerByID = async (id) => {
+    try {
+       const influencer = await Influencer.deleteOne({_id: id})
+
+       return influencer
+    } catch (error) {
+        logger.error(error)
+    }
+}
 
 // Social CRUD
 

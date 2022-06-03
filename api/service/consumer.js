@@ -40,6 +40,15 @@ export const getConsumerByChatID = async (id) => {
         logger.error(error)
     }
 }
+export const getConsumerByID = async (id) => {
+    try {
+       const consumer = await Consumer.findOne({_id: id}).lean()
+
+       return consumer
+    } catch (error) {
+        logger.error(error)
+    }
+}
 export const getAdmins = async () => {
     try {
        const consumer = await Consumer.findOne({isAdmin: true}).select({chatID: 1}).lean()

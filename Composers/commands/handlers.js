@@ -12,7 +12,7 @@ export const register = async (ctx) => {
 export const myproposals = async (ctx) => {
   ctx.session.proposals = await ctx.session.proposals;
   // console.log("myproposals", ctx.session.proposals);
-  let proposalText = `My proposals: \n`;
+  let proposalText = `My proposals - (Make your payments to this address: ${process.env.Wallet})\n----------------------\n\n`;
   if (ctx.session.proposals?.length === 0)
     return await ctx.reply("You do not have any proposal");
   for (let [i, proposal] of ctx.session.proposals?.entries()) {
@@ -44,3 +44,14 @@ export const myproposals = async (ctx) => {
 
   await ctx.reply(proposalText, paymentButtons(ctx.session.proposals));
 };
+
+export const verifiedTransactions = async(ctx) => {
+
+  try {
+    await ctx.scene.enter('payment-scene-toInfluencer-id')
+    
+  } catch (error) {
+    throw error
+  }
+  
+}

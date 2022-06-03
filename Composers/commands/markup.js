@@ -7,6 +7,9 @@ export const paymentButtons = (proposals) => {
             if(pkg.paymentPhase === 'ready-to-pay'){
                 payArr.push([Markup.button.callback(`Pay for ${proposal.name}-${pkg.package.name}`, `oo ${proposal._id} ${pkg._id}`)])
             }
+            if(pkg.paymentPhase === 'payed'){
+                payArr.push([Markup.button.callback(`Verified✅ ${proposal.name}-${pkg.package.name}`, `somernd ${proposal._id} ${pkg._id}`)])
+            }
         }
         
     }

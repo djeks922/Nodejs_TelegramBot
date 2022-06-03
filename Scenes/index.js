@@ -7,7 +7,7 @@ const {Stage} = Scenes
 
 const composer = new Composer()
 
-const stage = new Stage([proposal,registry,socialScene,packageScene,walletScene,requirementScene,payment])
+const stage = new Stage([proposal,registry,socialScene,packageScene,walletScene,requirementScene,payment.paymentToAdmin,payment.paymentToInfluencer])
 
 composer.use(session())
 composer.use(stage.middleware())

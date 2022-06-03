@@ -3,6 +3,7 @@ import {getProposals} from '../api/service/proposal.js'
 
 export default async (ctx, next)=> { // for all routes
     try {
+      if(ctx.inlineQuery || ctx.callbackQuery?.inline_message_id) return await next()
       if(!ctx.session.consumer) {
         const {id} = ctx.callbackQuery?.message.chat || ctx.message?.chat
         const _consumer = await getConsumerByChatID(id)

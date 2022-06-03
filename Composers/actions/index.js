@@ -1,8 +1,12 @@
 import {Composer} from 'telegraf'
 import {getProposalByID} from '../../api/service/proposal.js'
+import {getTransactionByID} from '../../api/service/transaction.js'
+import {updateProposal} from '../../api/utils/proposal/markup.js'
 import { approveProposal , rejectProposal ,approveIndividual, activateInfluencer,rejectActivationInfluencer} from './admin.js'
 import { acceptInfluencer,updateProfile } from './influencer.js'
 import { updateProposals } from './customer.js'
+import {consumerTransactionNText} from '../../helpers/consumer.js'
+import { getConsumerByID } from '../../api/service/consumer.js'
 
 const composer = new Composer()
 
@@ -18,10 +22,48 @@ composer.action(/oo+/, async(ctx) => {
     const proposalID = ctx.callbackQuery.data.split(' ')[1]
     const pkgID = ctx.callbackQuery.data.split(' ')[2]
     // console.log(ctx)
-    await ctx.scene.enter('payment-scene-id',{proposalID,pkgID})
+    await ctx.scene.enter('payment-scene-toAdmin-id',{proposalID,pkgID})
     await ctx.answerCbQuery()
 })
+composer.action(/infvt+/, async(ctx) => {
+    const trId = ctx.callbackQuery.data.split(' ')[1]
+    const transaction = await getTransactionByID(trId)
+    const admin = await getConsumerByID(transaction.proposal.approvedBy)
 
+    await ctx.telegram.sendMessage(transaction.from.chatID, 'Deal done!')
+    await ctx.telegram.sendMessage(admin.chatID, 'Influencer verified transaction')
+    await ctx.answerCbQuery()
+})
+composer.action(/adminvt+/, async (ctx) => {
+    try {
+        const trID = ctx.callbackQuery.data.split(' ')[1]
+
+        const transaction = await getTransactionByID(trID)
+        const proposal = await getProposalByID(transaction.proposal._id, {lean:false, populate:true})
+
+        let index = proposal.packages.findIndex(e => e.influencer._id.toString() === transaction.FOR.influencer._id.toString())
+        proposal.packages[index].paymentPhase = 'payed'
+        await proposal.save()
+        // console.log(transaction)
+        transaction.status = 'VERIFIED'
+        await transaction.save()
+        await ctx.answerCbQuery()
+    
+        await ctx.telegram.sendMessage(transaction.from.chatID, consumerTransactionNText(transaction),updateProposal())
+    } catch (error) {
+        throw error
+    }
+})
+composer.action(/adminrt+/, async (ctx) => {
+    const trID = ctx.callbackQuery.data.split(' ')[1]
+    const transaction = await getTransactionByID(trID)
+        // console.log(transaction)
+    transaction.status = 'REJECTED'
+    await transaction.save()
+    await ctx.answerCbQuery()
+    
+    // await ctx.telegram.sendMessage(transaction.from.chatID, consumerTransactionNText(transaction))  HERE SHOULD BE SOME FEEDBACK WHY REJECTED
+})
 
 composer.on('callback_query', async (ctx) => {
 

@@ -1,4 +1,4 @@
-import {Scenes} from 'telegraf'
+import {Markup, Scenes} from 'telegraf'
 import {backToRegistryButtons} from '../markup.js'
 
 const {BaseScene} = Scenes
@@ -21,7 +21,7 @@ requirementScene.hears('Back to registry', async (ctx) => {
 
 requirementScene.on('text', async (ctx) => {
     ctx.session.influencer.requirement = ctx.message.text
-    await ctx.reply('Requirement saved!')
+    await ctx.reply('Requirement saved!',Markup.removeKeyboard())
     await ctx.scene.enter('influencer-scene-id')
 })
 requirementScene.on('message', async (ctx) => {
