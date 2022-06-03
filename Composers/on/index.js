@@ -1,8 +1,8 @@
-import member from './memberLogging.js'
-import {Composer} from 'telegraf'
+import member from "./memberLogging.js";
+import { Composer } from "telegraf";
 
-const composer = new Composer()
+const composer = new Composer();
 
-composer.use(member)
+composer.use(member);
 
-export default composer
+export default composer;

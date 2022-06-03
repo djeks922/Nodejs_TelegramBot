@@ -8,7 +8,6 @@ dbConnect();
 
 const bot = new Telegraf(process.env.TOKEN);
 
-
 bot.telegram.setMyCommands([
   { command: "start", description: "Start the bot" },
   { command: "help", description: "Be aware of what you can do with bot" },

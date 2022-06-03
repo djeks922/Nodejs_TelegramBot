@@ -11,17 +11,20 @@ const existSocial = (arr = [], obj) => {
 export const socialScene = new WizardScene(
   "influencer-scene-social-id",
   async (ctx) => {
-    ctx.session.socialtmp.url = ctx.message.text;
-    if (!existSocial(ctx.session.influencer.socials, ctx.session.socialtmp)) {
-      const _social = await createSocial(undefined, ctx.session.socialtmp);
-      await ctx.reply("Saved!");
-      ctx.session.influencer.socials.push(_social);
-      // await ctx.session.influencer.save();
-      await ctx.scene.enter("influencer-scene-id");
-    } else {
-      await ctx.reply("Social already exist,enter valid url");
+    try {
+      ctx.session.socialtmp.url = ctx.message.text;
+      if (!existSocial(ctx.session.influencer.socials, ctx.session.socialtmp)) {
+        const _social = await createSocial(undefined, ctx.session.socialtmp);
+        await ctx.reply("Saved!");
+        ctx.session.influencer.socials.push(_social);
+        // await ctx.session.influencer.save();
+        await ctx.scene.enter("influencer-scene-id");
+      } else {
+        await ctx.reply("Social already exist,enter valid url");
+      }
+    } catch (error) {
+      throw error;
     }
-    
   }
 );
 
@@ -31,18 +34,28 @@ socialScene.leave((ctx) => {
 });
 
 socialScene.action(/ss +/, async (ctx) => {
-  await ctx.answerCbQuery();
-  const platform = ctx.callbackQuery.data.split(" ")[1];
-  if (platform === "back") {
-    await ctx.deleteMessage();
-    return ctx.scene.enter("influencer-scene-id");
+  try {
+    await ctx.answerCbQuery();
+    const platform = ctx.callbackQuery.data.split(" ")[1];
+    if (platform === "back") {
+      await ctx.deleteMessage();
+      return ctx.scene.enter("influencer-scene-id");
+    }
+    ctx.session.socialtmp.platform = platform;
+    await ctx.reply(`Enter ${platform} URL`, {
+      reply_markup: { force_reply: true },
+    });
+  } catch (error) {
+    throw error;
   }
-  ctx.session.socialtmp.platform = platform;
-  await ctx.reply(`Enter ${platform} URL`,{'reply_markup': {'force_reply': true}});
 });
 
 socialScene.on("callback_query", async (ctx) => {
-  ctx.answerCbQuery();
+  try {
+    await ctx.answerCbQuery();
+  } catch (error) {
+    throw error;
+  }
 });
 
 export default socialScene;

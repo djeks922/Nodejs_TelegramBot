@@ -195,7 +195,7 @@ export const updateProfile = async (ctx) => {
 };
 export const deleteAccVerStep = async (ctx) => {
   try {
-    await ctx.editMessageText('Are you sure ?',deleteVerifyButtons());
+    await ctx.editMessageText("Are you sure ?", deleteVerifyButtons());
   } catch (error) {
     throw error;
   }
@@ -218,7 +218,10 @@ export const deleteProfile = async (ctx) => {
       }
       await ctx.scene.leave();
     } else {
-      await ctx.editMessageText(accountText(ctx,ctx.session.influencer.status),accountButtons())
+      await ctx.editMessageText(
+        accountText(ctx, ctx.session.influencer.status),
+        accountButtons()
+      );
     }
   } catch (error) {
     throw error;

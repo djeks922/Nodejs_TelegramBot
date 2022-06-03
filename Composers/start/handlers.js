@@ -1,7 +1,6 @@
-
 export const startHandler = async (ctx) => {
   try {
-    await ctx.reply(`Hello, ${ctx.message.from.first_name}`);   
+    await ctx.reply(`Hello, ${ctx.message.from.first_name}`);
   } catch (error) {
     throw error;
   }

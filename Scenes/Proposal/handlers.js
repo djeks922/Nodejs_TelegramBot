@@ -1,7 +1,12 @@
-import { influencerButtons, leaveButton, leaveButtonEdited ,sentProposalButton} from "./markup.js";
+import {
+  influencerButtons,
+  leaveButton,
+  leaveButtonEdited,
+  sentProposalButton,
+} from "./markup.js";
 import { createProposal, getProposals } from "../../api/service/proposal.js";
 import { getInfluencers } from "../../api/service/influencer.js";
-import {activeInfluencerChooseList} from '../../helpers/influencer.js'
+import { activeInfluencerChooseList } from "../../helpers/influencer.js";
 
 export const nameStep = async (ctx) => {
   try {
@@ -69,12 +74,15 @@ export const developerUsernameStep = async (ctx) => {
 export const descriptionStep = async (ctx) => {
   try {
     ctx.wizard.state.description = ctx.message.text;
-    const influencers = await getInfluencers({status: 'active'},{populate: true});
-    
-    ctx.wizard.state.infstmp = influencers
+    const influencers = await getInfluencers(
+      { status: "active" },
+      { populate: true }
+    );
+
+    ctx.wizard.state.infstmp = influencers;
     await ctx.replyWithHTML(
       activeInfluencerChooseList(influencers),
-      influencerButtons(influencers,ctx.wizard.state.packages),
+      influencerButtons(influencers, ctx.wizard.state.packages)
     );
   } catch (error) {
     ctx.scene.leave();
@@ -95,9 +103,8 @@ export const enter = async (ctx) => {
 
 export const leave = async (ctx) => {
   try {
-   
     await ctx.scene.leave();
-    await ctx.editMessageReplyMarkup(leaveButtonEdited().reply_markup)
+    await ctx.editMessageReplyMarkup(leaveButtonEdited().reply_markup);
     await ctx.answerCbQuery("Come back when you feel ready :)");
   } catch (error) {
     throw error;
@@ -110,14 +117,14 @@ export const done = async (ctx) => {
       return await ctx.answerCbQuery("You must choose min. 1 Influencer!");
 
     await ctx.reply("Processing proposal...");
-    delete ctx.wizard.state.infstmp
+    delete ctx.wizard.state.infstmp;
     await createProposal(ctx.wizard.state, ctx.chat.id);
-   
-    ctx.session.proposals = getProposals({consumer: ctx.session.consumer})
+
+    ctx.session.proposals = getProposals({ consumer: ctx.session.consumer });
     await ctx.reply(
       "Thanks for taken time, we will inform you as soon as possible :)"
     );
-    await ctx.editMessageReplyMarkup(sentProposalButton().reply_markup)
+    await ctx.editMessageReplyMarkup(sentProposalButton().reply_markup);
     await ctx.answerCbQuery("Nicee!");
 
     return ctx.scene.leave();
@@ -126,25 +133,3 @@ export const done = async (ctx) => {
   }
 };
 
-export const chooseInfluencer_callback = async (ctx) => {
- 
-  try {
-    
-  } catch (error) {
-    throw error;
-  }
-};
-// export const chooseInfluencer_callback = async (ctx) => {
-//   const infID = ctx.callbackQuery.data.split(' ')[1]
-//   try {
-//     if (ctx.wizard.state.influencers.indexOf(infID) === -1) {
-//       await ctx.wizard.state.influencers.push(infID);
-//       // await ctx
-//       await ctx.answerCbQuery("Nice chose :)");
-//     } else {
-//       await ctx.answerCbQuery("Already added", { show_alert: true });
-//     }
-//   } catch (error) {
-//     throw error;
-//   }
-// };

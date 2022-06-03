@@ -20,25 +20,23 @@ export const registryButtons = () => {
 export const accountButtons = () => {
   return Markup.inlineKeyboard([
     [
-      Markup.button.callback("Deactive", "9"),
-      Markup.button.callback("Activate", "10"),
+      Markup.button.callback("Deactive", "8"),
+      Markup.button.callback("Activate", "9"),
     ],
     [
       Markup.button.callback("View Profile", "5"),
       Markup.button.callback("save&leave", "6"),
     ],
-    [
-      Markup.button.callback('DELETE ACCOUNT', 'deleteinfluenceraccaunt')
-    ]
+    [Markup.button.callback("DELETE ACCOUNT", "deleteinfluenceraccaunt")],
   ]).resize(false);
 };
 
 export const deleteVerifyButtons = () => {
   return Markup.inlineKeyboard([
-    Markup.button.callback('Sure', 'Delete Sure'),
-    Markup.button.callback('Cancel', 'Delete Cancel')
-  ])
-}
+    Markup.button.callback("Sure", "Delete Sure"),
+    Markup.button.callback("Cancel", "Delete Cancel"),
+  ]);
+};
 // export const updateButtons = () => {
 //   return Markup.inlineKeyboard([
 //     [

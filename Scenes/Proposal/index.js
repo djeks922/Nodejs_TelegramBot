@@ -11,7 +11,6 @@ import {
   enter,
   leave,
   done,
-  chooseInfluencer_callback,
 } from "./handlers.js";
 import { packagesButtons,influencerButtons } from "./markup.js";
 import {activeInfluencerChooseList} from '../../helpers/influencer.js'
