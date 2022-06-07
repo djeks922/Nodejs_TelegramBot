@@ -18,7 +18,7 @@ const onStaged = async (data) => {
   try {
     const admin = await getAdmins();
     const proposal = await getProposalByID(data.documentKey._id, {populate: true});
-
+    
     const text = proposalToAdmin(proposal);
     const buttons = adminButtons(proposal, admin);
 

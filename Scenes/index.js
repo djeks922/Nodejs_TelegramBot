@@ -7,6 +7,7 @@ import registry, {
   requirementScene,
 } from "./Registry/index.js";
 import payment from "./Payment/index.js";
+import sessionMiddleware from "../Composers/middlewares/sessionCustomerMiddleware.js";
 
 const { Stage } = Scenes;
 
@@ -24,6 +25,6 @@ const stage = new Stage([
 ]);
 
 composer.use(session());
-composer.use(stage.middleware());
+composer.use(stage.middleware(),sessionMiddleware);
 
 export default composer;

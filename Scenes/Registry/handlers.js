@@ -10,6 +10,8 @@ import {
   deleteInfluencerByID,
 } from "../../api/service/influencer.js";
 
+import { socialButtonsForRegistry } from "./Social/markup.js";
+
 export const enter = async (ctx) => {
   try {
     let buttons;
@@ -58,9 +60,35 @@ export const enter = async (ctx) => {
 
 export const leave = async (ctx) => {
   try {
+    console.log("registry scene leaved");
+  } catch (error) {
+    throw error;
+  }
+};
+export const saveleave = async (ctx) => {
+  try {
     await ctx.answerCbQuery("Come back when you feel ready :)");
+    ctx.session.influencer.save()
     await ctx.scene.leave();
     await ctx.deleteMessage();
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const onMessage = async (ctx) => {
+  try {
+    return await ctx.reply(
+      "No such option. If you want to add proposal or use other commands save&leave from registry(profile)."
+    );
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const onCallbackQr = async (ctx) => {
+  try {
+    await ctx.answerCbQuery("old button");
   } catch (error) {
     throw error;
   }
@@ -70,9 +98,7 @@ export const socialAction = async (ctx, actionData) => {
   switch (actionData) {
     case "back":
       await ctx.editMessageText(
-        `Hi again, ${
-          ctx.message ? ctx.message.from.first_name : ""
-        }\nAdd account details, packages and socials. (Apply for review when you are done with your packages and social accaunts)`,
+        `Add account details, packages and socials. (Apply for review when you are done with your packages and social accaunts)`,
         registryButtons()
       );
       break;
@@ -82,8 +108,19 @@ export const socialAction = async (ctx, actionData) => {
   }
 };
 
+export const addSocialActions = async (ctx) => {
+  try {
+    const data = ctx.callbackQuery.data.split(" ")[1];
+    await ctx.answerCbQuery();
+    socialAction(ctx, data);
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const addPackage = async (ctx) => {
   try {
+    ctx.scene.enter("influencer-scene-package-id");
   } catch (error) {
     throw error;
   }
@@ -91,20 +128,26 @@ export const addPackage = async (ctx) => {
 
 export const addSocial = async (ctx) => {
   try {
+    await ctx.editMessageText(
+      "Select social platform",
+      socialButtonsForRegistry()
+    );
   } catch (error) {
     throw error;
   }
 };
 export const addRequirement = async (ctx) => {
   try {
-    await ctx.reply("Add");
-    ctx.session.influencer.requirement = ctx.session.mes;
+    await ctx.deleteMessage();
+    await ctx.scene.enter("influencer-scene-requirement-id");
   } catch (error) {
     throw error;
   }
 };
 export const addWalletAddress = async (ctx) => {
   try {
+    await ctx.deleteMessage();
+    await ctx.scene.enter("influencer-scene-wallet-id");
   } catch (error) {
     throw error;
   }

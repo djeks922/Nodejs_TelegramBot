@@ -15,16 +15,20 @@ export const influencerButtons = (influencers, packages) => {
   let counter = 0;
   for (const inf of influencers) {
     let name;
+    let pkg = packages.find(
+      (pkgSelected) => inf.packages.some(pkgInfluencer => pkgInfluencer._id.toString() === pkgSelected.toString())
+    )
+    console.log(pkg)
     if (
-      packages.some(
-        (pkg) => inf._id.toString() === pkg.influencer._id.toString()
-      )
+      pkg && pkg.length
     ) {
       name = `${inf.name}✅`;
+      callbackArr.push(Markup.button.callback(name, `ps ${inf._id} ${pkg}`));
     } else {
       name = inf.name;
+      callbackArr.push(Markup.button.callback(name, `ps ${inf._id}`));
     }
-    callbackArr.push(Markup.button.callback(name, `ps ${inf._id}`));
+    
     counter++;
   }
 

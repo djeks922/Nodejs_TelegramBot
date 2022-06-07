@@ -6,7 +6,7 @@ const {Schema, model} = mongoose
 const socialSchema = new Schema(
     {
         url: String,
-        platform: {type:String, enum: ['Facebook','Youtube','Telegram','Twitter','Instagram']}
+        platform: {type:String, enum: ['Facebook','Youtube','Telegram','Twitter','Instagram','Tiktok']}
     }
 )
 

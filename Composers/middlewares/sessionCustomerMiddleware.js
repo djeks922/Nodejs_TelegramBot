@@ -1,8 +1,9 @@
+import logger from "../../api/logger/index.js";
 import {
   getConsumerByChatID,
   createConsumer,
-} from "../api/service/consumer.js";
-import { getProposals } from "../api/service/proposal.js";
+} from "../../api/service/consumer.js";
+import { getProposals } from "../../api/service/proposal.js";
 
 export default async (ctx, next) => {
   // for all routes
@@ -24,6 +25,7 @@ export default async (ctx, next) => {
         };
 
         const _consumer = await createConsumer(consumer);
+        logger.info(`New user started the bot! Username: ${consumer.username} - id: ${consumer.userID}`)
         ctx.session.consumer = _consumer;
         ctx.session.proposals = await getProposals({ consumer: _consumer });
       }

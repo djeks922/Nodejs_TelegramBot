@@ -12,6 +12,7 @@ export const createOrUpdateInfluencer = async (influencer, updates = {}) => {
        return _influencer
     } catch (error) {
         logger.error(error)
+        throw error
     }
 }
 
@@ -21,7 +22,8 @@ export const updateInfluencer = async (id, updates = {}) => {
 
         return updateInfo
     } catch (error) {
-        
+        logger.error(error)
+        throw error
     }
 }
 
@@ -43,6 +45,7 @@ export const getInfluencers = async (filter = {}, {lean =  true, populate = fals
          return influencer
     } catch (error) {
         logger.error(error)
+        throw error
     }
 }
 
@@ -65,6 +68,7 @@ export const getInfluencerByID = async (id, {lean = true,populate = false}) => {
          return influencer
     } catch (error) {
         logger.error(error)
+        throw error
     }
 }
 export const getInfluencerByUserID = async (id, {lean = true,populate = false}) => {
@@ -85,6 +89,7 @@ export const getInfluencerByUserID = async (id, {lean = true,populate = false}) 
          return influencer
     } catch (error) {
         logger.error(error)
+        throw error
     }
 }
 
@@ -106,6 +111,7 @@ export const getInfluencerByChatID = async (id,{lean = true,populate = false}) =
        return influencer
     } catch (error) {
         logger.error(error)
+        throw error
     }
 }
 
@@ -116,6 +122,7 @@ export const deleteInfluencerByChatID = async (id) => {
        return influencer
     } catch (error) {
         logger.error(error)
+        throw error
     }
 }
 export const deleteInfluencerByID = async (id) => {
@@ -125,6 +132,7 @@ export const deleteInfluencerByID = async (id) => {
        return influencer
     } catch (error) {
         logger.error(error)
+        throw error
     }
 }
 

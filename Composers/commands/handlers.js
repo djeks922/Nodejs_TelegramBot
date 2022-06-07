@@ -39,7 +39,7 @@ export const myproposals = async (ctx) => {
       for (let [i, pkg] of proposal.packages?.entries()) {
         packagesText = packagesText.concat(
           `    ${i}. Influencer: ${pkg.influencer.name}, Package: ${
-            pkg.package.name + `(${pkg.package.price})`
+            pkg.name + `(${pkg.price})`
           }\n`
         );
       }

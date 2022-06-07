@@ -2,18 +2,22 @@ import { Composer } from "telegraf";
 import { getProposalByID } from "../../api/service/proposal.js";
 import {
   approveProposal,
-  rejectProposal,
+  rejectAdminProposal,
   approveIndividual,
+  rejectIndividual,
   activateInfluencer,
   rejectActivationInfluencer,
   adminVerifiedTransaction,
   adminRejectsTransaction,
+  rejectAdminProposal_approvedCase,
+  approveProposal_rejectCase
 } from "./admin.js";
 import {
   acceptProposal,
   updateProfile,
   influencerAcceptTransaction,
   influencerRejectsTransaction,
+  rejectInfluencerProposal,
 } from "./influencer.js";
 import { updateProposals, payForPackage } from "./customer.js";
 
@@ -32,6 +36,9 @@ composer.action(/infrt+/, influencerRejectsTransaction);
 composer.action(/adminvt+/, adminVerifiedTransaction);
 composer.action(/adminrt+/, adminRejectsTransaction);
 
+composer.action(/rej+/, rejectAdminProposal_approvedCase)
+composer.action(/app+/, approveProposal_rejectCase)
+
 composer.on("callback_query", async (ctx) => {
   const command = ctx.callbackQuery.data.split(" ")[0]; // Main action
 
@@ -48,19 +55,23 @@ composer.on("callback_query", async (ctx) => {
 
   switch (command) {
     case "aa":
-      await approveProposal(ctx, proposal, refID); // refID is admin ID
+      await approveProposal(ctx, proposal); // refID is admin ID
       break;
     case "aai":
       await approveIndividual(ctx, proposal, refID); // refID is influencer ID
       break;
-    case "ra":
-      await rejectProposal(ctx, proposal);
+    case "rai":
+      await rejectIndividual(ctx, proposal, refID); // refID is influencer ID
       break;
+    case "ra":
+      await rejectAdminProposal(ctx, proposal);
+      break;
+      //** *********************     Admin part ends ************************ */
     case "ai":
       await acceptProposal(ctx, proposal, refID); // refID is influencer ID
       break;
-    case "ra":
-      // await rejectInfluencer(ctx, proposal, pID)
+    case "ri":
+      await rejectInfluencerProposal(ctx, proposal, refID)
       break;
     default:
       break;

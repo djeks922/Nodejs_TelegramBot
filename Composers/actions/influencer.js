@@ -16,6 +16,13 @@ export const acceptProposal = async (ctx, proposal, refID) => {
     throw error;
   }
 };
+export const rejectInfluencerProposal = async (ctx,proposal,refID) => {             // INFLUENCER REJECTS PROPOSAL
+  try {
+    
+  } catch (error) {
+    
+  }
+}
 export const updateProfile = async (ctx) => {
   try {
     ctx.session.influencer = await getInfluencerByChatID(

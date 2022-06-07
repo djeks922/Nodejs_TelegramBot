@@ -1,5 +1,5 @@
 export const proposalToInfluencer = (proposal,pkg) => {
-  return `NEW PROMO REQUEST\nName: ${proposal.name}\nContract address: ${proposal.contractAddress}\nWebsite: ${proposal.website}\n\n\nDescription: ${proposal.description}\n\nDev: @${proposal.developerUsername}\npost time: ${proposal.createdAt}\n For package: ${pkg.package.name}`;
+  return `NEW PROMO REQUEST\nName: ${proposal.name}\nContract address: ${proposal.contractAddress}\nWebsite: ${proposal.website}\n\n\nDescription: ${proposal.description}\n\nDev: @${proposal.developerUsername}\npost time: ${proposal.createdAt}\n For package: ${pkg.name}`;
 };
 
 export const proposalToAdmin = (proposal) => {
@@ -8,7 +8,7 @@ export const proposalToAdmin = (proposal) => {
   text = text.concat('\n\n\nFor Influencers:\n')
 
   for (const [i,pkg] of proposal.packages.entries()) {
-    text = text.concat(`\n@${pkg.influencer.username}: ${pkg.package.name}`)
+    text = text.concat(`\n@${pkg.influencer.username}: ${pkg.name}`)
   }
 
   return text;
