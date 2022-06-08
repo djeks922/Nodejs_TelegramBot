@@ -3,10 +3,12 @@ import {
   leaveButton,
   leaveButtonEdited,
   sentProposalButton,
+  packagesButtons,
 } from "./markup.js";
 import { createProposal, getProposals } from "../../api/service/proposal.js";
 import { getInfluencers } from "../../api/service/influencer.js";
 import { activeInfluencerChooseList } from "../../helpers/influencer.js";
+import { getInfluencerByID } from "../../api/service/influencer.js";
 
 export const nameStep = async (ctx) => {
   try {
@@ -111,6 +113,11 @@ export const leave = async (ctx) => {
   }
 };
 
+export const onMessage = async (ctx, next) => {
+  if (ctx.message.text) await next();
+  else ctx.reply("not valid input");
+};
+
 export const done = async (ctx) => {
   try {
     if (ctx.wizard.state.packages.length === 0)
@@ -120,7 +127,9 @@ export const done = async (ctx) => {
     delete ctx.wizard.state.infstmp;
     await createProposal(ctx.wizard.state, ctx.chat.id);
 
-    ctx.session.proposals = getProposals({ consumer: ctx.session.consumer });
+    ctx.session.proposals = await getProposals({
+      consumer: ctx.session.consumer,
+    });
     await ctx.reply(
       "Thanks for taken time, we will inform you as soon as possible :)"
     );
@@ -133,3 +142,47 @@ export const done = async (ctx) => {
   }
 };
 
+export const influencerSelectionActions = async (ctx) => {
+  const infID = ctx.callbackQuery.data.split(" ")[1];
+  const pkgID = ctx.callbackQuery.data.split(" ")[2];
+
+  if (pkgID) {
+    ctx.wizard.state.packages = ctx.wizard.state.packages.filter(
+      (pkg) => pkg != pkgID
+    );
+    // console.log('packge exist and id: ',pkgID)
+    // console.log('packages: ', ctx.wizard.state.packages)
+    await ctx.answerCbQuery("Package pulled out from proposal");
+    return await ctx.editMessageText(
+      activeInfluencerChooseList(ctx.wizard.state.infstmp),
+      influencerButtons(ctx.wizard.state.infstmp, ctx.wizard.state.packages)
+    );
+  }
+  const inf = await getInfluencerByID(infID, { populate: true });
+  await ctx.answerCbQuery();
+  let text = `Choose from below packages: \n`;
+
+  for (let pkg of inf.packages) {
+    text = text.concat(
+      `Name: ${pkg.name} - Detail: ${pkg.detail} - Price: ${pkg.price}\n`
+    );
+  }
+  await ctx.editMessageText(text, packagesButtons(inf));
+};
+
+export const packageSelectionActions = async (ctx) => {
+  const pkgID = ctx.callbackQuery.data.split(" ")[1];
+  if (pkgID === "back")
+    return await ctx.editMessageText(
+      activeInfluencerChooseList(ctx.wizard.state.infstmp),
+      influencerButtons(ctx.wizard.state.infstmp, ctx.wizard.state.packages)
+    );
+
+  // const pkg = await getPackage(pkgID)
+  ctx.answerCbQuery();
+  ctx.wizard.state.packages.push(pkgID);
+  ctx.editMessageText(
+    activeInfluencerChooseList(ctx.wizard.state.infstmp),
+    influencerButtons(ctx.wizard.state.infstmp, ctx.wizard.state.packages)
+  );
+};

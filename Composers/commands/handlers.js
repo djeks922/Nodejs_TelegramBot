@@ -39,7 +39,7 @@ export const myproposals = async (ctx) => {
       for (let [i, pkg] of proposal.packages?.entries()) {
         packagesText = packagesText.concat(
           `    ${i}. Influencer: ${pkg.influencer.name}, Package: ${
-            pkg.package.name + `(${pkg.package.price})`
+            pkg.name + `(${pkg.price})`
           }\n`
         );
       }
@@ -49,7 +49,7 @@ export const myproposals = async (ctx) => {
       );
     }
 
-    await ctx.reply(proposalText, paymentButtons(ctx.session.proposals));
+    await ctx.reply(proposalText, await paymentButtons(ctx.session.proposals));
   } catch (error) {
     throw error;
   }

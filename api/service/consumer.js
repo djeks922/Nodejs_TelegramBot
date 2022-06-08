@@ -8,6 +8,7 @@ export const createConsumer = async (consumer) => {
        return _consumer
     } catch (error) {
         logger.error(error)
+        throw error
     }
 }
 
@@ -18,6 +19,7 @@ export const getConsumers = async (filter = {}) => {
        return consumer
     } catch (error) {
         logger.error(error)
+        throw error
     }
 }
 
@@ -28,6 +30,7 @@ export const getConsumerByUserID = async (id) => {
        return consumer
     } catch (error) {
         logger.error(error)
+        throw error
     }
 }
 
@@ -38,6 +41,7 @@ export const getConsumerByChatID = async (id) => {
        return consumer
     } catch (error) {
         logger.error(error)
+        throw error
     }
 }
 export const getConsumerByID = async (id) => {
@@ -47,6 +51,7 @@ export const getConsumerByID = async (id) => {
        return consumer
     } catch (error) {
         logger.error(error)
+        throw error
     }
 }
 export const getAdmins = async () => {
@@ -56,6 +61,7 @@ export const getAdmins = async () => {
        return consumer
     } catch (error) {
         logger.error(error)
+        throw error
     }
 }
 
@@ -66,5 +72,6 @@ export const deleteConsumerByChatID = async (id) => {
        return consumer
     } catch (error) {
         logger.error(error)
+        throw error
     }
 }

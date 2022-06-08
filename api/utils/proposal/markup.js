@@ -1,33 +1,40 @@
 import { Markup } from "telegraf";
 
 export const adminButtons = (proposal, admin) => {
+  const approvedForButtons = approveInfluencersButtons(
+    proposal.packages,
+    proposal._id
+  );
 
-  const approvedForButtons = approveInfluencersButtons(proposal.packages, proposal._id, admin._id)
-
-  return Markup.inlineKeyboard([[
-    Markup.button.callback(
-      "approve",
-      `aa ${proposal._id} ${admin._id}`
-    ),
-    Markup.button.callback(
-      "reject",
-      `ra ${proposal._id} ${admin._id}`
-    ),
-  ],approvedForButtons])
+  return Markup.inlineKeyboard([
+    [
+      Markup.button.callback("Approve all", `aa ${proposal._id}`),
+      Markup.button.callback("Reject all", `ra ${proposal._id}`),
+    ],
+    ...approvedForButtons,
+  ])
     .oneTime()
     .resize();
 };
 
-export const approveInfluencersButtons = (packages,pID,aID) => {
+export const approveInfluencersButtons = (packages, pID) => {
   const callbackArr = [];
-  let counter = 0;
+  
 
   for (const pkg of packages) {
-    callbackArr.push(Markup.button.callback(`${counter}.approve for ${pkg.influencer.username}`,`aai ${pID} ${pkg.influencer._id}`));
-    counter++;
+    callbackArr.push([
+      Markup.button.callback(
+        `Approve ${pkg.influencer.username}`,
+        `aai ${pID} ${pkg.influencer._id}`
+      ),
+      Markup.button.callback(
+        `Reject ${pkg.influencer.username}`,
+        `rai ${pID} ${pkg.influencer._id}`
+      ),
+    ]);
   }
 
-  return callbackArr
+  return callbackArr;
 };
 
 export const influencerButtons = (proposal, inf) => {
@@ -40,5 +47,7 @@ export const influencerButtons = (proposal, inf) => {
 };
 
 export const updateProposal = () => {
-  return Markup.inlineKeyboard([Markup.button.callback('Update proposal', 'updateProposal')])
-}
+  return Markup.inlineKeyboard([
+    Markup.button.callback("Update proposal", "updateProposal"),
+  ]);
+};

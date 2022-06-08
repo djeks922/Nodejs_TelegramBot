@@ -21,8 +21,7 @@ export const createProposal = async (proposal, consumerChatID) => {
 export const getProposals = async (filter = {}) => {
   try {
     const proposal = await Proposal.find(filter)
-      .populate("packages.influencer")
-      .populate("packages.package")
+      .populate({path: 'packages',populate:{path: 'influencer'}})
       .populate("consumer", { chatID: 1 })
       .populate("approvedBy", { chatID: 1, username: 1 })
       .populate("acceptedBy", { chatID: 1, username: 1 })
@@ -39,8 +38,7 @@ export const getProposalByID = async (id, {lean = true, populate = false}) => {
     const proposal = lean
       ? populate
         ? await Proposal.findOne({ _id: id })
-            .populate("packages.influencer")
-            .populate('packages.package')
+            .populate({path: 'packages',populate:{path: 'influencer'}})
             .populate("consumer", { chatID: 1, username: 1 })
             .populate("approvedBy", { chatID: 1, username: 1 })
             .populate("acceptedBy", { chatID: 1, username: 1 })
@@ -48,8 +46,7 @@ export const getProposalByID = async (id, {lean = true, populate = false}) => {
         : await Proposal.findOne({ _id: id }).lean()
       : populate
       ? await Proposal.findOne({ _id: id })
-          .populate("packages.influencer")
-          .populate('packages.package')
+          .populate({path: 'packages',populate:{path: 'influencer'}})
           .populate("consumer", { chatID: 1, username: 1 })
           .populate("approvedBy", { chatID: 1, username: 1 })
           .populate("acceptedBy", { chatID: 1, username: 1 })

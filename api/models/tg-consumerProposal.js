@@ -11,17 +11,13 @@ const proposalSchema = new Schema(
     telegram: String,
     developerUsername: String,
     description: String,
-    packages: [
-      { 
-        package: { type: Schema.Types.ObjectId, ref: "tg-package" }, 
-        influencer: {type: Schema.Types.ObjectId, ref: 'tg-influencer'},
-        paymentPhase: {type: String, enum: ['pending','ready-to-pay','payed'], default:'pending'}
-      }
-    ],
+    packages: [{type: Schema.Types.ObjectId, ref: "tg-package"}],
+    packagesPayedToAdmin: [{type: Schema.Types.ObjectId, ref: 'tg-package'}],
+    packagesPayedToInfluencer: [{type: Schema.Types.ObjectId, ref: 'tg-package'}],
     consumer: { type: Schema.Types.ObjectId, ref: "tg-consumer" },
     status: {
       type: String,
-      enum: ["staged", "approved", "accepted", "rejected"],
+      enum: ["staged", "approved", "rejected-by-admin" ,"accepted", "rejected-by-influencer"],
       default: "staged",
     },
     acceptedBy: [{ type: Schema.Types.ObjectId, ref: "tg-influencer" }],
