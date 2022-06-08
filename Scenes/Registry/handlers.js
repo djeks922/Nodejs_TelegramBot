@@ -68,7 +68,7 @@ export const leave = async (ctx) => {
 export const saveleave = async (ctx) => {
   try {
     await ctx.answerCbQuery("Come back when you feel ready :)");
-    ctx.session.influencer.save()
+    ctx.session.influencer.save();
     await ctx.scene.leave();
     await ctx.deleteMessage();
   } catch (error) {
@@ -197,16 +197,16 @@ export const viewProfile = async (ctx) => {
 
 export const deactivate = async (ctx) => {
   try {
-    console.log("salam");
+    // console.log("salam");
     if (ctx.session.influencer.status === "active") {
-      console.log("icerde");
+      // console.log("icerde");
       ctx.session.influencer.status = "inactive";
       await ctx.session.influencer.save();
       return await ctx.answerCbQuery("Deactivated!");
     }
 
     // await ctx.reply('You account deactivated!')
-    console.log("sagol");
+    // console.log("sagol");
     await ctx.answerCbQuery("Already inactive");
   } catch (error) {
     throw error;

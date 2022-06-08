@@ -22,14 +22,14 @@ export const txIDSubmitionText = async (ctx) => {
     const transactionI = {
       txID: ctx.message?.text,
       from: ctx.scene.state.transaction.from,
-      to: ctx.scene.state.transaction.FOR.influencer._id,
+      to: ctx.scene.state.transaction.package.influencer._id,
       onUser: "tg-influencer",
       proposal: ctx.scene.state.transaction.proposal,
-      FOR: ctx.scene.state.transaction.FOR,
+      package: ctx.scene.state.transaction.package,
     };
     const tr = await createTransaction(transactionI);
     await ctx.telegram.sendMessage(
-      ctx.scene.state.transaction.FOR.influencer.chatID,
+      ctx.scene.state.transaction.package.influencer.chatID,
       adminPaymentText(transactionI),
       influencerPaymentButtons(tr._id)
     );
@@ -48,7 +48,7 @@ export const enter = async (ctx) => {
     let text = `Enter transaction number to forward payment to influencer\n`;
     for (let [i, transaction] of transactions.entries()) {
       text = text.concat(
-        `${i}. For token ${transaction.proposal.name}(@${transaction.from.username}) and package ${transaction.FOR.package.name}\n`
+        `${i}. For token ${transaction.proposal.name}(consumer: @${transaction.from.username}) and package ${transaction.package.name}- influencer: @${transaction.package.influencer.username}\n`
       );
     }
     ctx.scene.state.transactions = transactions;

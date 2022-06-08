@@ -10,7 +10,7 @@ const transactionSchema = new Schema(
         to: {type: Schema.Types.ObjectId, refPath: 'onUser'},
         onUser: {type: String, enum: ['tg-consumer', 'tg-influencer']},
         proposal: {type: Schema.Types.ObjectId, ref: 'tg-proposal'},
-        FOR: {type: Schema.Types.Mixed},
+        package: {type: Schema.Types.ObjectId, ref: 'tg-package'},
         status: {type: String, enum: ['NOT VERIFIED', 'VERIFIED'], default: 'NOT VERIFIED'}
     },{timestamps: true}
 )

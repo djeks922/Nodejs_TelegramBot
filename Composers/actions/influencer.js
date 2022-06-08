@@ -1,6 +1,7 @@
 import { getInfluencerByChatID } from "../../api/service/influencer.js";
 import { getConsumerByID } from "../../api/service/consumer.js";
 import { getTransactionByID } from "../../api/service/transaction.js";
+import { getProposalByID } from "../../api/service/proposal.js";
 
 export const acceptProposal = async (ctx, proposal, refID) => {
   try {
@@ -16,13 +17,11 @@ export const acceptProposal = async (ctx, proposal, refID) => {
     throw error;
   }
 };
-export const rejectInfluencerProposal = async (ctx,proposal,refID) => {             // INFLUENCER REJECTS PROPOSAL
+export const rejectInfluencerProposal = async (ctx, proposal, refID) => {
+  // INFLUENCER REJECTS PROPOSAL
   try {
-    
-  } catch (error) {
-    
-  }
-}
+  } catch (error) {}
+};
 export const updateProfile = async (ctx) => {
   try {
     ctx.session.influencer = await getInfluencerByChatID(
@@ -39,8 +38,13 @@ export const influencerAcceptTransaction = async (ctx) => {
   try {
     const trId = ctx.callbackQuery.data.split(" ")[1];
     const transaction = await getTransactionByID(trId);
+    const proposal = await getProposalByID(transaction.proposal._id, {
+      lean: false,
+      populate: false,
+    });
     const admin = await getConsumerByID(transaction.proposal.approvedBy);
-
+    proposal.packagesPayedToInfluencer.push(transaction.package._id);
+    await proposal.save();
     await ctx.telegram.sendMessage(transaction.from.chatID, "Deal done!");
     await ctx.telegram.sendMessage(
       admin.chatID,

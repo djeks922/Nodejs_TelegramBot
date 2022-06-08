@@ -12,8 +12,8 @@ const proposalSchema = new Schema(
     developerUsername: String,
     description: String,
     packages: [{type: Schema.Types.ObjectId, ref: "tg-package"}],
-    packagesPayToAdmin: {type: Schema.Types.ObjectId, ref: 'tg-package'},
-    packagesPayToInfluencer: {type: Schema.Types.ObjectId, ref: 'tg-package'},
+    packagesPayedToAdmin: [{type: Schema.Types.ObjectId, ref: 'tg-package'}],
+    packagesPayedToInfluencer: [{type: Schema.Types.ObjectId, ref: 'tg-package'}],
     consumer: { type: Schema.Types.ObjectId, ref: "tg-consumer" },
     status: {
       type: String,

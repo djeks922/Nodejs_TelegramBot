@@ -127,7 +127,9 @@ export const done = async (ctx) => {
     delete ctx.wizard.state.infstmp;
     await createProposal(ctx.wizard.state, ctx.chat.id);
 
-    ctx.session.proposals = await getProposals({ consumer: ctx.session.consumer });
+    ctx.session.proposals = await getProposals({
+      consumer: ctx.session.consumer,
+    });
     await ctx.reply(
       "Thanks for taken time, we will inform you as soon as possible :)"
     );
@@ -148,8 +150,8 @@ export const influencerSelectionActions = async (ctx) => {
     ctx.wizard.state.packages = ctx.wizard.state.packages.filter(
       (pkg) => pkg != pkgID
     );
-    console.log('packge exist and id: ',pkgID)
-    console.log('packages: ', ctx.wizard.state.packages)
+    // console.log('packge exist and id: ',pkgID)
+    // console.log('packages: ', ctx.wizard.state.packages)
     await ctx.answerCbQuery("Package pulled out from proposal");
     return await ctx.editMessageText(
       activeInfluencerChooseList(ctx.wizard.state.infstmp),

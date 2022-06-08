@@ -221,4 +221,13 @@ export const getPackage = async (id) => {
         throw error
     }
 }
+export const getPackageByFilter = async (filter = {}) => {
+    try {
+        const pkg = await Package.findOne(filter).populate('influencer')
+
+        return pkg
+    } catch (error) {
+        throw error
+    }
+}
 

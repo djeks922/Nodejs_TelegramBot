@@ -51,7 +51,7 @@ export const onText = async (ctx) => {
       to: admin._id,
       onUser: "tg-consumer",
       proposal: proposal,
-      FOR: pkg,
+      package: pkg,
     };
     const tr = await createTransaction(transaction);
     await ctx.telegram.sendMessage(
