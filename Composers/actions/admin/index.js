@@ -1,14 +1,15 @@
 import {
   deleteProposalByID,
   updateProposalByID,
-} from "../../api/service/proposal.js";
-import { getConsumerByID } from "../../api/service/consumer.js";
-import { updateInfluencer } from "../../api/service/influencer.js";
-import { consumerTransactionNText } from "../../helpers/consumer.js";
-import { getTransactionByID } from "../../api/service/transaction.js";
-import { updateProposal } from "../../api/utils/proposal/markup.js";
-import { getProposalByID } from "../../api/service/proposal.js";
+} from "../../../api/service/proposal.js";
+import { getConsumerByID } from "../../../api/service/consumer.js";
+import { updateInfluencer } from "../../../api/service/influencer.js";
+import { consumerTransactionNText } from "../../../helpers/consumer.js";
+import { getTransactionByID } from "../../../api/service/transaction.js";
+import { updateProposal } from "../../../api/utils/proposal/markup.js";
+import { getProposalByID } from "../../../api/service/proposal.js";
 import { Markup } from "telegraf";
+import { adminRejectsTransactionText } from "./text.js";
 
 //
 const approveButtons = () => {
@@ -175,8 +176,11 @@ export const rejectActivationInfluencer = async (ctx) => {
 export const adminVerifiedTransaction = async (ctx) => {
   try {
     const trID = ctx.callbackQuery.data.split(" ")[1];
-
+    // console.log(ctx.callbackQuery.from,ctx.callbackQuery.message)
     const transaction = await getTransactionByID(trID);
+
+    if(transaction.status === 'VERIFIED-admin') return await ctx.answerCbQuery('Already verified!')
+
     const proposal = await getProposalByID(transaction.proposal._id, {
       lean: false,
       populate: true,
@@ -185,8 +189,9 @@ export const adminVerifiedTransaction = async (ctx) => {
     proposal.packagesPayedToAdmin.push(transaction.package._id);
     await proposal.save();
     // console.log(transaction)
-    transaction.status = "VERIFIED";
+    transaction.status = "VERIFIED-admin";
     await transaction.save();
+    await ctx.editMessageText(`${ctx.callbackQuery.message.text}`, {reply_markup: {inline_keyboard: [[{text:'verified✅',callback_data:'ykhjyk'}]]}})
     await ctx.answerCbQuery();
 
     await ctx.telegram.sendMessage(
@@ -203,8 +208,11 @@ export const adminRejectsTransaction = async (ctx) => {
   const trID = ctx.callbackQuery.data.split(" ")[1];
   const transaction = await getTransactionByID(trID);
   // console.log(transaction)
-  transaction.status = "REJECTED";
+  transaction.status = "REJECTED-admin";
   await transaction.save();
+
+  await ctx.editMessageText(`${ctx.callbackQuery.message.text}`, {reply_markup: {inline_keyboard: [[{text:'rejected❌',callback_data:'ykhjyk'}]]}})
+  await ctx.telegram.sendMessage(transaction.from.chatID, adminRejectsTransactionText(transaction))
   await ctx.answerCbQuery();
 
   // await ctx.telegram.sendMessage(transaction.from.chatID, consumerTransactionNText(transaction))  HERE SHOULD BE SOME FEEDBACK WHY REJECTED

@@ -49,7 +49,7 @@ export const myproposals = async (ctx) => {
       );
     }
 
-    await ctx.reply(proposalText, paymentButtons(ctx.session.proposals));
+    await ctx.reply(proposalText, await paymentButtons(ctx.session.proposals));
   } catch (error) {
     throw error;
   }

@@ -25,7 +25,7 @@ export const approveNotificationToConsumerI = (proposal, influencer) => {
 export const acceptNotificationToConsumer = (proposal) => {
   return `Your proposal for token ${proposal.name} is accepted by ${
     proposal.acceptedBy[proposal.acceptedBy.length - 1].username
-  }, move to /myproposals and make the payment for promotion.`;
+  }, update proposals and move to /myproposals and make the payment for promotion.`;
 };
 
 export const acceptNotification_admin = (proposal) => {

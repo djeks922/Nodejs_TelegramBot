@@ -11,15 +11,15 @@ import {
   adminRejectsTransaction,
   rejectAdminProposal_approvedCase,
   approveProposal_rejectCase
-} from "./admin.js";
+} from "./admin/index.js";
 import {
   acceptProposal,
   updateProfile,
   influencerAcceptTransaction,
   influencerRejectsTransaction,
   rejectInfluencerProposal,
-} from "./influencer.js";
-import { updateProposals, payForPackage } from "./customer.js";
+} from "./influencer/index.js";
+import { updateProposals, payForPackage,rePayForPackage } from "./customer.js";
 
 const composer = new Composer();
 
@@ -31,6 +31,7 @@ composer.action(/admin-activated-influencer+/, activateInfluencer);
 composer.action(/admin-rejectedActivation-influencer+/,rejectActivationInfluencer);
 
 composer.action(/oo+/, payForPackage);
+composer.action(/rsT+/, rePayForPackage);
 composer.action(/infvt+/, influencerAcceptTransaction);
 composer.action(/infrt+/, influencerRejectsTransaction);
 composer.action(/adminvt+/, adminVerifiedTransaction);

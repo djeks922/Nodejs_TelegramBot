@@ -1,6 +1,6 @@
 import { Markup } from "telegraf";
-import { getPackageByFilter } from "../../api/service/influencer.js";
-export const paymentButtons = (proposals) => {
+import { getTransactionsByFilter } from "../../api/service/transaction.js";
+export const paymentButtons = async (proposals) => {
   const payArr = [];
   // console.log(proposals)
   for (let proposal of proposals) {
@@ -8,17 +8,12 @@ export const paymentButtons = (proposals) => {
       const pkg = proposal.packages.find(
         (pkg) => pkg.influencer._id.toString() === inf._id.toString()
       );
+      const transaction = await getTransactionsByFilter({
+        package: pkg,
+        proposal: proposal,
+      });
 
-      const isPayedToAdmin = proposal.packagesPayedToAdmin.some(
-        (pkgA) => pkgA._id.toString() === pkg._id.toString()
-      );
-      const isPayedToInfluencer = proposal.packagesPayedToInfluencer.some(
-        (pkgI) => pkgI._id.toString() === pkg._id.toString()
-      );
-
-      // console.log({isPayedToAdmin},{isPayedToInfluencer})
-
-      if (!isPayedToAdmin) {
+      if (transaction.length === 0 || !transaction) {
         // console.log('should pay to admin')
         payArr.push([
           Markup.button.callback(
@@ -26,23 +21,41 @@ export const paymentButtons = (proposals) => {
             `oo ${proposal._id} ${pkg._id}`
           ),
         ]);
-      }
-      if (isPayedToAdmin && !isPayedToInfluencer) {
-        // console.log('admin should pay to influencer')
-        payArr.push([
-          Markup.button.callback(
-            `Verified✅ by admin ${proposal.name}-${pkg.name}`,
-            `somernd ${proposal._id} ${pkg._id}`
-          ),
-        ]);
-      }
-      if (isPayedToAdmin && isPayedToInfluencer) {
-        payArr.push([
-          Markup.button.callback(
-            `Verified✅ by admin&influencer ${proposal.name}-${pkg.name}`,
-            `somernd ${proposal._id} ${pkg._id}`
-          ),
-        ]);
+      } else {
+        if (
+          transaction &&
+          transaction[0].status === "VERIFIED-admin" &&
+          transaction[1]?.status !== "VERIFIED-influencer"
+        ) {
+          // console.log('admin should pay to influencer')
+          payArr.push([
+            Markup.button.callback(
+              `Verified✅ by admin ${proposal.name}-${pkg.name}`,
+              `somernd ${proposal._id} ${pkg._id}`
+            ),
+          ]);
+        }
+        if (
+          transaction &&
+          transaction[0].status === "VERIFIED-admin" &&
+          transaction[1]?.status === "VERIFIED-influencer"
+        ) {
+          payArr.push([
+            Markup.button.callback(
+              `Verified✅ by admin&influencer ${proposal.name}-${pkg.name}`,
+              `somernd ${proposal._id} ${pkg._id}`
+            ),
+          ]);
+        }
+
+        if (transaction && transaction[0].status === "REJECTED-admin") {
+          payArr.push([
+            Markup.button.callback(
+              `Rejected❌|Repay ${proposal.name}-${pkg.name}`,
+              `rsT ${transaction[0]._id}`
+            ),
+          ]);
+        }
       }
     }
   }
