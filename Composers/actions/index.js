@@ -43,7 +43,7 @@ composer.action(/app+/, approveProposal_rejectCase)
 composer.on("callback_query", async (ctx) => {
   const command = ctx.callbackQuery.data.split(" ")[0]; // Main action
 
-  if (!["aa", "aai", "ra", "ai", "ri"].includes(command))
+  if (!["aa", "aai","rai","ra", "ai", "ri"].includes(command))
     return await ctx.answerCbQuery("asds");
 
   const pID = ctx.callbackQuery.data.split(" ")[1]; // proposal ID or registered influencer ID

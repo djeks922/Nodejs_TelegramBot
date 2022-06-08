@@ -9,3 +9,9 @@ Transaction package: ${transaction.package.name}`;
 
   return text
 };
+
+
+export const rejectIndividualConsumerText = (proposal,pkg) => {
+  let text = `Your Proposal: ${proposal.name} was rejected by admin for Package: ${pkg.name}`
+  return text
+}

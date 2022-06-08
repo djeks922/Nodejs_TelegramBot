@@ -6,10 +6,10 @@ import { getConsumerByID } from "../../../api/service/consumer.js";
 import { updateInfluencer } from "../../../api/service/influencer.js";
 import { consumerTransactionNText } from "../../../helpers/consumer.js";
 import { getTransactionByID } from "../../../api/service/transaction.js";
-import { updateProposal } from "../../../api/utils/proposal/markup.js";
+import { adminButtons, updateProposal } from "../../../api/utils/proposal/markup.js";
 import { getProposalByID } from "../../../api/service/proposal.js";
 import { Markup } from "telegraf";
-import { adminRejectsTransactionText } from "./text.js";
+import { adminRejectsTransactionText,rejectIndividualConsumerText } from "./text.js";
 
 //
 const approveButtons = () => {
@@ -20,7 +20,7 @@ const approveButtons = () => {
 };
 export const approveProposal = async (ctx, proposal) => {
   try {
-    if (proposal.status === "rejected-by-admin") {
+    if (proposal.status === "rejected") {
       ctx.session.currentRejectedProposal = proposal;
       await ctx.answerCbQuery();
       return await ctx.reply(
@@ -76,6 +76,8 @@ export const approveIndividual = async (ctx, proposal, approvedForID) => {
           proposal.approvedFor[proposal.approvedFor.length - 1].username
         }`
       );
+      await proposal.populate({path:'packages', populate: 'influencer'})
+      await ctx.editMessageText(ctx.callbackQuery.message.text,adminButtons(proposal))
     } else {
       await proposal.populate("approvedFor");
       await ctx.answerCbQuery(
@@ -105,11 +107,11 @@ export const rejectAdminProposal = async (ctx, proposal) => {
         rejectButtons()
       );
     }
-    if (proposal.status === "rejected-by-admin")
+    if (proposal.status === "rejected")
       return await ctx.answerCbQuery("Proposal already rejected!");
 
     const res = await updateProposalByID(proposal._id, {
-      status: "rejected-by-admin",
+      status: "rejected",
     });
 
     if (!res.matchedCount)
@@ -127,7 +129,7 @@ export const rejectAdminProposal_approvedCase = async (ctx) => {
 
     if (data === "Sure") {
       await updateProposalByID(ctx.session.currentRejectedProposal._id, {
-        status: "rejected-by-admin",
+        status: "rejected",
         approvedBy: null,
       });
       await ctx.answerCbQuery("Rejected");
@@ -144,13 +146,27 @@ export const rejectAdminProposal_approvedCase = async (ctx) => {
 
 export const rejectIndividual = async (ctx, proposal, rejectForID) => {
   try {
-    // const pkg
-    await proposal.populate("consumer");
+    await proposal.populate('packages')
+    
+    // console.log(proposal)
+    const pkg = proposal.packages.find(pkg => pkg.influencer.toString() === rejectForID.toString())
+
+    if(proposal.rejectedFor.some(pkgID => pkgID.toString() === pkg._id.toString())) return await ctx.answerCbQuery(`Already rejected!`)
+
+    proposal.rejectedFor.push(pkg)
+    
+    await proposal.populate('consumer')
     await ctx.telegram.sendMessage(
       proposal.consumer.chatID,
-      "Your proposal for "
+      rejectIndividualConsumerText(proposal,pkg)
     );
-  } catch (error) {}
+    await proposal.save()
+    await proposal.populate({path:'packages', populate: 'influencer'})
+    await ctx.editMessageText(ctx.callbackQuery.message.text,adminButtons(proposal))
+    await ctx.answerCbQuery('rejected!')
+  } catch (error) {
+    throw error
+  }
 };
 
 export const activateInfluencer = async (ctx) => {
@@ -181,14 +197,14 @@ export const adminVerifiedTransaction = async (ctx) => {
 
     if(transaction.status === 'VERIFIED-admin') return await ctx.answerCbQuery('Already verified!')
 
-    const proposal = await getProposalByID(transaction.proposal._id, {
-      lean: false,
-      populate: true,
-    });
-    // console.log(proposal.packagesPayedToAdmin)
-    proposal.packagesPayedToAdmin.push(transaction.package._id);
-    await proposal.save();
-    // console.log(transaction)
+    // const proposal = await getProposalByID(transaction.proposal._id, {
+    //   lean: false,
+    //   populate: true,
+    // });
+    // // console.log(proposal.packagesPayedToAdmin)
+    // proposal.packagesPayedToAdmin.push(transaction.package._id);
+    // await proposal.save();
+    // // console.log(transaction)
     transaction.status = "VERIFIED-admin";
     await transaction.save();
     await ctx.editMessageText(`${ctx.callbackQuery.message.text}`, {reply_markup: {inline_keyboard: [[{text:'verified✅',callback_data:'ykhjyk'}]]}})

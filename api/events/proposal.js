@@ -20,7 +20,7 @@ const onStaged = async (data) => {
     const proposal = await getProposalByID(data.documentKey._id, {populate: true});
     
     const text = proposalToAdmin(proposal);
-    const buttons = adminButtons(proposal, admin);
+    const buttons = adminButtons(proposal);
 
     admin
       ? await bot.telegram.sendMessage(admin.chatID, text, buttons)

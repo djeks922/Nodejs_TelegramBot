@@ -44,12 +44,12 @@ export const influencerAcceptTransaction = async (ctx) => {
     
     transaction.status = 'VERIFIED-influencer'
     transaction.save()
-    const proposal = await getProposalByID(transaction.proposal._id, {
-      lean: false,
-      populate: false,
-    });
-    proposal.packagesPayedToInfluencer.push(transaction.package._id);
-    proposal.save();
+    // const proposal = await getProposalByID(transaction.proposal._id, {
+    //   lean: false,
+    //   populate: false,
+    // });
+    // proposal.packagesPayedToInfluencer.push(transaction.package._id);
+    // proposal.save();
 
     const admin = await getConsumerByID(transaction.proposal.approvedBy);
     

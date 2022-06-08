@@ -25,6 +25,7 @@ export const getProposals = async (filter = {}) => {
       .populate("consumer", { chatID: 1 })
       .populate("approvedBy", { chatID: 1, username: 1 })
       .populate("acceptedBy", { chatID: 1, username: 1 })
+      .populate("rejectedFor", { name:1})
       .lean();
 
     return proposal;
@@ -42,6 +43,7 @@ export const getProposalByID = async (id, {lean = true, populate = false}) => {
             .populate("consumer", { chatID: 1, username: 1 })
             .populate("approvedBy", { chatID: 1, username: 1 })
             .populate("acceptedBy", { chatID: 1, username: 1 })
+            .populate("rejectedFor", { name:1})
             .lean()
         : await Proposal.findOne({ _id: id }).lean()
       : populate
@@ -50,6 +52,7 @@ export const getProposalByID = async (id, {lean = true, populate = false}) => {
           .populate("consumer", { chatID: 1, username: 1 })
           .populate("approvedBy", { chatID: 1, username: 1 })
           .populate("acceptedBy", { chatID: 1, username: 1 })
+          .populate("rejectedFor", { name:1})
       : await Proposal.findOne({ _id: id }).populate('approvedBy',{username: 1});
 
     return proposal;
