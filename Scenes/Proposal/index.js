@@ -1,4 +1,4 @@
-import { Scenes } from "telegraf";
+import { Scenes , Composer} from "telegraf";
 
 import {
   nameStep,
@@ -18,6 +18,23 @@ import {
 
 const { WizardScene } = Scenes;
 
+const selectionComposer = new Composer() 
+
+selectionComposer.on('text', async ( ctx )=> {
+  try {
+    return await ctx.reply('Please select influencer from above list.')
+  } catch (error) {
+    throw error
+  }
+})
+
+// selectionComposer.action(/ps+/g, influencerSelectionActions);
+// selectionComposer.action(/pp+/, packageSelectionActions);
+
+selectionComposer.on("callback_query", async (ctx) => {
+  ctx.answerCbQuery('selectionComposer');
+});
+
 const consumerScene = new WizardScene(
   "consumer-scene-id",
   nameStep,
@@ -26,7 +43,8 @@ const consumerScene = new WizardScene(
   twitterStep,
   telegramStep,
   developerUsernameStep,
-  descriptionStep
+  descriptionStep,
+  selectionComposer
 );
 
 consumerScene.enter(enter);
@@ -43,7 +61,7 @@ consumerScene.action(/ps+/g, influencerSelectionActions);
 consumerScene.action(/pp+/, packageSelectionActions);
 
 consumerScene.on("callback_query", async (ctx) => {
-  ctx.answerCbQuery();
+  ctx.answerCbQuery('consumerScene');
 });
 
 export default consumerScene;

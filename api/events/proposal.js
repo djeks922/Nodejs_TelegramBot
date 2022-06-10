@@ -76,14 +76,40 @@ const onAccept = async (data, acceptedByID) => {
 
     let adminText = acceptNotification_admin(proposal); // Admin notification when *influencers accept*
     await bot.telegram.sendMessage(proposal.approvedBy.chatID, adminText);
-    
-    let index = proposal.packages.findIndex(e => e.influencer._id.toString() === acceptedByID.toString())
-    proposal.packages[index].paymentPhase = 'ready-to-pay'
-    await proposal.save()
+
   } catch (error) {
     throw error;
   }
 };
+const onRejectAfterApprovement = async (data) => {
+  try {
+    const proposal = await getProposalByID(data.documentKey._id, {lean:false,populate: true});
+
+    for(let pkg of proposal.packages){
+      await bot.telegram.sendMessage(pkg.influencer.chatID, `Promo for Token: ${proposal.name} rejected for some reason, even if it was approved by Cryptoencer team.`); 
+    }
+    await bot.telegram.sendMessage(
+      proposal.consumer.chatID,
+      `Your proposal (Token name): ${proposal.name} fully rejected for all packages, even if it was approved before`,updateProposal()
+    );
+
+  } catch (error) {
+    throw error;
+  }
+};
+
+const onReject = async (data) => {
+  try {
+    const proposal = await getProposalByID(data.documentKey._id, {lean:false,populate: true});
+    
+    await bot.telegram.sendMessage(
+      proposal.consumer.chatID,
+      `Your proposal (Token name: ${proposal.name}) was rejected for all packages.`
+    );
+  } catch (error) {
+    throw error
+  }
+}
 
 proposalListener.on("change", async (data) => {
   try {
@@ -91,7 +117,7 @@ proposalListener.on("change", async (data) => {
       await onStaged(data);
     }
     if (data.operationType === "update") {
-
+      // console.log(data.updateDescription.updatedFields)
       for (const field in data.updateDescription.updatedFields) {
          field.includes('approvedFor')
          ? await onApproveIndividual(data, data.updateDescription.updatedFields[field])
@@ -104,6 +130,12 @@ proposalListener.on("change", async (data) => {
       data.updateDescription.updatedFields.status === "approved"
         ? await onApprove(data)
         : "";
+      if(data.updateDescription.updatedFields.status === "rejected" && data.updateDescription.updatedFields.approvedBy === null){
+         await onRejectAfterApprovement(data)
+      }  
+      if(data.updateDescription.updatedFields.status === "rejected" && !data.updateDescription.updatedFields.hasOwnProperty('approvedBy')){
+         await onReject(data)
+      }  
     }
   } catch (error) {
     throw error;

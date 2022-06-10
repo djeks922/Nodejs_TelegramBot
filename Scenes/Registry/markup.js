@@ -59,3 +59,8 @@ export const backToRegistryButtons = () => {
     .resize()
     .oneTime();
 };
+export const exitOrLeaveButton = () => {
+  return Markup.keyboard([["exit"]])
+    .resize()
+    .oneTime();
+};

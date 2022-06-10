@@ -125,7 +125,6 @@ export const rejectProposal_Admin = async (ctx, proposal) => {
     if (proposal.status === "rejected")
       return await ctx.answerCbQuery("Proposal already rejected!");
 
-    await proposal.populate("consumer");
     if (proposal.status === "approved") {
       const res = await updateProposalByID(proposal._id, {
         status: "rejected",
@@ -135,10 +134,6 @@ export const rejectProposal_Admin = async (ctx, proposal) => {
         return await ctx.answerCbQuery(
           "The proposal too old, or maybe deleted"
         );
-      await ctx.telegram.sendMessage(
-        proposal.consumer.chatID,
-        `Your proposal (Token name): ${proposal.name} fully rejected for all packages, even if it was approved before`
-      );
     } else {
       const res = await updateProposalByID(proposal._id, {
         status: "rejected",
@@ -148,11 +143,6 @@ export const rejectProposal_Admin = async (ctx, proposal) => {
         return await ctx.answerCbQuery(
           "The proposal too old, or maybe deleted"
         );
-
-      await ctx.telegram.sendMessage(
-        proposal.consumer.chatID,
-        `Your proposal (Token name: ${proposal.name}) was rejected for all packages.`
-      );
     }
     await ctx.editMessageText(
       ctx.callbackQuery.message.text,
@@ -164,37 +154,37 @@ export const rejectProposal_Admin = async (ctx, proposal) => {
   }
 };
 
-export const rejectAdminProposal_approvedCase = async (ctx) => {
-  try {
-    const data = ctx.callbackQuery.data.split(" ")[1];
-    const proposal = await ctx.session.currentRejectedProposal.populate(
-      "consumer"
-    );
-    console.log(proposal);
-    if (data === "Sure") {
-      await updateProposalByID(proposal._id, {
-        status: "rejected",
-        approvedBy: null,
-      });
-      await ctx.telegram.sendMessage(
-        proposal.consumer.chatID,
-        `Your proposal (Token name): ${proposal.name} fully rejected for all packages, even if it was approved before`
-      );
-      await ctx.answerCbQuery("Proposal rejected successfully!");
-      await ctx.deleteMessage();
-      await ctx.editMessageText(
-        ctx.callbackQuery.message.text,
-        adminButtonsRejected(proposal)
-      );
-    } else {
-      ctx.session.currentRejectedProposal = undefined;
-      await ctx.deleteMessage();
-      await ctx.answerCbQuery("Canceled!");
-    }
-  } catch (error) {
-    throw error;
-  }
-};
+// export const rejectAdminProposal_approvedCase = async (ctx) => {
+//   try {
+//     const data = ctx.callbackQuery.data.split(" ")[1];
+//     const proposal = await ctx.session.currentRejectedProposal.populate(
+//       "consumer"
+//     );
+//     console.log(proposal);
+//     if (data === "Sure") {
+//       await updateProposalByID(proposal._id, {
+//         status: "rejected",
+//         approvedBy: null,
+//       });
+//       await ctx.telegram.sendMessage(
+//         proposal.consumer.chatID,
+//         `Your proposal (Token name): ${proposal.name} fully rejected for all packages, even if it was approved before`
+//       );
+//       await ctx.answerCbQuery("Proposal rejected successfully!");
+//       await ctx.deleteMessage();
+//       await ctx.editMessageText(
+//         ctx.callbackQuery.message.text,
+//         adminButtonsRejected(proposal)
+//       );
+//     } else {
+//       ctx.session.currentRejectedProposal = undefined;
+//       await ctx.deleteMessage();
+//       await ctx.answerCbQuery("Canceled!");
+//     }
+//   } catch (error) {
+//     throw error;
+//   }
+// };
 
 export const rejectIndividual = async (ctx, proposal, rejectForID) => {
   try {

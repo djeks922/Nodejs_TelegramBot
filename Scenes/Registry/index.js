@@ -26,6 +26,15 @@ const registryScene = new BaseScene("influencer-scene-id");
 registryScene.enter(enter);
 registryScene.leave(leave);
 
+registryScene.hears(/(exit+|leave+)/, async (ctx) => {
+  try {
+    await ctx.reply('Leaved from registry(profile)')
+    await ctx.scene.leave()
+  } catch (error) {
+    throw error
+  }
+})
+
 registryScene.on("message", onMessage);
 
 registryScene.action("1", addSocial);

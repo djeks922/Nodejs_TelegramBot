@@ -9,7 +9,7 @@ import {
   rejectActivationInfluencer,
   adminVerifiedTransaction,
   adminRejectsTransaction,
-  rejectAdminProposal_approvedCase,
+  // rejectAdminProposal_approvedCase,
   approveProposal_rejectCase
 } from "./admin/index.js";
 import {
@@ -37,7 +37,7 @@ composer.action(/infrt+/, influencerRejectsTransaction);
 composer.action(/adminvt+/, adminVerifiedTransaction);
 composer.action(/adminrt+/, adminRejectsTransaction);
 
-composer.action(/rej+/, rejectAdminProposal_approvedCase)
+// composer.action(/rej+/, rejectAdminProposal_approvedCase)
 composer.action(/app+/, approveProposal_rejectCase)
 
 composer.on("callback_query", async (ctx) => {

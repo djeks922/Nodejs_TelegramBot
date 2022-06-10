@@ -2,6 +2,7 @@ import {
   registryButtons,
   accountButtons,
   deleteVerifyButtons,
+  exitOrLeaveButton
 } from "./markup.js";
 import { registryText, accountText } from "../../helpers/influencer.js";
 import {
@@ -43,6 +44,8 @@ export const enter = async (ctx) => {
         ctx.session.influencer = _influencer;
       }
       await ctx.reply(text, buttons);
+      await ctx.reply('Your profile', exitOrLeaveButton())
+      await viewProfileHandler(ctx)
     } else {
       buttons = ctx.session.influencer.status.includes("active")
         ? accountButtons()
@@ -52,6 +55,8 @@ export const enter = async (ctx) => {
         : registryText(ctx);
 
       await ctx.reply(text, buttons);
+      await ctx.reply('Your profile', exitOrLeaveButton())
+      await viewProfileHandler(ctx)
     }
   } catch (error) {
     throw error;
@@ -172,7 +177,7 @@ export const applyForReview = async (ctx) => {
   }
 };
 
-export const viewProfile = async (ctx) => {
+export const viewProfileHandler = async (ctx) => {
   try {
     const influencer = ctx.session.influencer;
     let socialText = ``;
@@ -187,8 +192,16 @@ export const viewProfile = async (ctx) => {
     }
     await ctx.replyWithHTML(
       `<b>username</b>: @${influencer.username}\n<b>Social Accounts</b>:\n ${socialText}\n<b>Packages</b>:\n ${packageText}\nRequirement: ${influencer.requirement}\nWallet: ${influencer.wallet}\nAccount status: ${influencer.status}`,
-      { disable_web_page_preview: true }
+      { disable_web_page_preview: true}
     );
+  } catch (error) {
+    throw error
+  }
+}
+
+export const viewProfile = async (ctx) => {
+  try {
+    viewProfileHandler(ctx)
     await ctx.answerCbQuery();
   } catch (error) {
     throw error;

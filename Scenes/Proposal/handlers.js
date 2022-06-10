@@ -86,6 +86,7 @@ export const descriptionStep = async (ctx) => {
       activeInfluencerChooseList(influencers),
       influencerButtons(influencers, ctx.wizard.state.packages)
     );
+    await ctx.wizard.next()
   } catch (error) {
     ctx.scene.leave();
     throw error;
