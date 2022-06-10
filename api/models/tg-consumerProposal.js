@@ -23,6 +23,7 @@ const proposalSchema = new Schema(
     acceptedBy: [{ type: Schema.Types.ObjectId, ref: "tg-influencer" }],
     approvedFor: [{ type: Schema.Types.ObjectId, ref: "tg-influencer" }],
     rejectedFor: [{ type: Schema.Types.ObjectId, ref: "tg-package" }],
+    rejectedForByI: [{ type: Schema.Types.ObjectId, ref: "tg-package" }],
     approvedBy: { type: Schema.Types.ObjectId, ref: "tg-consumer" },
   },
   { timestamps: true }

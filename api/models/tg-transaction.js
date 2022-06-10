@@ -21,6 +21,7 @@ const transactionSchema = new Schema(
       ],
       default: "NOT VERIFIED",
     },
+    forwarded: {type: Boolean, default: false}
   },
   { timestamps: true }
 );

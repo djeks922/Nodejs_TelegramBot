@@ -39,13 +39,22 @@ export const getTransactionsByFilter = async (filter = {}) => {
 };
 export const getVerifiedTransactions = async () => {
   try {
-    const transaction = await Transaction.find({ status: "VERIFIED-admin" })
+    const transaction = await Transaction.find({ status: "VERIFIED-admin",forwarded: false })
       .populate("from")
       .populate("to")
       .populate("proposal")
       .populate({ path: "package", populate: "influencer" });
 
     return transaction;
+  } catch (error) {
+    throw error;
+  }
+};
+export const updateTransaction = async (transaction,updates) => {
+  try {
+    const info = await Transaction.updateOne(transaction, updates)
+
+    return info;
   } catch (error) {
     throw error;
   }

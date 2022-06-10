@@ -1,14 +1,30 @@
 import { Markup } from "telegraf";
 
-export const adminButtons = (proposal) => {
+export const adminButtons = (proposal,all = 0) => {
   const approvedForButtons = approveInfluencersButtons(proposal);
-
+  const btns = []
+  !all ? btns.push([
+    Markup.button.callback("Approve all", `aa ${proposal._id}`),
+    Markup.button.callback("Reject all", `ra ${proposal._id}`),
+  ]) : ''
+  btns.push(...approvedForButtons)
+  return Markup.inlineKeyboard(btns)
+    .oneTime()
+    .resize();
+};
+export const adminButtonsApproved = (proposal) => {
+  
   return Markup.inlineKeyboard([
-    [
-      Markup.button.callback("Approve all", `aa ${proposal._id}`),
-      Markup.button.callback("Reject all", `ra ${proposal._id}`),
-    ],
-    ...approvedForButtons,
+    Markup.button.callback("Approved for all✅", `aa ${proposal._id}`),
+    Markup.button.callback("Reject even tho?❌", `ra ${proposal._id}`),
+  ])
+    .oneTime()
+    .resize();
+};
+export const adminButtonsRejected = (proposal) => {
+  
+  return Markup.inlineKeyboard([
+    Markup.button.callback("Rejected❌", `ra ${proposal._id}`),
   ])
     .oneTime()
     .resize();
@@ -16,11 +32,11 @@ export const adminButtons = (proposal) => {
 
 export const approveInfluencersButtons = (proposal) => {
   const callbackArr = [];
-
+  // console.log(proposal,{proposalrejectedfor: proposal.rejectedFor})
   for (const pkg of proposal.packages) {
     if (
       proposal.rejectedFor.some(
-        (pkgID) => pkg._id.toString() === pkgID.toString()
+        (pkgR) => pkg._id.toString() === pkgR.toString()
       )
     ) {
       callbackArr.push([
@@ -57,10 +73,10 @@ export const approveInfluencersButtons = (proposal) => {
   return callbackArr;
 };
 
-export const influencerButtons = (proposal, inf) => {
+export const influencerButtons = (proposal, pkg) => {
   return Markup.inlineKeyboard([
-    Markup.button.callback("accept", `ai ${proposal._id} ${inf._id}`),
-    Markup.button.callback("reject", `ri ${proposal._id} ${inf._id}`),
+    Markup.button.callback("accept", `ai ${proposal._id} ${pkg.influencer._id}`),
+    Markup.button.callback("reject", `ri ${proposal._id} ${pkg._id}`),
   ])
     .oneTime()
     .resize();

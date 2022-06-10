@@ -3,13 +3,18 @@ import { influencerPaymentButtons } from "../markup.js";
 
 import {
   createTransaction,
+  updateTransaction,
   getVerifiedTransactions,
 } from "../../../api/service/transaction.js";
 
 export const transactionSelectionActions = async (ctx) => {
   try {
-    ctx.scene.state.transaction =
-      ctx.scene.state.transactions[+ctx.message.text];
+    console.log('selection')
+    console.log(ctx.message)
+
+    ctx.scene.state.transaction = ctx.scene.state.transactions[+ctx.message.text]
+    if(!ctx.scene.state.transaction) return await ctx.reply('Enter valid number from the list')
+    
     await ctx.reply("Please enter the TxID of transaction");
     ctx.wizard.next();
   } catch (error) {
@@ -33,6 +38,7 @@ export const txIDSubmitionText = async (ctx) => {
       adminPaymentText(transactionI),
       influencerPaymentButtons(tr._id)
     );
+    await updateTransaction(ctx.scene.state.transaction, {forwarded: true})
     await ctx.reply("Transaction succesfully sent to Influencer.");
     await ctx.scene.leave();
   } catch (error) {
@@ -43,8 +49,10 @@ export const txIDSubmitionText = async (ctx) => {
 export const enter = async (ctx) => {
   try {
     const transactions = await getVerifiedTransactions();
-    if (!transactions || transactions.length === 0)
-      return await ctx.reply("There is no active verified transaction sir.");
+    if (!transactions || transactions.length === 0){
+      await ctx.reply("There is no active verified transaction sir.");
+      return await ctx.scene.leave()
+    }
     let text = `Enter transaction number to forward payment to influencer\n`;
     for (let [i, transaction] of transactions.entries()) {
       text = text.concat(
@@ -60,9 +68,10 @@ export const enter = async (ctx) => {
 
 export const onMessage = async (ctx, next) => {
   try {
+    console.log(ctx.message)
     return ctx.message.text
       ? await next()
-      : await ctx.reply("Please enter valid TaxID");
+      : await ctx.reply("Not valid input");
   } catch (error) {
     throw error;
   }

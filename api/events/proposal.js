@@ -16,15 +16,14 @@ const proposalListener = Proposal.watch();
 
 const onStaged = async (data) => {
   try {
-    const admin = await getAdmins();
+    // const admin = await getAdmins();
     const proposal = await getProposalByID(data.documentKey._id, {populate: true});
     
     const text = proposalToAdmin(proposal);
     const buttons = adminButtons(proposal);
 
-    admin
-      ? await bot.telegram.sendMessage(admin.chatID, text, buttons)
-      : undefined;
+    await bot.telegram.sendMessage(process.env.ADMIN_CHAT_ID, text, buttons)
+    
   } catch (error) {
     throw error;
   }
@@ -40,7 +39,7 @@ const onApprove = async (data) => {
     for (let pkg of proposal.packages) {
       //   notify influencers that ** NEW PROMO **
       let text = proposalToInfluencer(proposal,pkg);
-      let buttons = influencerButtons(proposal, pkg.influencer);
+      let buttons = influencerButtons(proposal, pkg);
       await bot.telegram.sendMessage(pkg.influencer.chatID, text, buttons);
     }
   } catch (error) {
@@ -60,7 +59,7 @@ const onApproveIndividual = async (data, approvedForID) => {
     
 
     let infText = proposalToInfluencer(proposal,pkg);
-    let buttons = influencerButtons(proposal, pkg.influencer);
+    let buttons = influencerButtons(proposal, pkg);
     await bot.telegram.sendMessage(pkg.influencer.chatID, infText, buttons);
 
   } catch (error) {

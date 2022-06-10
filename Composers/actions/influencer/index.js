@@ -6,22 +6,50 @@ import { influencerAcceptTransactionTextForAdmin, influencerAcceptTransactionTex
 
 export const acceptProposal = async (ctx, proposal, refID) => {
   try {
-    proposal.status !== "accepted" ? (proposal.status = "accepted") : undefined;
-    if (proposal.acceptedBy.indexOf(refID) === -1) {
-      proposal.acceptedBy.push(refID);
-      await proposal.save();
-      await ctx.answerCbQuery("Accepted!");
-    } else {
-      await ctx.answerCbQuery("Already accepted!");
+    if(proposal.status === 'rejected'){
+      await ctx.answerCbQuery('Proposal rejected by Cryptoencer team.')
+    }else{
+      if (proposal.acceptedBy.indexOf(refID) === -1) {
+        proposal.acceptedBy.push(refID);
+        await proposal.save();
+        await ctx.editMessageText(ctx.callbackQuery.message.text,{reply_markup: {inline_keyboard: [[{text: 'accepted✅',callback_data: 'htrt'}]]}})
+        await ctx.answerCbQuery("Accepted!");
+      } else {
+        await ctx.answerCbQuery("Already accepted!");
+      }
     }
+   
   } catch (error) {
     throw error;
   }
 };
-export const rejectInfluencerProposal = async (ctx, proposal, refID) => {
+export const rejectProposal_Influencer = async (ctx, proposal, refID) => {
   // INFLUENCER REJECTS PROPOSAL
   try {
-  } catch (error) {}
+    if(proposal.status === 'rejected'){
+      await ctx.answerCbQuery('Proposal already rejected by Cryptoencer team.')
+      await ctx.deleteMessage()
+    }else{
+      if (proposal.rejectedForByI.indexOf(refID) === -1) {
+        proposal.rejectedForByI.push(refID);
+        await proposal.save();
+        await proposal.populate('consumer')
+        await proposal.populate('approvedBy')
+        
+        // Consumer notification
+        await ctx.telegram.sendMessage(proposal.consumer.chatID, `❌❌Proposal token name: ${proposal.name} && Influencer name: ${ctx.session.influencer.name} was rejected❌❌`)
+        // Admin notification
+        await ctx.telegram.sendMessage(proposal.approvedBy.chatID,`❌❌Proposal token name: ${proposal.name} && Influencer name: ${ctx.session.influencer.name} was rejected❌❌`)
+        
+        await ctx.editMessageText(ctx.callbackQuery.message.text,{reply_markup: {inline_keyboard: [[{text: 'rejected❌',callback_data: 'htrt'}]]}})
+        await ctx.answerCbQuery("Rejected!");
+      } else {
+        await ctx.answerCbQuery("Already rejected!");
+      }
+    }
+  } catch (error) {
+    throw error
+  }
 };
 export const updateProfile = async (ctx) => {
   try {
@@ -51,10 +79,10 @@ export const influencerAcceptTransaction = async (ctx) => {
     // proposal.packagesPayedToInfluencer.push(transaction.package._id);
     // proposal.save();
 
-    const admin = await getConsumerByID(transaction.proposal.approvedBy);
+    // const admin = await getConsumerByID(transaction.proposal.approvedBy);
     
     await ctx.telegram.sendMessage(
-      admin.chatID,
+      process.env.ADMIN_CHAT_ID,
       influencerAcceptTransactionTextForAdmin(transaction)
     );
     await ctx.telegram.sendMessage(transaction.from.chatID, influencerAcceptTransactionTextForCustomer(transaction));

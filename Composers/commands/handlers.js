@@ -2,6 +2,7 @@ import { paymentButtons } from "./markup.js";
 
 export const add = async (ctx) => {
   try {
+    if(ctx.message.chat.type === 'supergroup') return
     await ctx.scene.enter("consumer-scene-id");
   } catch (error) {
     throw error;
@@ -10,6 +11,7 @@ export const add = async (ctx) => {
 
 export const register = async (ctx) => {
   try {
+    if(ctx.message.chat.type === 'supergroup') return
     await ctx.scene.enter("influencer-scene-id");
   } catch (error) {
     throw error;
@@ -18,6 +20,9 @@ export const register = async (ctx) => {
 
 export const myproposals = async (ctx) => {
   try {
+    if(ctx.message.chat.type === 'supergroup') return
+
+
     ctx.session.proposals = await ctx.session.proposals;
     // console.log("myproposals", ctx.session.proposals);
     let proposalText = `My proposals - (Make your payments to this address: ${process.env.Wallet})\n----------------------\n\n`;
@@ -57,6 +62,7 @@ export const myproposals = async (ctx) => {
 
 export const verifiedTransactions = async (ctx) => {
   try {
+    if(ctx.message.chat.type === 'private') return
     await ctx.scene.enter("payment-scene-toInfluencer-id");
   } catch (error) {
     throw error;

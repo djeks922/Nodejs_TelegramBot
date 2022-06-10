@@ -44,6 +44,16 @@ export const getConsumerByChatID = async (id) => {
         throw error
     }
 }
+export const getConsumerBySessionIDs = async (cID,uID) => {
+    try {
+       const consumer = await Consumer.findOne({chatID: cID, userID: uID}).lean()
+
+       return consumer
+    } catch (error) {
+        logger.error(error)
+        throw error
+    }
+}
 export const getConsumerByID = async (id) => {
     try {
        const consumer = await Consumer.findOne({_id: id}).lean()

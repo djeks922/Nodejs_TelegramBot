@@ -2,7 +2,7 @@ import { Composer } from "telegraf";
 import { getProposalByID } from "../../api/service/proposal.js";
 import {
   approveProposal,
-  rejectAdminProposal,
+  rejectProposal_Admin,
   approveIndividual,
   rejectIndividual,
   activateInfluencer,
@@ -17,7 +17,7 @@ import {
   updateProfile,
   influencerAcceptTransaction,
   influencerRejectsTransaction,
-  rejectInfluencerProposal,
+  rejectProposal_Influencer,
 } from "./influencer/index.js";
 import { updateProposals, payForPackage,rePayForPackage } from "./customer.js";
 
@@ -65,14 +65,14 @@ composer.on("callback_query", async (ctx) => {
       await rejectIndividual(ctx, proposal, refID); // refID is influencer ID
       break;
     case "ra":
-      await rejectAdminProposal(ctx, proposal);
+      await rejectProposal_Admin(ctx, proposal);
       break;
       //** *********************     Admin part ends ************************ */
     case "ai":
       await acceptProposal(ctx, proposal, refID); // refID is influencer ID
       break;
     case "ri":
-      await rejectInfluencerProposal(ctx, proposal, refID)
+      await rejectProposal_Influencer(ctx, proposal, refID) // refID is package ID
       break;
     default:
       break;
