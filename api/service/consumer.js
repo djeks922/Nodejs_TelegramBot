@@ -85,3 +85,14 @@ export const deleteConsumerByChatID = async (id) => {
         throw error
     }
 }
+
+export const getConsumerCount = async () => {
+    try {
+       const count = await Consumer.countDocuments()
+
+       return count
+    } catch (error) {
+        logger.error(error)
+        throw error
+    }
+}

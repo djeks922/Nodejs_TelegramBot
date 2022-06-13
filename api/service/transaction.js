@@ -24,6 +24,16 @@ export const getTransactionByID = async (id) => {
     throw error;
   }
 };
+export const getTransactionCount = async (query) => {
+  try {
+    const transactionCount = await Transaction.countDocuments(query)
+
+
+    return transactionCount;
+  } catch (error) {
+    throw error;
+  }
+};
 export const getTransactionsByFilter = async (filter = {}) => {
   try {
     const transaction = await Transaction.find(filter)

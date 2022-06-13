@@ -32,6 +32,8 @@ bot.telegram.setMyCommands(
       command: "verifiedtransactions",
       description: "get verified transactions",
     },
+    {command: "stat",description: "Bot statistics about consumers, influencers and etc."},
+    {command: "getinfluencers",description: "Get list of influencers"},
   ],
   {
     scope: {

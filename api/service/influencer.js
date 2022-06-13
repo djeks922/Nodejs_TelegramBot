@@ -27,20 +27,20 @@ export const updateInfluencer = async (id, updates = {}) => {
     }
 }
 
-export const getInfluencers = async (filter = {}, {lean =  true, populate = false}) => {
+export const getInfluencers = async (filter = {}, {lean =  true, populate = false}, options = {}) => {
     try {
         const influencer = lean
         ? populate
-          ? await Influencer.find(filter)
+          ? await Influencer.find(filter,{},options)
               .populate("socials")
               .populate('packages')
               .lean()
-          : await Influencer.find(filter).lean()
+          : await Influencer.find(filter,{},options).lean()
         : populate
-        ? await Influencer.find(filter)
+        ? await Influencer.find(filter,{},options)
               .populate("socials")
               .populate('packages')
-        : await Influencer.find(filter);
+        : await Influencer.find(filter,{},options);
   
          return influencer
     } catch (error) {
@@ -114,6 +114,27 @@ export const getInfluencerByChatID = async (id,{lean = true,populate = false}) =
         throw error
     }
 }
+export const getInfluencerByUsername = async (username,{lean = true,populate = false}) => {
+    try {
+        const influencer = lean
+      ? populate
+        ? await Influencer.findOne({ username: { $regex: username, $options: 'gi' } })
+            .populate("socials")
+            .populate('packages')
+            .lean()
+        : await Influencer.findOne({ username: { $regex: username, $options: 'gi' } }).lean()
+      : populate
+      ? await Influencer.findOne({ username: { $regex: username, $options: 'gi' } })
+            .populate("socials")
+            .populate('packages')
+      : await Influencer.findOne({ username: { $regex: username, $options: 'gi' } });
+
+       return influencer
+    } catch (error) {
+        logger.error(error)
+        throw error
+    }
+}
 
 export const deleteInfluencerByChatID = async (id) => {
     try {
@@ -130,6 +151,16 @@ export const deleteInfluencerByID = async (id) => {
        const influencer = await Influencer.findByIdAndDelete(id)
 
        return influencer
+    } catch (error) {
+        logger.error(error)
+        throw error
+    }
+}
+export const getInfluencerCount = async (query) => {
+    try {
+       const influencerCount = await Influencer.countDocuments(query)
+
+       return influencerCount
     } catch (error) {
         logger.error(error)
         throw error

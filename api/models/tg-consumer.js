@@ -10,7 +10,7 @@ const consumerSchema = new Schema(
         userID: Number,
         chatID: Number,
         isAdmin: {type: Boolean, default: false}
-    }
+    },{timestamps: true}
 )
 
 

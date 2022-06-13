@@ -5,21 +5,24 @@ import Social from "./tg-social.js";
 
 const { Schema, model } = mongoose;
 
-const influencerSchema = new Schema({
-  name: String,
-  username: String,
-  userID: Number,
-  chatID: Number,
-  packages: [{ type: Schema.Types.ObjectId, ref: "tg-package" }],
-  socials: [{ type: Schema.Types.ObjectId, ref: "tg-social" }],
-  requirement: { type: String, default: "requirement" },
-  wallet: { type: String, default: "wallet address" },
-  status: {
-    type: String,
-    enum: ["active", "inreview", "staged", "inactive"],
-    default: "staged",
+const influencerSchema = new Schema(
+  {
+    name: String,
+    username: String,
+    userID: Number,
+    chatID: Number,
+    packages: [{ type: Schema.Types.ObjectId, ref: "tg-package" }],
+    socials: [{ type: Schema.Types.ObjectId, ref: "tg-social" }],
+    requirement: { type: String, default: "requirement" },
+    wallet: { type: String, default: "wallet address" },
+    status: {
+      type: String,
+      enum: ["staged", "inreview", "active", "inactive"],
+      default: "staged",
+    },
   },
-});
+  { timestamps: true }
+);
 
 influencerSchema.post("findOneAndDelete", async function (doc) {
   // console.log(doc);
@@ -32,7 +35,9 @@ influencerSchema.post("findOneAndDelete", async function (doc) {
       _id: { $in: doc.socials },
     });
     // console.log(`socialsdeleted: ${socialsdeleted}`)
-    logger.info(`Influencer: ${'@'+ doc.username + '/' + doc.name} deleted profile`);
+    logger.info(
+      `Influencer: ${"@" + doc.username + "/" + doc.name} deleted profile`
+    );
   }
 });
 

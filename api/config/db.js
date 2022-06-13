@@ -5,7 +5,7 @@ import '../events/registry.js'
 
 mongoose.connection
   .once("connected", () => {
-    logger.info("Connected to DB...");
+    logger.debug("Connected to DB...");
   })
   .on("error", (error) => {
     logger.error(`Error connecting to DB: ${JSON.stringify(error.message)}`);
@@ -14,7 +14,7 @@ mongoose.connection
     logger.info(`Disconnected from DB...`);
   })
   .on("connecting", () => {
-    logger.info(`Connecting to Db...`);
+    logger.debug(`Connecting to Db...`);
   });
 
 process.on("SIGINT", async () => {

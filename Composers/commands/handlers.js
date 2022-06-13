@@ -1,3 +1,8 @@
+import { getConsumerCount } from "../../api/service/consumer.js";
+import { getInfluencerCount,getInfluencers, getInfluencerByUsername } from "../../api/service/influencer.js";
+import { getProposalCount } from "../../api/service/proposal.js";
+import { getTransactionCount } from "../../api/service/transaction.js";
+
 import { paymentButtons } from "./markup.js";
 
 export const add = async (ctx) => {
@@ -68,3 +73,102 @@ export const verifiedTransactions = async (ctx) => {
     throw error;
   }
 };
+export const stat = async (ctx) => {
+  try {
+    let statText = `Bot stat: \n`
+    let promises = []
+
+    promises.push(getConsumerCount())
+
+    promises.push(getInfluencerCount())
+    promises.push(getInfluencerCount({status: 'staged'}))
+    promises.push(getInfluencerCount({status: 'inreview'}))
+    promises.push(getInfluencerCount({status: 'active'}))
+    promises.push(getInfluencerCount({status: 'inactive'}))
+
+    promises.push(getProposalCount())
+    promises.push(getProposalCount({status: 'staged'}))
+    promises.push(getProposalCount({status: 'approved'}))
+    promises.push(getProposalCount({status: 'rejected'}))
+
+    promises.push(getTransactionCount())
+    promises.push(getTransactionCount({onUser: 'tg-consumer'}))
+    promises.push(getTransactionCount({onUser: 'tg-influencer'}))
+    
+    await ctx.reply('Proccessing up to date data...Please be patient')
+    const results = await Promise.all(promises)
+
+    statText = statText.concat(`Consumers: ${results[0]}
+Influencers total: ${results[1]}
+    staged: ${results[2]}
+    inreview: ${results[3]}
+    active: ${results[4]}
+    inactive: ${results[5]}
+Proposals total: ${results[6]}
+    staged: ${results[7]}
+    approved: ${results[8]}
+    rejected: ${results[9]}
+Transactions total: ${results[10]} 
+    Consumer side: ${results[11]}
+    Admin side: ${results[12]}`)
+
+    await ctx.reply(statText)
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const retrieveInfluencers = async (ctx) => {
+  try {
+    if(ctx.message.text.length > 15) {
+      // console.log(ctx.message.text.split(' ')[1])
+      const influencer = await getInfluencerByUsername(ctx.message.text.split(' ')[1], {populate: true})
+      if(!influencer) {
+        return await ctx.reply('Not found')
+      }
+      let socialText = ``;
+      for (let [i, social] of influencer.socials.entries()) {
+        socialText = socialText.concat(
+          `${i}. ${social.platform}: ${social.url}\n`
+        );
+      }
+      let packageText = ``;
+      for (let [i, pkg] of influencer.packages.entries()) {
+        packageText = packageText.concat(`${i}. ${pkg.name}: ${pkg.price}\n`);
+      }
+      await ctx.replyWithHTML(
+        `<b>username</b>: @${influencer.username}\n<b>Social Accounts</b>:\n ${socialText}\n<b>Packages</b>:\n ${packageText}\nRequirement: ${influencer.requirement}\nWallet: ${influencer.wallet}\nAccount status: ${influencer.status}`,
+        { disable_web_page_preview: true}
+      );
+    }else{
+      const influencers = await getInfluencers({},{lean: true, populate: false},{limit: 30})
+
+      let infText = `Basic influencers infos:\n`
+      for(let [i,inf] of influencers.entries()){
+        infText = infText.concat(`${i}. Username: @${inf.username}\n`)
+      }    
+  
+      await ctx.reply(infText)
+      await ctx.reply(`To get more info about spesific influencer, type /getinfluencers glyv9 for example (without @)`)
+    }
+  } catch (error) {
+    throw error
+  }
+}
+// export const retrieveInfluencers = async (ctx) => {
+//   try {
+//     const influencers = await getInfluencers({},{lean: true, populate: false},{limit: 10})
+
+//     let infText = `Basic influencers infos:\n`
+//     for(let [i,inf] of influencers.entries()){
+//       infText = infText.concat(`${i}. Username: @${inf.username}
+//   ChatID: ${inf.chatID}
+//   Social count: ${inf.socials.length}
+//   Package count: ${inf.packages.length}\n`)
+//     }    
+
+//     await ctx.reply(infText)
+//   } catch (error) {
+//     throw error
+//   }
+// }

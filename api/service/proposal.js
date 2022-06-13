@@ -1,4 +1,3 @@
-import logger from "../logger/index.js";
 import Proposal from "../models/tg-consumerProposal.js";
 import { getConsumerByChatID} from "./consumer.js";
 
@@ -76,6 +75,15 @@ export const updateProposalByID = async (id, updates) => {
     const proposal = await Proposal.updateOne({ _id: id }, updates);
     
     return proposal;
+  } catch (error) {
+    throw error
+  }
+};
+export const getProposalCount = async (query) => {
+  try {
+    const proposalCount = await Proposal.countDocuments(query)
+    
+    return proposalCount;
   } catch (error) {
     throw error
   }
