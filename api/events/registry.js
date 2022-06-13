@@ -1,5 +1,6 @@
 import bot from "../../config/bot.config.js";
-import { getAdmins } from "../service/consumer.js";
+import logger from "../logger/index.js";
+
 import { getInfluencerByID } from "../service/influencer.js";
 import Influencer from '../models/tg-influencer.js'
 
@@ -12,7 +13,7 @@ const influencerListener = Influencer.watch();
 influencerListener.on("change", async (data) => {
     try {
       if (data.operationType === "insert") {
-        // console.log(data,'new registry')
+        logger.info('Potentially NEW INFLUENCER' + JSON.stringify(data.fullDocument))
       }
       if (data.operationType === "update") {
 
@@ -26,7 +27,7 @@ influencerListener.on("change", async (data) => {
             const _influencer  = await getInfluencerByID(data.documentKey._id,{lean: true,populate:false})
             bot.telegram.sendMessage(_influencer.chatID,'Your account activated, good luck :)',updateProfile())
         }
-        if(data.updateDescription.updatedFields.status !== null && data.updateDescription.updatedFields.status === 'staged'){
+        if(data.updateDescription.updatedFields.status !== null && data.updateDescription.updatedFields.status === 'inactive'){
             const _influencer  = await getInfluencerByID(data.documentKey._id,{lean: true,populate:false})
             bot.telegram.sendMessage(_influencer.chatID,'Your account deactivated, come back when you feel ready :)',updateProfile())
         }

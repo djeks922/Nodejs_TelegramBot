@@ -1,4 +1,5 @@
 import { Scenes } from "telegraf";
+
 import {
   enter,
   viewProfile,
@@ -17,6 +18,7 @@ import {
   onCallbackQr,
   addSocialActions,
   leave,
+  onHearsExit,
 } from "./handlers.js";
 
 const { BaseScene } = Scenes;
@@ -26,14 +28,7 @@ const registryScene = new BaseScene("influencer-scene-id");
 registryScene.enter(enter);
 registryScene.leave(leave);
 
-registryScene.hears(/(exit+|leave+)/, async (ctx) => {
-  try {
-    await ctx.reply('Leaved from registry(profile)')
-    await ctx.scene.leave()
-  } catch (error) {
-    throw error
-  }
-})
+registryScene.hears(/(exit+|leave+)/, onHearsExit)
 
 registryScene.on("message", onMessage);
 

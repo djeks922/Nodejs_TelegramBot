@@ -2,7 +2,8 @@ import {
   registryButtons,
   accountButtons,
   deleteVerifyButtons,
-  exitOrLeaveButton
+  exitOrLeaveButton,
+  removeKeyboard
 } from "./markup.js";
 import { registryText, accountText } from "../../helpers/influencer.js";
 import {
@@ -75,6 +76,7 @@ export const saveleave = async (ctx) => {
     await ctx.answerCbQuery("Come back when you feel ready :)");
     ctx.session.influencer.save();
     await ctx.scene.leave();
+    await ctx.reply('Leaved', removeKeyboard())
     await ctx.deleteMessage();
   } catch (error) {
     throw error;
@@ -244,6 +246,8 @@ export const updateProfile = async (ctx) => {
       ctx.callbackQuery.message.chat.id,
       { lean: false, populate: true }
     );
+    // await ctx.scene.leave()
+    await ctx.scene.enter('influencer-scene-id')
     await ctx.answerCbQuery("Profile updated");
   } catch (error) {
     throw error;
@@ -264,7 +268,7 @@ export const deleteProfile = async (ctx) => {
       const deletedInfo = await deleteInfluencerByID(
         ctx.session.influencer._id
       );
-      if (deletedInfo.deletedCount) {
+      if (deletedInfo) {
         ctx.session.influencer = undefined;
         await ctx.deleteMessage();
         await ctx.reply("Successfully deleted!");
@@ -283,3 +287,12 @@ export const deleteProfile = async (ctx) => {
     throw error;
   }
 };
+
+export const onHearsExit = async (ctx) => {
+  try {
+    await ctx.reply('Leaved from registry(profile)',removeKeyboard())
+    await ctx.scene.leave()
+  } catch (error) {
+    throw error
+  }
+}

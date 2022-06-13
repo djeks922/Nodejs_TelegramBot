@@ -127,7 +127,7 @@ export const deleteInfluencerByChatID = async (id) => {
 }
 export const deleteInfluencerByID = async (id) => {
     try {
-       const influencer = await Influencer.deleteOne({_id: id})
+       const influencer = await Influencer.findByIdAndDelete(id)
 
        return influencer
     } catch (error) {

@@ -64,3 +64,6 @@ export const exitOrLeaveButton = () => {
     .resize()
     .oneTime();
 };
+export const removeKeyboard = () => {
+  return Markup.removeKeyboard()
+};
