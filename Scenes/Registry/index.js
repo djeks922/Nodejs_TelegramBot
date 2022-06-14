@@ -19,6 +19,8 @@ import {
   addSocialActions,
   leave,
   onHearsExit,
+  receivedProposals,
+  receivedTransactions
 } from "./handlers.js";
 
 const { BaseScene } = Scenes;
@@ -41,6 +43,8 @@ registryScene.action("6", saveleave);
 registryScene.action("7", applyForReview);
 registryScene.action("8", deactivate);
 registryScene.action("9", activate);
+registryScene.action("10", receivedProposals);
+registryScene.action("11", receivedTransactions);
 
 registryScene.action("updateProfile", updateProfile);
 registryScene.action("deleteinfluenceraccaunt", deleteAccVerStep);

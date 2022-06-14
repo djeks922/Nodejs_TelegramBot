@@ -82,7 +82,7 @@ export const verifiedTransactions = async (ctx) => {
 };
 export const stat = async (ctx) => {
   try {
-    if (ctx.message.chat.type === "supergroup") return;
+    if (ctx.message.chat.type === "private") return;
     let statText = `Bot stat: \n`;
     let promises = [];
 
@@ -128,11 +128,11 @@ Transactions total: ${results[10]}
 
 export const retrieveInfluencers = async (ctx) => {
   try {
-    if (ctx.message.chat.type === "supergroup") return;
-    if (ctx.message.text.length > 15) {
+    if (ctx.message.chat.type === "private") return;
+    if (ctx.message.text.split(" ")[1]) {
       // console.log(ctx.message.text.split(' ')[1])
       const influencer = await getInfluencerByUsername(
-        ctx.message.text.split(" ")[1],
+        username,
         { populate: true }
       );
       if (!influencer) {
@@ -166,7 +166,8 @@ export const retrieveInfluencers = async (ctx) => {
 
       await ctx.reply(infText);
       await ctx.reply(
-        `To get more info about spesific influencer, type /getinfluencers glyv9 for example (without @)`
+        `To get more info about spesific influencer
+,type '/getinfluencers glyv9' for example (without @)`
       );
     }
   } catch (error) {
@@ -176,7 +177,7 @@ export const retrieveInfluencers = async (ctx) => {
 
 export const getTransactionTx = async (ctx) => {
   try {
-    if (ctx.message.chat.type === "supergroup") return;
+    if (ctx.message.chat.type === "private") return;
     const txID = ctx.message.text.split(" ")[1];
     if(!txID){
       return await ctx.reply(`Please use it as '/transactionbytx transaction_id'`)
@@ -203,7 +204,7 @@ Created at: ${transaction.createdAt}`);
 
 export const getTransactionKeyword = async (ctx) => {
   try {
-    if (ctx.message.chat.type === "supergroup") return;
+    if (ctx.message.chat.type === "private") return;
     const keyWord = ctx.message.text.split(" ")[1];
     await ctx.reply('Processing...')
     const transactions = await getTransactionsByKeyword(keyWord)

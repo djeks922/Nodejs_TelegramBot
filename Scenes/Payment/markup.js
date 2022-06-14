@@ -8,7 +8,7 @@ export const adminPaymentButtons = (trID) => {
 };
 export const influencerPaymentButtons = (transaction) => {
   return Markup.inlineKeyboard([
-    Markup.button.callback("Verify", `infvt ${transaction._id}`),
-    Markup.button.callback("Reject", `infrt ${transaction._id}`),
+    Markup.button.callback("Mark as notified", `infvt ${transaction._id}`),
+    Markup.button.callback("There is problem?", `infrt ${transaction._id}`),
   ]);
 };

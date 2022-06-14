@@ -27,6 +27,10 @@ export const accountButtons = () => {
       Markup.button.callback("View Profile", "5"),
       Markup.button.callback("save&leave", "6"),
     ],
+    [
+      Markup.button.callback("Received proposals", "10"),
+      Markup.button.callback("Received payments", "11"),
+    ],
     [Markup.button.callback("DELETE ACCOUNT", "deleteinfluenceraccaunt")],
   ]).resize(false);
 };

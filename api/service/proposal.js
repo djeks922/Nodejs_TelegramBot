@@ -110,3 +110,12 @@ export const getProposalByKeyword = async (name) => {
     throw error;
   }
 };
+export const getProposalByInfluencerID = async (id) => {
+  try {
+    const proposal = await Proposal.find({acceptedBy: {$in: [id]}});
+    
+    return proposal;
+  } catch (error) {
+    throw error;
+  }
+};

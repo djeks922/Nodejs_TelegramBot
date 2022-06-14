@@ -93,6 +93,7 @@ export const influencerAcceptTransaction = async (ctx) => {
 
     transaction.status = "VERIFIED-influencer";
     transaction.save();
+    await ctx.reply('When you are done with posts. Enter /register, then click Received proposals. Find button to add post links for related proposal.')
     // const proposal = await getProposalByID(transaction.proposal._id, {
     //   lean: false,
     //   populate: false,

@@ -3,7 +3,7 @@ import {
   accountButtons,
   deleteVerifyButtons,
   exitOrLeaveButton,
-  removeKeyboard
+  removeKeyboard,
 } from "./markup.js";
 import { registryText, accountText } from "../../helpers/influencer.js";
 import {
@@ -11,6 +11,8 @@ import {
   getInfluencerByChatID,
   deleteInfluencerByID,
 } from "../../api/service/influencer.js";
+import { getProposalByInfluencerID } from "../../api/service/proposal.js";
+import { getTransactionsByFilter } from "../../api/service/transaction.js";
 
 import { socialButtonsForRegistry } from "./Social/markup.js";
 
@@ -45,8 +47,8 @@ export const enter = async (ctx) => {
         ctx.session.influencer = _influencer;
       }
       await ctx.reply(text, buttons);
-      await ctx.reply('Your profile', exitOrLeaveButton())
-      await viewProfileHandler(ctx)
+      await ctx.reply("Your profile", exitOrLeaveButton());
+      await viewProfileHandler(ctx);
     } else {
       buttons = ctx.session.influencer.status.includes("active")
         ? accountButtons()
@@ -56,8 +58,8 @@ export const enter = async (ctx) => {
         : registryText(ctx);
 
       await ctx.reply(text, buttons);
-      await ctx.reply('Your profile', exitOrLeaveButton())
-      await viewProfileHandler(ctx)
+      await ctx.reply("Your profile", exitOrLeaveButton());
+      await viewProfileHandler(ctx);
     }
   } catch (error) {
     throw error;
@@ -76,7 +78,7 @@ export const saveleave = async (ctx) => {
     await ctx.answerCbQuery("Come back when you feel ready :)");
     ctx.session.influencer.save();
     await ctx.scene.leave();
-    await ctx.reply('Leaved', removeKeyboard())
+    await ctx.reply("Leaved", removeKeyboard());
     await ctx.deleteMessage();
   } catch (error) {
     throw error;
@@ -194,16 +196,16 @@ export const viewProfileHandler = async (ctx) => {
     }
     await ctx.replyWithHTML(
       `<b>username</b>: @${influencer.username}\n<b>Social Accounts</b>:\n ${socialText}\n<b>Packages</b>:\n ${packageText}\nRequirement: ${influencer.requirement}\nWallet: ${influencer.wallet}\nAccount status: ${influencer.status}`,
-      { disable_web_page_preview: true}
+      { disable_web_page_preview: true }
     );
   } catch (error) {
-    throw error
+    throw error;
   }
-}
+};
 
 export const viewProfile = async (ctx) => {
   try {
-    viewProfileHandler(ctx)
+    viewProfileHandler(ctx);
     await ctx.answerCbQuery();
   } catch (error) {
     throw error;
@@ -247,7 +249,7 @@ export const updateProfile = async (ctx) => {
       { lean: false, populate: true }
     );
     // await ctx.scene.leave()
-    await ctx.scene.enter('influencer-scene-id')
+    await ctx.scene.enter("influencer-scene-id");
     await ctx.answerCbQuery("Profile updated");
   } catch (error) {
     throw error;
@@ -290,9 +292,59 @@ export const deleteProfile = async (ctx) => {
 
 export const onHearsExit = async (ctx) => {
   try {
-    await ctx.reply('Leaved from registry(profile)',removeKeyboard())
-    await ctx.scene.leave()
+    await ctx.reply("Leaved from registry(profile)", removeKeyboard());
+    await ctx.scene.leave();
   } catch (error) {
-    throw error
+    throw error;
   }
-}
+};
+export const receivedProposals = async (ctx) => {
+  try {
+    const proposals = await getProposalByInfluencerID(
+      ctx.session.influencer._id
+    );
+    if (proposals.length === 0) {
+      return await ctx.reply("You did not receive any proposal");
+    }
+    let trtext = `Recieved proposals:\n`;
+    for (let [i, pr] of proposals.entries()) {
+      console.log(pr.packages, ctx.session.influencer.packages)
+      const pkg = ctx.session.influencer.packages.find(infPkg => pr.packages.find(prPkg => infPkg._id.toString() === prPkg._id.toString()))
+      trtext = trtext.concat(`\n${i}. Name: ${pr.name}
+  website: ${pr.website}
+  twitter: ${pr.twitter}
+  telegram: ${pr.twitter}
+  description: ${pr.description}
+  developerUsername: ${pr.developerUsername}
+  contractAddress: ${pr.contractAddress}
+  for package: ${pkg.name}
+    ------------------------------`);
+    }
+    await ctx.answerCbQuery()
+    await ctx.reply(trtext);
+  } catch (error) {
+    throw error;
+  }
+};
+export const receivedTransactions = async (ctx) => {
+  try {
+    const transactions = await getTransactionsByFilter({
+      to: ctx.session.influencer._id,
+    });
+    if (transactions.length === 0) {
+      return await ctx.reply("You did not receive any payment");
+    }
+    let trtext = `Recieved payments:\n`;
+    for (let [i, tr] of transactions.entries()) {
+      trtext = trtext.concat(`\n${i}. txID: ${tr.txID}
+  Proposal name: ${tr.proposal.name}
+  Package name: ${tr.package.name}
+  Received at: ${tr.createdAt}
+  ------------------------------`);
+    }
+    await ctx.answerCbQuery()
+    await ctx.reply(trtext);
+  } catch (error) {
+    throw error;
+  }
+};
