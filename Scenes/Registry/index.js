@@ -20,7 +20,8 @@ import {
   leave,
   onHearsExit,
   receivedProposals,
-  receivedTransactions
+  receivedTransactions,
+  postLink
 } from "./handlers.js";
 
 const { BaseScene } = Scenes;
@@ -46,6 +47,8 @@ registryScene.action("9", activate);
 registryScene.action("10", receivedProposals);
 registryScene.action("11", receivedTransactions);
 
+registryScene.action(/link+/, postLink)
+
 registryScene.action("updateProfile", updateProfile);
 registryScene.action("deleteinfluenceraccaunt", deleteAccVerStep);
 registryScene.action(/Delete+/, deleteProfile);
@@ -61,3 +64,4 @@ export { socialScene } from "./Social/index.js";
 export { packageScene } from "./Pkge/index.js";
 export { requirementScene } from "./Requirement/index.js";
 export { walletScene } from "./Wallet/index.js";
+export { postScene } from "./Postlink/index.js";

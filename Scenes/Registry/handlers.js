@@ -4,6 +4,7 @@ import {
   deleteVerifyButtons,
   exitOrLeaveButton,
   removeKeyboard,
+  postLinkButtons,
 } from "./markup.js";
 import { registryText, accountText } from "../../helpers/influencer.js";
 import {
@@ -11,7 +12,7 @@ import {
   getInfluencerByChatID,
   deleteInfluencerByID,
 } from "../../api/service/influencer.js";
-import { getProposalByInfluencerID } from "../../api/service/proposal.js";
+import { getProposalByInfluencerID, getProposalByID } from "../../api/service/proposal.js";
 import { getTransactionsByFilter } from "../../api/service/transaction.js";
 
 import { socialButtonsForRegistry } from "./Social/markup.js";
@@ -308,7 +309,6 @@ export const receivedProposals = async (ctx) => {
     }
     let trtext = `Recieved proposals:\n`;
     for (let [i, pr] of proposals.entries()) {
-      console.log(pr.packages, ctx.session.influencer.packages)
       const pkg = ctx.session.influencer.packages.find(infPkg => pr.packages.find(prPkg => infPkg._id.toString() === prPkg._id.toString()))
       trtext = trtext.concat(`\n${i}. Name: ${pr.name}
   website: ${pr.website}
@@ -321,7 +321,7 @@ export const receivedProposals = async (ctx) => {
     ------------------------------`);
     }
     await ctx.answerCbQuery()
-    await ctx.reply(trtext);
+    await ctx.reply(trtext, postLinkButtons(proposals));
   } catch (error) {
     throw error;
   }
@@ -348,3 +348,14 @@ export const receivedTransactions = async (ctx) => {
     throw error;
   }
 };
+
+export const postLink = async (ctx) => {
+  try {
+    const proposalID = ctx.callbackQuery.data.split(' ')[1]
+    const proposal = getProposalByID(proposalID,{})
+    await ctx.scene.enter('post-scene-id',{proposal})
+  } catch (error) {
+    throw error;
+  }
+};
+
