@@ -41,7 +41,7 @@ export const approveInfluencersButtons = (proposal) => {
     ) {
       callbackArr.push([
         Markup.button.callback(
-          `Rejected❌ ${pkg.influencer.username}`,
+          `Rejected❌ @${pkg.influencer.username}`,
           `jkgtk ${proposal._id} ${pkg.influencer._id}`
         )
       ]);
@@ -52,18 +52,18 @@ export const approveInfluencersButtons = (proposal) => {
     ) {
       callbackArr.push([
         Markup.button.callback(
-          `Approved✅ ${pkg.influencer.username}`,
+          `Approved✅ @${pkg.influencer.username}`,
           `askjdqwk ${proposal._id} ${pkg.influencer._id}`
         )
       ]);
     } else {
       callbackArr.push([
         Markup.button.callback(
-          `Approve ${pkg.influencer.username}`,
+          `Approve @${pkg.influencer.username}`,
           `aai ${proposal._id} ${pkg.influencer._id}`
         ),
         Markup.button.callback(
-          `Reject ${pkg.influencer.username}`,
+          `Reject @${pkg.influencer.username}`,
           `rai ${proposal._id} ${pkg.influencer._id}`
         ),
       ]);

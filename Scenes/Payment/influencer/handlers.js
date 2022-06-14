@@ -56,7 +56,7 @@ export const enter = async (ctx) => {
     let text = `Enter transaction number to forward payment to influencer\n`;
     for (let [i, transaction] of transactions.entries()) {
       text = text.concat(
-        `${i}. For token ${transaction.proposal.name}(consumer: @${transaction.from.username}) and package ${transaction.package.name}- influencer: @${transaction.package.influencer.username}\n`
+        `${i}. For token ${transaction.proposal.name}(consumer: @${transaction.from.username}) and package ${transaction.package.name}- influencer: ${transaction.package.influencer.name}\n`
       );
     }
     ctx.scene.state.transactions = transactions;

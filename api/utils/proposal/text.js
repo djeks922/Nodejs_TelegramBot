@@ -19,19 +19,19 @@ export const approveNotificationToConsumer = (proposal) => {
 };
 
 export const approveNotificationToConsumerI = (proposal, influencer) => {
-  return `Your proposal for token: '${proposal.name}' was approved by Cryptoencer team to Influencer: ${influencer.username}, waiting for influencer response :)`;
+  return `Your proposal for token: '${proposal.name}' was approved by Cryptoencer team to Influencer: @${influencer.username}, waiting for influencer response :)`;
 };
 
 export const acceptNotificationToConsumer = (proposal) => {
   return `Your proposal for token ${proposal.name} is accepted by ${
-    proposal.acceptedBy[proposal.acceptedBy.length - 1].username
+    proposal.acceptedBy[proposal.acceptedBy.length - 1].name
   }, update proposals and move to /myproposals and make the payment for promotion.`;
 };
 
 export const acceptNotification_admin = (proposal) => {
-  return `Influencer ${
+  return `Influencer @${
     proposal.acceptedBy[proposal.acceptedBy.length - 1].username
-  } accepted the Proposal for Token ${proposal.name} of Consumer ${
+  } accepted the Proposal for Token ${proposal.name} of Consumer @${
     proposal.consumer.username
   }`;
 };

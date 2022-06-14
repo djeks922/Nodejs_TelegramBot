@@ -10,9 +10,18 @@ export const leaveButtonEdited = () => {
   ]);
 };
 
+function sliceIntoChunks(arr, chunkSize) {
+  const res = [];
+  for (let i = 0; i < arr.length; i += chunkSize) {
+      const chunk = arr.slice(i, i + chunkSize);
+      res.push(chunk);
+  }
+  return res;
+}
+
 export const influencerButtons = (influencers, packages) => {
   const callbackArr = [];
-  let counter = 0;
+  let counter = 1;
   for (const inf of influencers) {
     let name;
     let pkg = packages.find((pkgSelected) =>
@@ -23,18 +32,17 @@ export const influencerButtons = (influencers, packages) => {
     );
     // console.log(pkg)
     if (pkg && pkg.length) {
-      name = `${inf.name}✅`;
+      name = `✅${inf.name}`;
       callbackArr.push(Markup.button.callback(name, `ps ${inf._id} ${pkg}`));
     } else {
       name = inf.name;
       callbackArr.push(Markup.button.callback(name, `ps ${inf._id}`));
     }
-
     counter++;
   }
-
+  const infBtns = sliceIntoChunks(callbackArr,3)
   return Markup.inlineKeyboard([
-    callbackArr,
+    ...infBtns,
     [Markup.button.callback("done", "ps done")],
   ]);
 };

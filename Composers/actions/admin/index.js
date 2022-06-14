@@ -38,7 +38,7 @@ export const approveProposal = async (ctx, proposal) => {
     }
     if (proposal.status === "approved") {
       await ctx.answerCbQuery(
-        `Already approved by ${proposal.approvedBy?.username}, for all Influencers !`
+        `Already approved by @${proposal.approvedBy?.username}, for all Influencers !`
       );
     } else {
       proposal.status = "approved";
