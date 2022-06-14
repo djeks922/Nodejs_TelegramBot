@@ -1,13 +1,21 @@
 import { getConsumerCount } from "../../api/service/consumer.js";
-import { getInfluencerCount,getInfluencers, getInfluencerByUsername } from "../../api/service/influencer.js";
+import {
+  getInfluencerCount,
+  getInfluencers,
+  getInfluencerByUsername,
+} from "../../api/service/influencer.js";
 import { getProposalCount } from "../../api/service/proposal.js";
-import { getTransactionCount } from "../../api/service/transaction.js";
+import {
+  getTransactionCount,
+  getTransactionByTxID,
+  getTransactionsByKeyword
+} from "../../api/service/transaction.js";
 
 import { paymentButtons } from "./markup.js";
 
 export const add = async (ctx) => {
   try {
-    if(ctx.message.chat.type === 'supergroup') return
+    if (ctx.message.chat.type === "supergroup") return;
     await ctx.scene.enter("consumer-scene-id");
   } catch (error) {
     throw error;
@@ -16,7 +24,7 @@ export const add = async (ctx) => {
 
 export const register = async (ctx) => {
   try {
-    if(ctx.message.chat.type === 'supergroup') return
+    if (ctx.message.chat.type === "supergroup") return;
     await ctx.scene.enter("influencer-scene-id");
   } catch (error) {
     throw error;
@@ -25,8 +33,7 @@ export const register = async (ctx) => {
 
 export const myproposals = async (ctx) => {
   try {
-    if(ctx.message.chat.type === 'supergroup') return
-
+    if (ctx.message.chat.type === "supergroup") return;
 
     ctx.session.proposals = await ctx.session.proposals;
     // console.log("myproposals", ctx.session.proposals);
@@ -55,7 +62,7 @@ export const myproposals = async (ctx) => {
       }
       proposalText = proposalText.concat(packagesText);
       proposalText = proposalText.concat(
-        "----------------------------------------\n"
+        "-----------------------------------------------------------------------------------------------------\n"
       );
     }
 
@@ -67,7 +74,7 @@ export const myproposals = async (ctx) => {
 
 export const verifiedTransactions = async (ctx) => {
   try {
-    if(ctx.message.chat.type === 'private') return
+    if (ctx.message.chat.type === "private") return;
     await ctx.scene.enter("payment-scene-toInfluencer-id");
   } catch (error) {
     throw error;
@@ -75,28 +82,29 @@ export const verifiedTransactions = async (ctx) => {
 };
 export const stat = async (ctx) => {
   try {
-    let statText = `Bot stat: \n`
-    let promises = []
+    if (ctx.message.chat.type === "supergroup") return;
+    let statText = `Bot stat: \n`;
+    let promises = [];
 
-    promises.push(getConsumerCount())
+    promises.push(getConsumerCount());
 
-    promises.push(getInfluencerCount())
-    promises.push(getInfluencerCount({status: 'staged'}))
-    promises.push(getInfluencerCount({status: 'inreview'}))
-    promises.push(getInfluencerCount({status: 'active'}))
-    promises.push(getInfluencerCount({status: 'inactive'}))
+    promises.push(getInfluencerCount());
+    promises.push(getInfluencerCount({ status: "staged" }));
+    promises.push(getInfluencerCount({ status: "inreview" }));
+    promises.push(getInfluencerCount({ status: "active" }));
+    promises.push(getInfluencerCount({ status: "inactive" }));
 
-    promises.push(getProposalCount())
-    promises.push(getProposalCount({status: 'staged'}))
-    promises.push(getProposalCount({status: 'approved'}))
-    promises.push(getProposalCount({status: 'rejected'}))
+    promises.push(getProposalCount());
+    promises.push(getProposalCount({ status: "staged" }));
+    promises.push(getProposalCount({ status: "approved" }));
+    promises.push(getProposalCount({ status: "rejected" }));
 
-    promises.push(getTransactionCount())
-    promises.push(getTransactionCount({onUser: 'tg-consumer'}))
-    promises.push(getTransactionCount({onUser: 'tg-influencer'}))
-    
-    await ctx.reply('Proccessing up to date data...Please be patient')
-    const results = await Promise.all(promises)
+    promises.push(getTransactionCount());
+    promises.push(getTransactionCount({ onUser: "tg-consumer" }));
+    promises.push(getTransactionCount({ onUser: "tg-influencer" }));
+
+    await ctx.reply("Proccessing up to date data...Please be patient");
+    const results = await Promise.all(promises);
 
     statText = statText.concat(`Consumers: ${results[0]}
 Influencers total: ${results[1]}
@@ -110,9 +118,9 @@ Proposals total: ${results[6]}
     rejected: ${results[9]}
 Transactions total: ${results[10]} 
     Consumer side: ${results[11]}
-    Admin side: ${results[12]}`)
+    Admin side: ${results[12]}`);
 
-    await ctx.reply(statText)
+    await ctx.reply(statText);
   } catch (error) {
     throw error;
   }
@@ -120,11 +128,15 @@ Transactions total: ${results[10]}
 
 export const retrieveInfluencers = async (ctx) => {
   try {
-    if(ctx.message.text.length > 15) {
+    if (ctx.message.chat.type === "supergroup") return;
+    if (ctx.message.text.length > 15) {
       // console.log(ctx.message.text.split(' ')[1])
-      const influencer = await getInfluencerByUsername(ctx.message.text.split(' ')[1], {populate: true})
-      if(!influencer) {
-        return await ctx.reply('Not found')
+      const influencer = await getInfluencerByUsername(
+        ctx.message.text.split(" ")[1],
+        { populate: true }
+      );
+      if (!influencer) {
+        return await ctx.reply("Not found");
       }
       let socialText = ``;
       for (let [i, social] of influencer.socials.entries()) {
@@ -138,37 +150,77 @@ export const retrieveInfluencers = async (ctx) => {
       }
       await ctx.replyWithHTML(
         `<b>username</b>: @${influencer.username}\n<b>Social Accounts</b>:\n ${socialText}\n<b>Packages</b>:\n ${packageText}\nRequirement: ${influencer.requirement}\nWallet: ${influencer.wallet}\nAccount status: ${influencer.status}`,
-        { disable_web_page_preview: true}
+        { disable_web_page_preview: true }
       );
-    }else{
-      const influencers = await getInfluencers({},{lean: true, populate: false},{limit: 30})
+    } else {
+      const influencers = await getInfluencers(
+        {},
+        { lean: true, populate: false },
+        { limit: 30 }
+      );
 
-      let infText = `Basic influencers infos:\n`
-      for(let [i,inf] of influencers.entries()){
-        infText = infText.concat(`${i}. Username: @${inf.username}\n`)
-      }    
-  
-      await ctx.reply(infText)
-      await ctx.reply(`To get more info about spesific influencer, type /getinfluencers glyv9 for example (without @)`)
+      let infText = `Basic influencers infos:\n`;
+      for (let [i, inf] of influencers.entries()) {
+        infText = infText.concat(`${i}. Username: @${inf.username}\n`);
+      }
+
+      await ctx.reply(infText);
+      await ctx.reply(
+        `To get more info about spesific influencer, type /getinfluencers glyv9 for example (without @)`
+      );
     }
   } catch (error) {
-    throw error
+    throw error;
   }
-}
-// export const retrieveInfluencers = async (ctx) => {
-//   try {
-//     const influencers = await getInfluencers({},{lean: true, populate: false},{limit: 10})
+};
 
-//     let infText = `Basic influencers infos:\n`
-//     for(let [i,inf] of influencers.entries()){
-//       infText = infText.concat(`${i}. Username: @${inf.username}
-//   ChatID: ${inf.chatID}
-//   Social count: ${inf.socials.length}
-//   Package count: ${inf.packages.length}\n`)
-//     }    
+export const getTransactionTx = async (ctx) => {
+  try {
+    if (ctx.message.chat.type === "supergroup") return;
+    const txID = ctx.message.text.split(" ")[1];
+    if(!txID){
+      return await ctx.reply(`Please use it as '/transactionbytx transaction_id'`)
+    }
+    const transaction = await getTransactionByTxID(txID);
 
-//     await ctx.reply(infText)
-//   } catch (error) {
-//     throw error
-//   }
-// }
+    if (transaction) {
+      await ctx.reply(`Transaction: ${transaction._id}
+From: @${transaction.from.username}
+To: @${transaction.to.username}
+txID: ${transaction.txID}
+Made by: ${transaction.onUser === "tg-consumer" ? "consumer" : "admin"}
+Status: ${transaction.status}
+Proposal name: ${transaction.proposal.name}
+Package name: ${transaction.package.name}
+Created at: ${transaction.createdAt}`);
+    } else {
+      await ctx.reply("Transaction not found");
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getTransactionKeyword = async (ctx) => {
+  try {
+    if (ctx.message.chat.type === "supergroup") return;
+    const keyWord = ctx.message.text.split(" ")[1];
+    await ctx.reply('Processing...')
+    const transactions = await getTransactionsByKeyword(keyWord)
+    let trText = `Transaction for keyword: ${keyWord}\n`
+    for(let [i,tr] of transactions.entries()){
+      trText = trText.concat(`\n${i}.Transaction id: ${tr._id}
+txID: ${tr.txID}
+To: @${tr.to.username}
+Status: ${tr.status}
+${tr.forwarded ? `Payed to Influencer: @${tr.package.influencer.username}`: 'Payed to Admin'}
+Proposal: ${tr.proposal.name}
+Package: ${tr.package.name}
+CreatedAt: ${tr.createdAt}
+--------------------------`)
+    }
+    await ctx.reply(trText)
+  } catch (error) {
+    throw error;
+  }
+};

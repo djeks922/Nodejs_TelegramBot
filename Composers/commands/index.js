@@ -5,7 +5,9 @@ import {
   myproposals,
   verifiedTransactions,
   stat,
-  retrieveInfluencers
+  retrieveInfluencers,
+  getTransactionTx,
+  getTransactionKeyword
 } from "./handlers.js";
 const composer = new Composer();
 
@@ -19,6 +21,9 @@ composer.command("myproposals", myproposals);
 composer.command("verifiedtransactions", verifiedTransactions);
 
 composer.command("stat", stat);
+
+composer.command('transactionbytx', getTransactionTx)
+composer.command('transactionbykeyword', getTransactionKeyword)
 
 composer.command('getinfluencers', retrieveInfluencers)
 

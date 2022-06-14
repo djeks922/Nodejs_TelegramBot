@@ -1,5 +1,5 @@
 export const proposalToInfluencer = (proposal,pkg) => {
-  return `NEW PROMO REQUEST\nName: ${proposal.name}\nContract address: ${proposal.contractAddress}\nWebsite: ${proposal.website}\n\n\nDescription: ${proposal.description}\n\nDev: @${proposal.developerUsername}\npost time: ${proposal.createdAt}\n For package: ${pkg.name}`;
+  return `NEW PROMO REQUEST\nName: ${proposal.name}\nContract address: ${proposal.contractAddress}\nWebsite: ${proposal.website}\n\n\nDescription: ${proposal.description}\n\nDev: @${proposal.developerUsername}\npost time: ${proposal.createdAt}\n\nFor package: ${pkg.name}`;
 };
 
 export const proposalToAdmin = (proposal) => {
@@ -19,7 +19,7 @@ export const approveNotificationToConsumer = (proposal) => {
 };
 
 export const approveNotificationToConsumerI = (proposal, influencer) => {
-  return `Your proposal for token: '${proposal.name}' was approved by Cryptoencer team to Influencer: @${influencer.username}, waiting for influencer response :)`;
+  return `Your proposal for token: '${proposal.name}' was approved by Cryptoencer team and redirected to Influencer: ${influencer.name}, waiting for influencer response :)`;
 };
 
 export const acceptNotificationToConsumer = (proposal) => {

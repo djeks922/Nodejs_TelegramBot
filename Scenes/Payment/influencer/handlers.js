@@ -9,9 +9,6 @@ import {
 
 export const transactionSelectionActions = async (ctx) => {
   try {
-    console.log('selection')
-    console.log(ctx.message)
-
     ctx.scene.state.transaction = ctx.scene.state.transactions[+ctx.message.text]
     if(!ctx.scene.state.transaction) return await ctx.reply('Enter valid number from the list')
     
@@ -68,7 +65,6 @@ export const enter = async (ctx) => {
 
 export const onMessage = async (ctx, next) => {
   try {
-    console.log(ctx.message)
     return ctx.message.text
       ? await next()
       : await ctx.reply("Not valid input");

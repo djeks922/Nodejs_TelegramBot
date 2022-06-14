@@ -1,4 +1,6 @@
 import Transaction from "../models/tg-transaction.js";
+import { getConsumerByKeyword } from "./consumer.js";
+import { getProposalByKeyword } from "./proposal.js";
 
 export const createTransaction = async (tr) => {
   try {
@@ -26,8 +28,7 @@ export const getTransactionByID = async (id) => {
 };
 export const getTransactionCount = async (query) => {
   try {
-    const transactionCount = await Transaction.countDocuments(query)
-
+    const transactionCount = await Transaction.countDocuments(query);
 
     return transactionCount;
   } catch (error) {
@@ -47,9 +48,9 @@ export const getTransactionsByFilter = async (filter = {}) => {
     throw error;
   }
 };
-export const getVerifiedTransactions = async () => {
+export const getTransactionByTxID = async (txID) => {
   try {
-    const transaction = await Transaction.find({ status: "VERIFIED-admin",forwarded: false })
+    const transaction = await Transaction.findOne({ txID: txID })
       .populate("from")
       .populate("to")
       .populate("proposal")
@@ -60,9 +61,42 @@ export const getVerifiedTransactions = async () => {
     throw error;
   }
 };
-export const updateTransaction = async (transaction,updates) => {
+export const getTransactionsByKeyword = async (keyword) => {
   try {
-    const info = await Transaction.updateOne(transaction, updates)
+    const consumer =  getConsumerByKeyword(keyword)
+    const proposal =  getProposalByKeyword(keyword)
+    const [con, prop] = await Promise.all([consumer,proposal])
+
+    const transactions = await Transaction.find({$or: [{from: con?._id},{proposal: prop?._id}]})
+    .populate("from")
+    .populate("to")
+    .populate("proposal")
+    .populate({ path: "package", populate: "influencer" });
+  
+    return transactions
+  } catch (error) {
+    throw error
+  }
+}
+export const getVerifiedTransactions = async () => {
+  try {
+    const transaction = await Transaction.find({
+      status: "VERIFIED-admin",
+      forwarded: false,
+    })
+      .populate("from")
+      .populate("to")
+      .populate("proposal")
+      .populate({ path: "package", populate: "influencer" });
+
+    return transaction;
+  } catch (error) {
+    throw error;
+  }
+};
+export const updateTransaction = async (transaction, updates) => {
+  try {
+    const info = await Transaction.updateOne(transaction, updates);
 
     return info;
   } catch (error) {
