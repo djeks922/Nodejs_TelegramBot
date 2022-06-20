@@ -352,7 +352,7 @@ export const receivedTransactions = async (ctx) => {
 export const postLink = async (ctx) => {
   try {
     const proposalID = ctx.callbackQuery.data.split(' ')[1]
-    const proposal = getProposalByID(proposalID,{})
+    const proposal = getProposalByID(proposalID,{lean:false, populate:false})
     await ctx.scene.enter('post-scene-id',{proposal})
   } catch (error) {
     throw error;
