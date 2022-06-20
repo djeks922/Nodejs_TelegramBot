@@ -1,6 +1,7 @@
 import { Scenes, Composer } from "telegraf";
 import {
   enter,
+  leave,
   onCallbackQr,
   onMessage,
   transactionSelectionActions,
@@ -29,6 +30,7 @@ const paymentAdminScene = new WizardScene(
 );
 
 paymentAdminScene.enter(enter);
+paymentAdminScene.leave(leave)
 
 paymentAdminScene.on("message", onMessage);
 paymentAdminScene.on("callback_query", onCallbackQr);

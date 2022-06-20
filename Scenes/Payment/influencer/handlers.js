@@ -62,6 +62,13 @@ export const enter = async (ctx) => {
     throw error;
   }
 };
+export const leave = async (ctx) => {
+  try {
+    console.log('leaved influencer payment')
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const onMessage = async (ctx, next) => {
   try {
