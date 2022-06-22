@@ -1,3 +1,4 @@
+import { Markup } from "telegraf";
 import { getConsumerCount } from "../../api/service/consumer.js";
 import {
   getInfluencerCount,
@@ -212,7 +213,7 @@ export const getTransactionKeyword = async (ctx) => {
     for(let [i,tr] of transactions.entries()){
       trText = trText.concat(`\n${i}.Transaction id: ${tr._id}
 txID: ${tr.txID}
-From: ${tr.from.username}
+From: @${tr.from.username}
 To: @${tr.to.username}
 Status: ${tr.status}
 ${tr.forwarded ? `Payed to Influencer: @${tr.package.influencer.username}`: 'Payed to Admin'}
