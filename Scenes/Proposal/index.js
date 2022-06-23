@@ -27,6 +27,13 @@ selectionComposer.on('text', async ( ctx )=> {
     throw error
   }
 })
+selectionComposer.on('web_app_data', async ( ctx ) => {
+  try {
+    console.log(ctx)
+  } catch (error) {
+    
+  }
+})
 
 // selectionComposer.action(/ps+/g, influencerSelectionActions);
 // selectionComposer.action(/pp+/, packageSelectionActions);

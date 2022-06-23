@@ -11,6 +11,7 @@ const influencerSchema = new Schema(
     username: String,
     userID: Number,
     chatID: Number,
+    avatar: String,
     packages: [{ type: Schema.Types.ObjectId, ref: "tg-package" }],
     socials: [{ type: Schema.Types.ObjectId, ref: "tg-social" }],
     requirement: { type: String, default: "requirement" },

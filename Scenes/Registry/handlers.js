@@ -14,7 +14,7 @@ import {
 } from "../../api/service/influencer.js";
 import { getProposalByInfluencerID, getProposalByID } from "../../api/service/proposal.js";
 import { getTransactionsByFilter } from "../../api/service/transaction.js";
-
+import checkFileExist from "../../helpers/checkFileExist.js";
 import { socialButtonsForRegistry } from "./Social/markup.js";
 
 export const enter = async (ctx) => {
@@ -28,6 +28,10 @@ export const enter = async (ctx) => {
       );
 
       if (_influencer) {
+        if(_influencer.status === 'inreview'){
+           await ctx.reply(`Dear ${_influencer.name}, Your application is in review. We will update you asap.`)
+           return await ctx.scene.leave()
+        }
         buttons = _influencer.status.includes("active")
           ? accountButtons()
           : registryButtons();
@@ -47,20 +51,25 @@ export const enter = async (ctx) => {
         const _influencer = await createOrUpdateInfluencer(influencer);
         ctx.session.influencer = _influencer;
       }
+      await ctx.reply("💬", exitOrLeaveButton());
+      // await viewProfileHandler(ctx);
       await ctx.reply(text, buttons);
-      await ctx.reply("Your profile", exitOrLeaveButton());
-      await viewProfileHandler(ctx);
     } else {
-      buttons = ctx.session.influencer.status.includes("active")
+      if(ctx.session.influencer.status === 'inreview'){
+        await ctx.reply(`Dear ${ctx.session.influencer.name}, Your application is in review. We will update you asap.`)
+        return await ctx.scene.leave()
+      }else{
+        buttons = ctx.session.influencer.status.includes("active")
         ? accountButtons()
         : registryButtons();
       text = ctx.session.influencer.status.includes("active")
         ? accountText(ctx, ctx.session.influencer.status)
         : registryText(ctx);
 
+      await ctx.reply("💬", exitOrLeaveButton());
+      // await viewProfileHandler(ctx);
       await ctx.reply(text, buttons);
-      await ctx.reply("Your profile", exitOrLeaveButton());
-      await viewProfileHandler(ctx);
+      }
     }
   } catch (error) {
     throw error;
@@ -195,6 +204,8 @@ export const viewProfileHandler = async (ctx) => {
     for (let [i, pkg] of influencer.packages.entries()) {
       packageText = packageText.concat(`${i}. ${pkg.name}: ${pkg.price}\n`);
     }
+    const exist = await checkFileExist(`./public/influencer/${ctx.callbackQuery.from.id}.jpg`)
+    exist ? await ctx.replyWithPhoto({source: `./public/influencer/${ctx.callbackQuery.from.id}.jpg`}) : ''
     await ctx.replyWithHTML(
       `<b>username</b>: @${influencer.username}\n<b>Social Accounts</b>:\n ${socialText}\n<b>Packages</b>:\n ${packageText}\nRequirement: ${influencer.requirement}\nWallet: ${influencer.wallet}\nAccount status: ${influencer.status}`,
       { disable_web_page_preview: true }
@@ -274,7 +285,7 @@ export const deleteProfile = async (ctx) => {
       if (deletedInfo) {
         ctx.session.influencer = undefined;
         await ctx.deleteMessage();
-        await ctx.reply("Successfully deleted!");
+        await ctx.reply("Successfully deleted!", removeKeyboard());
         await ctx.answerCbQuery("Successfully deleted!");
       } else {
         await ctx.answerCbQuery("Something went wrong");
@@ -293,7 +304,7 @@ export const deleteProfile = async (ctx) => {
 
 export const onHearsExit = async (ctx) => {
   try {
-    await ctx.reply("Leaved from registry(profile)", removeKeyboard());
+    await ctx.reply("Leaved", removeKeyboard());
     await ctx.scene.leave();
   } catch (error) {
     throw error;
@@ -305,6 +316,7 @@ export const receivedProposals = async (ctx) => {
       ctx.session.influencer._id
     );
     if (proposals.length === 0) {
+      await ctx.answerCbQuery()
       return await ctx.reply("You did not receive any proposal");
     }
     let trtext = `Recieved proposals:\n`;
@@ -332,6 +344,7 @@ export const receivedTransactions = async (ctx) => {
       to: ctx.session.influencer._id,
     });
     if (transactions.length === 0) {
+      await ctx.answerCbQuery()
       return await ctx.reply("You did not receive any payment");
     }
     let trtext = `Recieved payments:\n`;
@@ -354,6 +367,15 @@ export const postLink = async (ctx) => {
     const proposalID = ctx.callbackQuery.data.split(' ')[1]
     const proposal = getProposalByID(proposalID,{lean:false, populate:false})
     await ctx.scene.enter('post-scene-id',{proposal})
+  } catch (error) {
+    throw error;
+  }
+};
+export const addAvatar = async (ctx) => {
+  try {
+    await ctx.deleteMessage()
+    await ctx.scene.enter('influencer-scene-avatar-id')
+    await ctx.answerCbQuery()
   } catch (error) {
     throw error;
   }
