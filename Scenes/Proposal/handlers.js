@@ -83,11 +83,11 @@ export const descriptionStep = async (ctx) => {
     );
 
     ctx.wizard.state.infstmp = influencers;
-    // await ctx.replyWithHTML(
-    //   activeInfluencerChooseList(influencers),
-    //   influencerButtons(influencers, ctx.wizard.state.packages)
-    // );
-    await ctx.reply('Choose Influencer`s packages', Markup.inlineKeyboard([Markup.button.webApp('open', 'https://138f-95-86-155-168.eu.ngrok.io/')]).resize())
+    await ctx.replyWithHTML(
+      activeInfluencerChooseList(influencers),
+      influencerButtons(influencers, ctx.wizard.state.packages)
+    );
+    // await ctx.reply('Choose Influencer`s packages', Markup.inlineKeyboard([Markup.button.webApp('open', 'https://138f-95-86-155-168.eu.ngrok.io/')]).resize())
     await ctx.wizard.next()
   } catch (error) {
     ctx.scene.leave();
