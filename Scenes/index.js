@@ -5,7 +5,8 @@ import registry, {
   packageScene,
   walletScene,
   requirementScene,
-  postScene
+  postScene,
+  avatarScene
 } from "./Registry/index.js";
 import payment from "./Payment/index.js";
 import sessionMiddleware from "../Composers/middlewares/sessionCustomerMiddleware.js";
@@ -22,6 +23,7 @@ const stage = new Stage([
   walletScene,
   requirementScene,
   postScene,
+  avatarScene,
   payment.paymentToAdmin,
   payment.paymentToInfluencer,
 ]);

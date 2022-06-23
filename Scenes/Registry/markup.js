@@ -6,6 +6,7 @@ export const registryButtons = () => {
       Markup.button.callback("Social", "1"),
       Markup.button.callback("Package", "2"),
       Markup.button.callback("Requirement", "3"),
+      Markup.button.callback("Avatar", "12"),
     ],
     [
       Markup.button.callback("Wallet address", "4"),

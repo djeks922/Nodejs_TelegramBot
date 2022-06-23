@@ -9,6 +9,7 @@ import { createProposal, getProposals } from "../../api/service/proposal.js";
 import { getInfluencers } from "../../api/service/influencer.js";
 import { activeInfluencerChooseList } from "../../helpers/influencer.js";
 import { getInfluencerByID } from "../../api/service/influencer.js";
+import { Markup } from "telegraf";
 
 export const nameStep = async (ctx) => {
   try {
@@ -82,10 +83,11 @@ export const descriptionStep = async (ctx) => {
     );
 
     ctx.wizard.state.infstmp = influencers;
-    await ctx.replyWithHTML(
-      activeInfluencerChooseList(influencers),
-      influencerButtons(influencers, ctx.wizard.state.packages)
-    );
+    // await ctx.replyWithHTML(
+    //   activeInfluencerChooseList(influencers),
+    //   influencerButtons(influencers, ctx.wizard.state.packages)
+    // );
+    await ctx.reply('Choose Influencer`s packages', Markup.inlineKeyboard([Markup.button.webApp('open', 'https://138f-95-86-155-168.eu.ngrok.io/')]).resize())
     await ctx.wizard.next()
   } catch (error) {
     ctx.scene.leave();
