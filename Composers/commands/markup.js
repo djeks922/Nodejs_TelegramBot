@@ -63,5 +63,5 @@ export const paymentButtons = async (proposals) => {
 };
 
 export const webapp_opener = () => {
-  return Markup.keyboard([[Markup.button.webApp('Create proposal',process.env.WEBAPP_URL)]]).resize()
+  return Markup.inlineKeyboard([[Markup.button.webApp('Create proposal',process.env.WEBAPP_URL)]]).resize()
 }

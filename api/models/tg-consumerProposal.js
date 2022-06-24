@@ -11,6 +11,7 @@ const proposalSchema = new Schema(
     telegram: String,
     developerUsername: String,
     description: String,
+    additionalInfo: String,
     packages: [{ type: Schema.Types.ObjectId, ref: "tg-package" }],
     // packagesPayedToAdmin: [{type: Schema.Types.ObjectId, ref: 'tg-package'}],
     // packagesPayedToInfluencer: [{type: Schema.Types.ObjectId, ref: 'tg-package'}],

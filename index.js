@@ -7,6 +7,26 @@ import scenes from "./Scenes/index.js";
 import webapp from './webapp/index.js'
 import logger from "./api/logger/index.js";
 
+import express from 'express'
+import cors from 'cors'
+import routes from './api/routes/index.js'
+
+
+const secretPath = `/telegraf/${bot.secretPathComponent()}`
+bot.telegram.setWebhook(`${process.env.APITUNEL_URL}${secretPath}`)
+
+const app = express()
+app.use(cors())
+app.use(express.json())
+app.get('/', (req, res) => res.send('Hello World!'))
+app.use(bot.webhookCallback(secretPath))
+
+app.listen(3001, () => {
+  console.log('Example app listening on port 3001!')
+})
+
+routes(app)
+
 bot.use(scenes);
 
 bot.use(start);
@@ -22,7 +42,7 @@ bot.catch((err, ctx) => {
   ctx.reply("I do not feel well, :( , Please try it later.");
 });
 
-bot.launch();
+// bot.launch();
 
 // Enable graceful stop
 process.once("SIGINT", () => bot.stop("SIGINT"));
