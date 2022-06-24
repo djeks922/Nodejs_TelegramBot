@@ -4,6 +4,7 @@ import commands from "./Composers/commands/index.js";
 import actions from "./Composers/actions/index.js";
 import on from "./Composers/on/index.js";
 import scenes from "./Scenes/index.js";
+import webapp from './webapp/index.js'
 import logger from "./api/logger/index.js";
 
 bot.use(scenes);
@@ -13,6 +14,8 @@ bot.use(start);
 bot.use(commands);
 bot.use(on);
 bot.use(actions);
+
+bot.use(webapp)
 
 bot.catch((err, ctx) => {
   logger.error(err);

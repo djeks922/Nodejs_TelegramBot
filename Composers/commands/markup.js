@@ -61,3 +61,7 @@ export const paymentButtons = async (proposals) => {
   }
   return Markup.inlineKeyboard(payArr).resize().oneTime();
 };
+
+export const webapp_opener = () => {
+  return Markup.keyboard([[Markup.button.webApp('Create proposal',process.env.WEBAPP_URL)]]).resize()
+}
