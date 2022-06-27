@@ -18,6 +18,7 @@ bot.telegram.setWebhook(`${process.env.APITUNEL_URL}${secretPath}`)
 const app = express()
 app.use(cors())
 app.use(express.json())
+app.use('/public',express.static('public'))
 app.get('/', (req, res) => res.send('Hello World!'))
 app.use(bot.webhookCallback(secretPath))
 
