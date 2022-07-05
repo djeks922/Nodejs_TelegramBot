@@ -1,4 +1,4 @@
-import { adminPaymentText } from "../../../helpers/consumer.js";
+import { adminPaymentText } from "./text.js";
 import { influencerPaymentButtons } from "../markup.js";
 
 import {

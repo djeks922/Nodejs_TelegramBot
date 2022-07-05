@@ -12,12 +12,20 @@ import {
   getTransactionsByKeyword
 } from "../../api/service/transaction.js";
 
-import { paymentButtons } from "./markup.js";
+import { paymentButtons, webapp_opener } from "./markup.js";
 
 export const add = async (ctx) => {
   try {
     if (ctx.message.chat.type === "supergroup") return;
     await ctx.scene.enter("consumer-scene-id");
+  } catch (error) {
+    throw error;
+  }
+};
+export const add_webappversion = async (ctx) => {
+  try {
+    if (ctx.message.chat.type === "supergroup") return;
+    await ctx.reply('Please click the below button, and fill the spesific form', webapp_opener())
   } catch (error) {
     throw error;
   }

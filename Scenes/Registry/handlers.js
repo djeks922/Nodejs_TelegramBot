@@ -6,7 +6,7 @@ import {
   removeKeyboard,
   postLinkButtons,
 } from "./markup.js";
-import { registryText, accountText } from "../../helpers/influencer.js";
+import { registryText, accountText } from "./text.js";
 import {
   createOrUpdateInfluencer,
   getInfluencerByChatID,

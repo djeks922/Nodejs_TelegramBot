@@ -3,22 +3,30 @@ import {
   updateProposalByID,
 } from "../../../api/service/proposal.js";
 import { getConsumerByID } from "../../../api/service/consumer.js";
-import { updateInfluencer } from "../../../api/service/influencer.js";
-import { consumerTransactionNText } from "../../../helpers/consumer.js";
+import {
+  updateInfluencer,
+  getInfluencerByID,
+} from "../../../api/service/influencer.js";
+// import { consumerTransactionNText } from "../../../helpers/consumer.js";
 import { getTransactionByID } from "../../../api/service/transaction.js";
 import {
   adminButtons,
   adminButtonsApproved,
   adminButtonsRejected,
   updateProposal,
-} from "../../../api/utils/proposal/markup.js";
+} from "../../../api/utils/Bot/proposal/markup.js";
 import { getProposalByID } from "../../../api/service/proposal.js";
 import { Markup } from "telegraf";
 import {
   adminRejectsTransactionText,
   rejectIndividualConsumerText,
+  consumerTransactionNText
 } from "./text.js";
 
+import checkFileExist from "../../../helpers/checkFileExist.js";
+import fs from "fs";
+import axios from "axios";
+import FormData from "form-data";
 //
 const approveButtons = () => {
   return Markup.inlineKeyboard([
@@ -221,12 +229,60 @@ export const rejectIndividual = async (ctx, proposal, rejectForID) => {
   }
 };
 
+export const createInfluencerOnWebb = async (id) => {
+  try {
+    const _influencer = await getInfluencerByID(id, {
+      lean: true,
+      populate: true,
+    });
+    const form = new FormData();
+    form.append("name", _influencer.name);
+    form.append("requirements", _influencer.requirement);
+    form.append("volume", "MEDIUM");
+    const exist = await checkFileExist(_influencer.avatar);
+    exist
+      ? form.append("avatarImage", fs.createReadStream(_influencer.avatar))
+      : "";
+    //
+    const res = await axios.post(
+      "http://localhost:3001/api/internal/influencer/",
+      form,
+      {
+        headers: {
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NTU5MDM3NDh9.8__ByfMv9c6zi1A1OJLgjT94W2TN1XRq1rYU1hl5k-o",
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    // console.log(webInfluencer)
+    for (let social of _influencer.socials) {
+      await axios.post(
+        `http://localhost:3001/api/internal/social/${res.data._id}`,
+        {
+          link: social.url,
+          platform: social.platform,
+        },
+        {
+          headers: {
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NTU5MDM3NDh9.8__ByfMv9c6zi1A1OJLgjT94W2TN1XRq1rYU1hl5k-o",
+          },
+        }
+      );
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const activateInfluencer = async (ctx) => {
   try {
     const id = ctx.callbackQuery.data.split(" ")[1];
     const res = await updateInfluencer(id, { status: "active" });
     if (!res.modifiedCount)
       return await ctx.answerCbQuery("Already activated!");
+    await createInfluencerOnWebb(id);
     await ctx.answerCbQuery("activated!");
   } catch (error) {
     throw error;

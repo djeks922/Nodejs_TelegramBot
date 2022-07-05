@@ -8,8 +8,8 @@ import {
   approveNotificationToConsumerI,
   proposalToAdmin,
   proposalToInfluencer,
-} from "../utils/proposal/text.js";
-import { adminButtons, influencerButtons, updateProposal } from "../utils/proposal/markup.js";
+} from "../utils/Bot/proposal/text.js";
+import { adminButtons, influencerButtons, updateProposal } from "../utils/Bot/proposal/markup.js";
 import Proposal from '../models/tg-consumerProposal.js'
 
 const proposalListener = Proposal.watch();
@@ -21,7 +21,18 @@ const onStaged = async (data) => {
     
     const text = proposalToAdmin(proposal);
     const buttons = adminButtons(proposal);
-
+    
+    if(proposal.pImages && proposal.pImages.length > 1){
+      const mediaArr = [] 
+      for(let imgFile of proposal.pImages){
+        mediaArr.push({
+          type: "photo",
+          media: imgFile
+        })
+      }
+      await bot.telegram.sendMediaGroup(process.env.ADMIN_CHAT_ID,mediaArr)
+    }
+    
     await bot.telegram.sendMessage(process.env.ADMIN_CHAT_ID, text, buttons)
     
   } catch (error) {

@@ -15,3 +15,7 @@ export const rejectIndividualConsumerText = (proposal,pkg) => {
   let text = `Your Proposal: ${proposal.name} was rejected by admin for Package: ${pkg.name}`
   return text
 }
+
+export const consumerTransactionNText = (tr) => {
+  return `Your Transaction verified by admin for: \nToken: ${tr.proposal.name}\nPackage: ${tr.package.name}\n\nYou will receive posts' links when influencer share your project on his(her) platforms.`;
+};

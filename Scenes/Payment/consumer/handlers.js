@@ -1,6 +1,6 @@
 import { getAdmins } from "../../../api/service/consumer.js";
 import { createTransaction } from "../../../api/service/transaction.js";
-import { consumerPaymentText,consumerRePaymentText } from "../../../helpers/consumer.js";
+import { consumerPaymentText,consumerRePaymentText } from "./text.js";
 import { adminPaymentButtons } from "../markup.js";
 
 export const enter = async (ctx) => {
