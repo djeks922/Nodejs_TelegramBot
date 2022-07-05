@@ -7,9 +7,8 @@ import {
 } from "./markup.js";
 import { createProposal, getProposals } from "../../api/service/proposal.js";
 import { getInfluencers } from "../../api/service/influencer.js";
-import { activeInfluencerChooseList } from "../../helpers/influencer.js";
+import { activeInfluencerChooseList } from "./text.js";
 import { getInfluencerByID } from "../../api/service/influencer.js";
-import { Markup } from "telegraf";
 
 export const nameStep = async (ctx) => {
   try {

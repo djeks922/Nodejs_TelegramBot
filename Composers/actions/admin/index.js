@@ -7,7 +7,7 @@ import {
   updateInfluencer,
   getInfluencerByID,
 } from "../../../api/service/influencer.js";
-import { consumerTransactionNText } from "../../../helpers/consumer.js";
+// import { consumerTransactionNText } from "../../../helpers/consumer.js";
 import { getTransactionByID } from "../../../api/service/transaction.js";
 import {
   adminButtons,
@@ -20,6 +20,7 @@ import { Markup } from "telegraf";
 import {
   adminRejectsTransactionText,
   rejectIndividualConsumerText,
+  consumerTransactionNText
 } from "./text.js";
 
 import checkFileExist from "../../../helpers/checkFileExist.js";
