@@ -22,8 +22,12 @@ app.use('/public',express.static('public'))
 app.get('/', (req, res) => res.send('Hello World!'))
 app.use(bot.webhookCallback(secretPath))
 
-app.listen(3001, () => {
-  console.log('Example app listening on port 3001!')
+app.use( async (err,res,req,next) => {
+  const a = await bot.deleteWebhook()
+  console.log(a, 'a')
+})
+app.listen(3002, () => {
+  console.log('Example app listening on port 3002 !')
 })
 
 routes(app)
@@ -40,11 +44,17 @@ bot.use(webapp)
 
 bot.catch((err, ctx) => {
   logger.error(err);
-  ctx.reply("I do not feel well, :( , Please try it later.");
+  ctx.tg.sendMessage(1316429545,JSON.stringify(err,Object.getOwnPropertyNames()));
 });
 
-// bot.launch();
+bot.launch();
 
 // Enable graceful stop
-process.once("SIGINT", () => bot.stop("SIGINT"));
-process.once("SIGTERM", () => bot.stop("SIGTERM"));
+process.once("SIGINT", () => {
+  bot.stop("SIGINT")
+  bot.telegram.deleteWebhook()
+});
+process.once("SIGTERM", () => {
+  bot.stop("SIGTERM")
+  bot.telegram.deleteWebhook()
+});
