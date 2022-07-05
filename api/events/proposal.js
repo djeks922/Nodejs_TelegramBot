@@ -8,8 +8,8 @@ import {
   approveNotificationToConsumerI,
   proposalToAdmin,
   proposalToInfluencer,
-} from "../utils/proposal/text.js";
-import { adminButtons, influencerButtons, updateProposal } from "../utils/proposal/markup.js";
+} from "../utils/Bot/proposal/text.js";
+import { adminButtons, influencerButtons, updateProposal } from "../utils/Bot/proposal/markup.js";
 import Proposal from '../models/tg-consumerProposal.js'
 
 const proposalListener = Proposal.watch();

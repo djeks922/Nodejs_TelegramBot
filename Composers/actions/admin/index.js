@@ -14,7 +14,7 @@ import {
   adminButtonsApproved,
   adminButtonsRejected,
   updateProposal,
-} from "../../../api/utils/proposal/markup.js";
+} from "../../../api/utils/Bot/proposal/markup.js";
 import { getProposalByID } from "../../../api/service/proposal.js";
 import { Markup } from "telegraf";
 import {

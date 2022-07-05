@@ -6,8 +6,8 @@ import logger from "../logger/index.js";
 import { getInfluencerByID } from "../service/influencer.js";
 import Influencer from '../models/tg-influencer.js'
 
-import {adminButtons,updateProfile} from '../utils/registry/markup.js'
-import {influencerRegistryText} from '../utils/registry/text.js'
+import {adminButtons,updateProfile} from '../utils/Bot/registry/markup.js'
+import {influencerRegistryText} from '../utils/Bot/registry/text.js'
 
 import FormData from 'form-data'
 import checkFileExist from "../../helpers/checkFileExist.js";
