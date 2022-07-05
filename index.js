@@ -2,10 +2,9 @@ import bot from "./config/bot.config.js";
 import start from "./Composers/start/index.js";
 import commands from "./Composers/commands/index.js";
 import actions from "./Composers/actions/index.js";
-import on from "./Composers/on/index.js";
+import on,{errorHandler} from "./Composers/on/index.js";
 import scenes from "./Scenes/index.js";
 import webapp from './webapp/index.js'
-import logger from "./api/logger/index.js";
 
 import express from 'express'
 import cors from 'cors'
@@ -42,10 +41,7 @@ bot.use(actions);
 
 bot.use(webapp)
 
-bot.catch((err, ctx) => {
-  logger.error(err);
-  ctx.tg.sendMessage(1316429545,JSON.stringify(err,Object.getOwnPropertyNames()));
-});
+bot.catch(errorHandler);
 
 bot.launch();
 
