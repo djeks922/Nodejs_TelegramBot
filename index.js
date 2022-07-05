@@ -9,6 +9,7 @@ import webapp from "./webapp/index.js";
 import express from "express";
 import cors from "cors";
 import routes from "./api/routes/index.js";
+import dbConnection from './api/config/db.js'
 import errorMiddleware from "./api/middlewares/errorMiddleware.js";
 
 /************************ Secret Path for bot updates to assing to Express Server ***************************** */
@@ -29,6 +30,7 @@ app.use(bot.webhookCallback(secretPath));
 
 app.use(errorMiddleware);
 app.listen(3002, () => {
+  dbConnection()
   console.log("Example app listening on port 3002 !");
 });
 
@@ -46,7 +48,7 @@ bot.use(webapp);
 
 bot.catch(errorHandler);
 
-bot.launch();
+// bot.launch();
 
 // Enable graceful stop
 process.once("SIGINT", () => {

@@ -1,10 +1,9 @@
 import { Telegraf } from "telegraf";
-import dbConnect from "../api/config/db.js";
 
 import { config } from "dotenv";
 config();
 
-dbConnect();
+
 
 const bot = new Telegraf(process.env.TOKEN);
 
