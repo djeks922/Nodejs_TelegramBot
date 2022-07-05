@@ -25,7 +25,7 @@ export const add = async (ctx) => {
 export const add_webappversion = async (ctx) => {
   try {
     if (ctx.message.chat.type === "supergroup") return;
-    await ctx.reply('Enter proposal details', webapp_opener())
+    await ctx.reply('Please click the below button, and fill the spesific form', webapp_opener())
   } catch (error) {
     throw error;
   }

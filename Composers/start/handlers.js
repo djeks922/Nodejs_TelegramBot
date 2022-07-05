@@ -1,6 +1,9 @@
+import {startText, helpText} from './text.js'
+
+
 export const startHandler = async (ctx) => {
   try {
-    await ctx.reply(`Hello, ${ctx.message.from.first_name}`);
+    await ctx.replyWithHTML(startText(ctx));
   } catch (error) {
     throw error;
   }
@@ -8,9 +11,7 @@ export const startHandler = async (ctx) => {
 
 export const helpHandler = (ctx) => {
   try {
-    ctx.replyWithHTML(
-      `<strong>/start</strong>- initialize bot\n<strong>/help</strong> - get information about commands\n<strong>/add</strong> - add proposal for promotion\n<strong>/register</strong> - register as influencer`
-    );
+    ctx.replyWithHTML(helpText(ctx));
   } catch (error) {
     throw error;
   }
