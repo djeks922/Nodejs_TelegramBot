@@ -1,4 +1,3 @@
-import { Markup } from "telegraf";
 import { getConsumerCount } from "../../api/service/consumer.js";
 import {
   getInfluencerCount,

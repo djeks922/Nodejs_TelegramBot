@@ -6,11 +6,11 @@ export const errorHandler =  async (err, ctx) => {
         logger.error(err);
   
         if(ctx.message){
-            await ctx.tg.sendMessage(1316429545,typeMsgErrNotification(err,ctx.message));
+            await ctx.tg.sendMessage(process.env.ERROR_REPORT_CHAT_ID,typeMsgErrNotification(err,ctx.message));
         }
 
         if(ctx.callbackQuery){
-            await ctx.tg.sendMessage(1316429545,typeCallbackNotification(err,ctx.callbackQuery));
+            await ctx.tg.sendMessage(process.env.ERROR_REPORT_CHAT_ID,typeCallbackNotification(err,ctx.callbackQuery));
         }
         
     } catch (error) {
