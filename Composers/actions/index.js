@@ -25,11 +25,15 @@ const composer = new Composer();
 
 // Add actions
 
+
+/************************    Utility & Registry actions **************************** */
 composer.action("updateProfile", updateProfile);
 composer.action("updateProposal", updateProposals);
 composer.action(/admin-activated-influencer+/, activateInfluencer);
 composer.action(/admin-rejectedActivation-influencer+/,rejectActivationInfluencer);
 
+
+/************************    Payment and Transaction actions **************************** */
 composer.action(/oo+/, payForPackage);
 composer.action(/rsT+/, rePayForPackage);
 composer.action(/infvt+/, influencerAcceptTransaction);
@@ -43,6 +47,7 @@ composer.action(/app+/, approveProposal_rejectCase)
 composer.on("callback_query", async (ctx) => {
   const command = ctx.callbackQuery.data.split(" ")[0]; // Main action
 
+  // PROPOSAL ACTIONS ONLY!!
   if (!["aa", "aai","rai","ra", "ai", "ri"].includes(command))
     return await ctx.answerCbQuery("asds");
 
@@ -51,10 +56,11 @@ composer.on("callback_query", async (ctx) => {
 
   const proposal = await getProposalByID(pID, { lean: false, populate: false }); // the main proposal
 
-  if (!proposal || pID || refID)
+  if (!proposal)
     return await ctx.answerCbQuery("Proposal does not exits or deleted!");
 
   switch (command) {
+    //** *********************     Admin actions starts ************************ */
     case "aa":
       await approveProposal(ctx, proposal); // refID is admin ID
       break;
@@ -67,13 +73,15 @@ composer.on("callback_query", async (ctx) => {
     case "ra":
       await rejectProposal_Admin(ctx, proposal);
       break;
-      //** *********************     Admin part ends ************************ */
+      //** *********************     Admin actions ends ************************ */
+      //** *********************     Influencer actions starts ************************ */
     case "ai":
       await acceptProposal(ctx, proposal, refID); // refID is influencer ID
       break;
     case "ri":
       await rejectProposal_Influencer(ctx, proposal, refID) // refID is package ID
       break;
+    //** *********************     Influencer actions ends ************************ */  
     default:
       break;
   }

@@ -53,7 +53,7 @@ export const enter = async (ctx) => {
       }
       await ctx.reply("💬", exitOrLeaveButton());
       // await viewProfileHandler(ctx);
-      await ctx.reply(text, buttons);
+      await ctx.replyWithHTML(text, buttons);
     } else {
       if(ctx.session.influencer.status === 'inreview'){
         await ctx.reply(`Dear ${ctx.session.influencer.name}, Your application is in review. We will update you asap.`)
@@ -68,7 +68,7 @@ export const enter = async (ctx) => {
 
       await ctx.reply("💬", exitOrLeaveButton());
       // await viewProfileHandler(ctx);
-      await ctx.reply(text, buttons);
+      await ctx.replyWithHTML(text, buttons);
       }
     }
   } catch (error) {

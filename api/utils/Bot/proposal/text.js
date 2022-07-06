@@ -14,6 +14,16 @@ export const proposalToAdmin = (proposal) => {
   return text;
 };
 
+export const rejectNotificationToInfluencer_approveCase = (proposal) => {
+  return `Promo for Token: ${proposal.name} rejected for some reason, even if it was approved by Cryptoencer team.`
+}
+export const rejectNotificationToConsumer_approveCase = (proposal) => {
+  return `Promo for Token: ${proposal.name} rejected for some reason, even if it was approved by Cryptoencer team.`
+}
+export const rejectNotificationToConsumer = (proposal) => {
+  return `Your proposal (Token name: ${proposal.name}) was rejected for all packages.`
+}
+
 export const approveNotificationToConsumer = (proposal) => {
   return `Your proposal for token: '${proposal.name}' was approved by Cryptoencer team for all influencers, waiting for influencers' response :)`;
 };

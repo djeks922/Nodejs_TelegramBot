@@ -1,11 +1,13 @@
 import { getInfluencerByChatID } from "../../../api/service/influencer.js";
-import { getConsumerByID } from "../../../api/service/consumer.js";
 import { getTransactionByID } from "../../../api/service/transaction.js";
-import { getProposalByID } from "../../../api/service/proposal.js";
 import {
   influencerAcceptTransactionTextForAdmin,
   influencerAcceptTransactionTextForCustomer,
+  influencerRejectsProposalToAdmin,
+  influencerRejectsProposalToConsumer,
+  postLinkInformation_reply,
 } from "./text.js";
+import { updateProposal } from "../../../api/utils/Bot/proposal/markup.js";
 
 export const acceptProposal = async (ctx, proposal, refID) => {
   try {
@@ -45,16 +47,12 @@ export const rejectProposal_Influencer = async (ctx, proposal, refID) => {
         // Consumer notification
         await ctx.telegram.sendMessage(
           proposal.consumer.chatID,
-          `❌❌Proposal token name: ${proposal.name} && Package name: ${
-            proposal.rejectedForByI[proposal.rejectedForByI.length - 1].name
-          } was rejected by Influencer: ${ctx.session.consumer.name}❌❌`
+          influencerRejectsProposalToConsumer(ctx,proposal),updateProposal()
         );
         // Admin notification
         await ctx.telegram.sendMessage(
-          proposal.approvedBy.chatID,
-          `❌❌Proposal token name: ${proposal.name} && Package name: ${
-            proposal.rejectedForByI[proposal.rejectedForByI.length - 1].name
-          } was rejected by Influencer: @${ctx.session.consumer.username}❌❌`
+          process.env.ADMIN_CHAT_ID,
+          influencerRejectsProposalToAdmin(ctx,proposal)
         );
 
         await ctx.editMessageText(ctx.callbackQuery.message.text, {
@@ -93,7 +91,7 @@ export const influencerAcceptTransaction = async (ctx) => {
 
     transaction.status = "VERIFIED-influencer";
     transaction.save();
-    await ctx.reply('When you are done with posts. Enter /register, then click Received proposals. Find button to add post links for related proposal.')
+    await ctx.reply(postLinkInformation_reply())
     // const proposal = await getProposalByID(transaction.proposal._id, {
     //   lean: false,
     //   populate: false,

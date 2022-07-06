@@ -1,4 +1,3 @@
-import { Markup } from "telegraf";
 import { getConsumerCount } from "../../api/service/consumer.js";
 import {
   getInfluencerCount,
@@ -9,7 +8,7 @@ import { getProposalCount } from "../../api/service/proposal.js";
 import {
   getTransactionCount,
   getTransactionByTxID,
-  getTransactionsByKeyword
+  getTransactionsByKeyword,
 } from "../../api/service/transaction.js";
 
 import { paymentButtons, webapp_opener } from "./markup.js";
@@ -25,7 +24,10 @@ export const add = async (ctx) => {
 export const add_webappversion = async (ctx) => {
   try {
     if (ctx.message.chat.type === "supergroup") return;
-    await ctx.reply('Please click the below button, and fill the spesific form', webapp_opener())
+    await ctx.reply(
+      "Please click the below button, and fill the spesific form",
+      webapp_opener()
+    );
   } catch (error) {
     throw error;
   }
@@ -47,35 +49,62 @@ export const myproposals = async (ctx) => {
     ctx.session.proposals = await ctx.session.proposals;
     // console.log("myproposals", ctx.session.proposals);
     let proposalText = `My proposals - (Make your payments to this address: ${process.env.Wallet})\n----------------------\n\n`;
+
     if (ctx.session.proposals?.length === 0)
       return await ctx.reply("You do not have any proposal");
+
     for (let [i, proposal] of ctx.session.proposals?.entries()) {
       proposalText = proposalText.concat(
         `${i}.Token: ${proposal.name}\n  Contract address: ${
           proposal.contractAddress
-        }\n  Description: ${proposal.description}\n  Developer: ${
+        }\n  Description:
+         ${proposal.description}\n  Developer: ${
           "@" + proposal.developerUsername
         }\n  Telegram: ${proposal.telegram}\n  Twitter: ${
           proposal.twitter
-        }\n  Website: ${proposal.website}\n  Status: ${
-          proposal.status
-        }\n  Staged date : ${proposal.createdAt}\n`
+        }\n  Website: ${proposal.website}\n  Staged date : ${
+          proposal.createdAt
+        }\n`
       );
       let packagesText = `  Applied packages: \n`;
       for (let [i, pkg] of proposal.packages?.entries()) {
         packagesText = packagesText.concat(
           `    ${i}. Influencer: ${pkg.influencer?.name}, Package: ${
             pkg.name + `(${pkg.price})`
-          }\n`
+          }\n        Status: ${
+            proposal.rejectedForByI.some(
+              (pkgR) => pkg._id.toString() === pkgR._id.toString()
+            )
+              ? "Rejected by Influencer❌,"
+              : proposal.acceptedBy.some(
+                  (pkgA) =>
+                    pkg.influencer._id.toString() === pkgA._id.toString()
+                )
+              ? "accepted✅,"
+              : proposal.rejectedFor.some(
+                  (pkgR) => pkg._id.toString() === pkgR._id.toString()
+                )
+              ? "Rejected by admin❌,"
+              : proposal.approvedFor.some(
+                  (pkgA) => pkg.influencer._id.toString() === pkgA.toString()
+                )
+              ? "approved✅,"
+              : proposal.status === "approved"
+              ? "approved✅" : ""
+          } \n`
         );
       }
+
       proposalText = proposalText.concat(packagesText);
       proposalText = proposalText.concat(
         "-----------------------------------------------------------------------------------------------------\n"
       );
     }
 
-    await ctx.reply(proposalText, await paymentButtons(ctx.session.proposals));
+    await ctx.reply(proposalText, {
+      reply_markup: (await paymentButtons(ctx.session.proposals)).reply_markup,
+      disable_web_page_preview: true,
+    });
   } catch (error) {
     throw error;
   }
@@ -140,10 +169,9 @@ export const retrieveInfluencers = async (ctx) => {
     if (ctx.message.chat.type === "private") return;
     if (ctx.message.text.split(" ")[1]) {
       // console.log(ctx.message.text.split(' ')[1])
-      const influencer = await getInfluencerByUsername(
-        username,
-        { populate: true }
-      );
+      const influencer = await getInfluencerByUsername(username, {
+        populate: true,
+      });
       if (!influencer) {
         return await ctx.reply("Not found");
       }
@@ -188,8 +216,10 @@ export const getTransactionTx = async (ctx) => {
   try {
     if (ctx.message.chat.type === "private") return;
     const txID = ctx.message.text.split(" ")[1];
-    if(!txID){
-      return await ctx.reply(`Please use it as '/transactionbytx transaction_id'`)
+    if (!txID) {
+      return await ctx.reply(
+        `Please use it as '/transactionbytx transaction_id'`
+      );
     }
     const transaction = await getTransactionByTxID(txID);
 
@@ -215,22 +245,26 @@ export const getTransactionKeyword = async (ctx) => {
   try {
     if (ctx.message.chat.type === "private") return;
     const keyWord = ctx.message.text.split(" ")[1];
-    await ctx.reply('Processing...')
-    const transactions = await getTransactionsByKeyword(keyWord)
-    let trText = `Transaction for keyword: ${keyWord}\n`
-    for(let [i,tr] of transactions.entries()){
+    await ctx.reply("Processing...");
+    const transactions = await getTransactionsByKeyword(keyWord);
+    let trText = `Transaction for keyword: ${keyWord}\n`;
+    for (let [i, tr] of transactions.entries()) {
       trText = trText.concat(`\n${i}.Transaction id: ${tr._id}
 txID: ${tr.txID}
 From: @${tr.from.username}
 To: @${tr.to.username}
 Status: ${tr.status}
-${tr.forwarded ? `Payed to Influencer: @${tr.package.influencer.username}`: 'Payed to Admin'}
+${
+  tr.forwarded
+    ? `Payed to Influencer: @${tr.package.influencer.username}`
+    : "Payed to Admin"
+}
 Proposal: ${tr.proposal.name}
 Package: ${tr.package.name}
 CreatedAt: ${tr.createdAt}
---------------------------`)
+--------------------------`);
     }
-    await ctx.reply(trText)
+    await ctx.reply(trText);
   } catch (error) {
     throw error;
   }

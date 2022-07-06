@@ -1,8 +1,4 @@
-import {
-  deleteProposalByID,
-  updateProposalByID,
-} from "../../../api/service/proposal.js";
-import { getConsumerByID } from "../../../api/service/consumer.js";
+import { updateProposalByID } from "../../../api/service/proposal.js";
 import {
   updateInfluencer,
   getInfluencerByID,
@@ -15,19 +11,20 @@ import {
   adminButtonsRejected,
   updateProposal,
 } from "../../../api/utils/Bot/proposal/markup.js";
-import { getProposalByID } from "../../../api/service/proposal.js";
 import { Markup } from "telegraf";
 import {
   adminRejectsTransactionText,
   rejectIndividualConsumerText,
-  consumerTransactionNText
+  consumerTransactionNText,
 } from "./text.js";
 
 import checkFileExist from "../../../helpers/checkFileExist.js";
 import fs from "fs";
 import axios from "axios";
 import FormData from "form-data";
-//
+
+/************************ APPROVE PROPOSAL FOR ALL PACKAGES ***********************/
+
 const approveButtons = () => {
   return Markup.inlineKeyboard([
     Markup.button.callback("sure", `app Sure`),
@@ -63,6 +60,8 @@ export const approveProposal = async (ctx, proposal) => {
   }
 };
 
+/************************ APPROVE PROPOSAL (AFTER REJECTE) FOR ALL PACKAGES ***********************/
+
 export const approveProposal_rejectCase = async (ctx) => {
   try {
     const data = ctx.callbackQuery.data.split(" ")[1];
@@ -81,6 +80,8 @@ export const approveProposal_rejectCase = async (ctx) => {
     }
   } catch (error) {}
 };
+
+/************************ APPROVE PROPOSAL FOR INDIVIDUAL PACKAGE ***********************/
 
 export const approveIndividual = async (ctx, proposal, approvedForID) => {
   try {
@@ -112,7 +113,10 @@ export const approveIndividual = async (ctx, proposal, approvedForID) => {
   }
 };
 
-//************************************    Approvement Ends   HERE        ******************************** */
+/************************************    APPROVEMENT CASES ENDS       ******************************** */
+
+/************************ REJECT PROPOSAL FOR ALL PACKAGES ***********************/
+
 const rejectButtons = () => {
   return Markup.inlineKeyboard([
     Markup.button.callback("sure", `rej Sure`),
@@ -194,6 +198,8 @@ export const rejectProposal_Admin = async (ctx, proposal) => {
 //   }
 // };
 
+/************************ REJECT PROPOSAL FOR INDIVIDUAL PACKAGE  **************************/
+
 export const rejectIndividual = async (ctx, proposal, rejectForID) => {
   try {
     await proposal.populate("packages");
@@ -228,6 +234,8 @@ export const rejectIndividual = async (ctx, proposal, rejectForID) => {
     throw error;
   }
 };
+
+/************************ AUTO REGISTER INFLUENCER ON WEBSITE ***********************/
 
 export const createInfluencerOnWebb = async (id) => {
   try {
@@ -276,27 +284,45 @@ export const createInfluencerOnWebb = async (id) => {
   }
 };
 
+/************************ ACTIVATE INFLUENCER PROFILE  ***********************/
 export const activateInfluencer = async (ctx) => {
   try {
     const id = ctx.callbackQuery.data.split(" ")[1];
+
     const res = await updateInfluencer(id, { status: "active" });
+
+    if (!res.matchedCount)
+      return await ctx.answerCbQuery(
+        "Influencer does not exist, sorry could not activate"
+      );
     if (!res.modifiedCount)
       return await ctx.answerCbQuery("Already activated!");
-    await createInfluencerOnWebb(id);
+
     await ctx.answerCbQuery("activated!");
+    await createInfluencerOnWebb(id);
   } catch (error) {
+    if (error.name === "AxiosError") {
+      ctx.reply(
+        "Error occured while auto-registration on website! (Check the social links or add them manually)"
+      );
+    }
     throw error;
   }
 };
-
+/************************ REJECT ACTIVATION FOR INFLUENCER PROFILE  ***********************/
 export const rejectActivationInfluencer = async (ctx) => {
   try {
-    // REJECT ACTIVATION INFLUENCER REGISTRY
+    const id = ctx.callbackQuery.data.split(" ")[1];
+    const res = await updateInfluencer(id, { status: "rejected" });
+    if (!res.modifiedCount)
+      return await ctx.answerCbQuery("Already activated!");
+    await ctx.answerCbQuery("Rejected!");
   } catch (error) {
     throw error;
   }
 };
 
+/************************ VERIFY TRANSACTION MADE BY CONSUMER  ***********************/
 export const adminVerifiedTransaction = async (ctx) => {
   try {
     const trID = ctx.callbackQuery.data.split(" ")[1];
@@ -332,6 +358,8 @@ export const adminVerifiedTransaction = async (ctx) => {
     throw error;
   }
 };
+
+/************************ REJECT TRANSACTION MADE BY CONSUMER  ***********************/
 
 export const adminRejectsTransaction = async (ctx) => {
   const trID = ctx.callbackQuery.data.split(" ")[1];
