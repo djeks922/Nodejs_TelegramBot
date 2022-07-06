@@ -18,7 +18,7 @@ const influencerSchema = new Schema(
     wallet: { type: String, default: "wallet address" },
     status: {
       type: String,
-      enum: ["staged", "inreview", "active", "inactive"],
+      enum: ["staged", "inreview", "active", "inactive","rejected"],
       default: "staged",
     },
   },
