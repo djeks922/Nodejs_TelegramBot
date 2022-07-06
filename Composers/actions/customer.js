@@ -1,5 +1,7 @@
 import { getProposals } from "../../api/service/proposal.js";
 import { getTransactionByID } from "../../api/service/transaction.js";
+
+
 export const updateProposals = async (ctx) => {
   try {
     ctx.session.proposals = await getProposals({

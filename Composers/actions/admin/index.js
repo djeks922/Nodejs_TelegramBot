@@ -1,8 +1,4 @@
-import {
-  deleteProposalByID,
-  updateProposalByID,
-} from "../../../api/service/proposal.js";
-import { getConsumerByID } from "../../../api/service/consumer.js";
+import { updateProposalByID } from "../../../api/service/proposal.js";
 import {
   updateInfluencer,
   getInfluencerByID,
@@ -15,12 +11,11 @@ import {
   adminButtonsRejected,
   updateProposal,
 } from "../../../api/utils/Bot/proposal/markup.js";
-import { getProposalByID } from "../../../api/service/proposal.js";
 import { Markup } from "telegraf";
 import {
   adminRejectsTransactionText,
   rejectIndividualConsumerText,
-  consumerTransactionNText
+  consumerTransactionNText,
 } from "./text.js";
 
 import checkFileExist from "../../../helpers/checkFileExist.js";
@@ -240,7 +235,6 @@ export const rejectIndividual = async (ctx, proposal, rejectForID) => {
   }
 };
 
-
 /************************ AUTO REGISTER INFLUENCER ON WEBSITE ***********************/
 
 export const createInfluencerOnWebb = async (id) => {
@@ -286,10 +280,9 @@ export const createInfluencerOnWebb = async (id) => {
       );
     }
   } catch (error) {
-    throw error
+    throw error;
   }
 };
-
 
 /************************ ACTIVATE INFLUENCER PROFILE  ***********************/
 export const activateInfluencer = async (ctx) => {
@@ -297,17 +290,21 @@ export const activateInfluencer = async (ctx) => {
     const id = ctx.callbackQuery.data.split(" ")[1];
 
     const res = await updateInfluencer(id, { status: "active" });
-    
+
     if (!res.matchedCount)
-      return await ctx.answerCbQuery("Influencer does not exist, sorry could not activate");
+      return await ctx.answerCbQuery(
+        "Influencer does not exist, sorry could not activate"
+      );
     if (!res.modifiedCount)
       return await ctx.answerCbQuery("Already activated!");
 
     await ctx.answerCbQuery("activated!");
     await createInfluencerOnWebb(id);
   } catch (error) {
-    if(error.name === 'AxiosError'){
-      ctx.reply('Error occured while auto-registration on website! (Check the social links or add them manually)')
+    if (error.name === "AxiosError") {
+      ctx.reply(
+        "Error occured while auto-registration on website! (Check the social links or add them manually)"
+      );
     }
     throw error;
   }

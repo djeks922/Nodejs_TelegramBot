@@ -1,7 +1,5 @@
 import bot from "../../config/bot.config.js";
 import logger from "../logger/index.js";
-// import axios from "axios";
-// import fs from 'fs'
 
 import { getInfluencerByID } from "../service/influencer.js";
 import Influencer from '../models/tg-influencer.js'
@@ -9,7 +7,6 @@ import Influencer from '../models/tg-influencer.js'
 import {adminButtons,updateProfile} from '../utils/Bot/registry/markup.js'
 import {influencerRegistryText} from '../utils/Bot/registry/text.js'
 
-import FormData from 'form-data'
 import checkFileExist from "../../helpers/checkFileExist.js";
 
 const influencerListener = Influencer.watch();
@@ -25,7 +22,6 @@ influencerListener.on("change", async (data) => {
         
         if(data.updateDescription.updatedFields.status !== null && data.updateDescription.updatedFields.status === 'inreview'){
             const _influencer  = await getInfluencerByID(data.documentKey._id,{lean: true,populate:true})
-            // const admin = await getAdmins()
             const exist = await checkFileExist(_influencer.avatar)
             exist ? await bot.telegram.sendPhoto(process.env.ADMIN_CHAT_ID,{source: _influencer.avatar}) : ''
             bot.telegram.sendMessage(process.env.ADMIN_CHAT_ID, influencerRegistryText(_influencer), adminButtons(_influencer))
