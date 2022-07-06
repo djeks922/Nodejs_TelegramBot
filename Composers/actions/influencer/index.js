@@ -6,6 +6,7 @@ import {
   influencerAcceptTransactionTextForAdmin,
   influencerAcceptTransactionTextForCustomer,
 } from "./text.js";
+import { updateProposal } from "../../../api/utils/Bot/proposal/markup.js";
 
 export const acceptProposal = async (ctx, proposal, refID) => {
   try {
@@ -47,11 +48,11 @@ export const rejectProposal_Influencer = async (ctx, proposal, refID) => {
           proposal.consumer.chatID,
           `❌❌Proposal token name: ${proposal.name} && Package name: ${
             proposal.rejectedForByI[proposal.rejectedForByI.length - 1].name
-          } was rejected by Influencer: ${ctx.session.consumer.name}❌❌`
+          } was rejected by Influencer: ${ctx.session.consumer.name}❌❌`,updateProposal()
         );
         // Admin notification
         await ctx.telegram.sendMessage(
-          proposal.approvedBy.chatID,
+          process.env.ADMIN_CHAT_ID,
           `❌❌Proposal token name: ${proposal.name} && Package name: ${
             proposal.rejectedForByI[proposal.rejectedForByI.length - 1].name
           } was rejected by Influencer: @${ctx.session.consumer.username}❌❌`

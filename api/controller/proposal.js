@@ -4,7 +4,7 @@ import { createProposal } from "../service/proposal.js";
 
 export const postProposal = async (req, res, next) => {
   try {
-    console.log(req.files)
+    // console.log(req.files)
     const proposal = req.body
     const { queryID, consumerChatID } = req.query;
     const pImages = []

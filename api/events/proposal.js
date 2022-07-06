@@ -45,7 +45,7 @@ const onApprove = async (data) => {
     const proposal = await getProposalByID(data.documentKey._id, {populate: true});
     
     const text = approveNotificationToConsumer(proposal);
-    await bot.telegram.sendMessage(proposal.consumer.chatID, text); // notify user **Token approved**
+    await bot.telegram.sendMessage(proposal.consumer.chatID, text, updateProposal()); // notify user **Token approved**
     
     for (let pkg of proposal.packages) {
       //   notify influencers that ** NEW PROMO **
@@ -66,7 +66,7 @@ const onApproveIndividual = async (data, approvedForID) => {
 
     const text = approveNotificationToConsumerI(proposal,pkg.influencer);
 
-    await bot.telegram.sendMessage(proposal.consumer.chatID, text); // notify user **Token approved**
+    await bot.telegram.sendMessage(proposal.consumer.chatID, text, updateProposal()); // notify user **Token approved**
     
 
     let infText = proposalToInfluencer(proposal,pkg);
