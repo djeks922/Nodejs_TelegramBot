@@ -7,11 +7,11 @@ export const enter = async (ctx) => {
   try {
     if (ctx.scene.state.transaction) {
       await ctx.reply(
-        "Please enter VALID TaxID of transaction for related package(influencer)"
+        "Please enter VALID TXID of transaction for related package(influencer)"
       );
     } else {
       await ctx.reply(
-        "Please enter TaxID of transaction for related package(influencer)"
+        "Please enter TXID of transaction for related package(influencer)"
       );
       const proposal = ctx.session.proposals.find(
         (p) => `${p._id}` === ctx.scene.state.proposalID
@@ -32,7 +32,7 @@ export const onMessage = async (ctx, next) => {
   try {
     return ctx.message.text
       ? await next()
-      : await ctx.reply("Please enter valid TaxID");
+      : await ctx.reply("Please enter valid TxID");
   } catch (error) {
     throw error;
   }

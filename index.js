@@ -11,6 +11,7 @@ import cors from "cors";
 import routes from "./api/routes/index.js";
 import dbConnection from './api/config/db.js'
 import errorMiddleware from "./api/middlewares/errorMiddleware.js";
+import logger from "./api/logger/index.js";
 
 /************************ Secret Path for bot updates to assing to Express Server ***************************** */
 
@@ -51,11 +52,14 @@ bot.catch(errorHandler);
 // bot.launch();
 
 // Enable graceful stop
-process.once("SIGINT", () => {
+
+process.on("SIGINT", () => {
   bot.stop("SIGINT");
-  bot.telegram.deleteWebhook();
+  logger.info('sigint')
+  bot.telegram.deleteWebhook({'drop_pending_updates': true});
 });
-process.once("SIGTERM", () => {
+process.on("SIGTERM", () => {
   bot.stop("SIGTERM");
-  bot.telegram.deleteWebhook();
+  logger.info('sigterm')
+  bot.telegram.deleteWebhook({'drop_pending_updates': true});
 });

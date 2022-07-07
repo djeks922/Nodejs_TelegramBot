@@ -7,7 +7,7 @@ import {
 } from "./markup.js";
 import { createProposal, getProposals } from "../../api/service/proposal.js";
 import { getInfluencers } from "../../api/service/influencer.js";
-import { activeInfluencerChooseList } from "./text.js";
+import { activeInfluencerChooseListText } from "./text.js";
 import { getInfluencerByID } from "../../api/service/influencer.js";
 
 export const nameStep = async (ctx) => {
@@ -83,7 +83,7 @@ export const descriptionStep = async (ctx) => {
 
     ctx.wizard.state.infstmp = influencers;
     await ctx.replyWithHTML(
-      activeInfluencerChooseList(influencers),
+      activeInfluencerChooseListText(influencers),
       influencerButtons(influencers, ctx.wizard.state.packages)
     );
     // await ctx.reply('Choose Influencer`s packages', Markup.inlineKeyboard([Markup.button.webApp('open', 'https://138f-95-86-155-168.eu.ngrok.io/')]).resize())
@@ -156,7 +156,7 @@ export const influencerSelectionActions = async (ctx) => {
     // console.log('packages: ', ctx.wizard.state.packages)
     await ctx.answerCbQuery("Package pulled out from proposal");
     return await ctx.editMessageText(
-      activeInfluencerChooseList(ctx.wizard.state.infstmp),
+      activeInfluencerChooseListText(ctx.wizard.state.infstmp),
       influencerButtons(ctx.wizard.state.infstmp, ctx.wizard.state.packages)
     );
   }
@@ -176,7 +176,7 @@ export const packageSelectionActions = async (ctx) => {
   const pkgID = ctx.callbackQuery.data.split(" ")[1];
   if (pkgID === "back")
     return await ctx.editMessageText(
-      activeInfluencerChooseList(ctx.wizard.state.infstmp),
+      activeInfluencerChooseListText(ctx.wizard.state.infstmp),
       influencerButtons(ctx.wizard.state.infstmp, ctx.wizard.state.packages)
     );
 
@@ -184,7 +184,7 @@ export const packageSelectionActions = async (ctx) => {
   ctx.answerCbQuery();
   ctx.wizard.state.packages.push(pkgID);
   ctx.editMessageText(
-    activeInfluencerChooseList(ctx.wizard.state.infstmp),
+    activeInfluencerChooseListText(ctx.wizard.state.infstmp),
     influencerButtons(ctx.wizard.state.infstmp, ctx.wizard.state.packages)
   );
 };

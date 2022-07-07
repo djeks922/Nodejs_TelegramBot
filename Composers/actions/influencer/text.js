@@ -6,6 +6,10 @@ export const influencerAcceptTransactionTextForAdmin = (transaction) => {
   const text = `Influencer verified transaction:\nProposal name: ${transaction.proposal.name}\nInfluencer: @${transaction.package.influencer.username}\nPackage: ${transaction.package.name}\nTxID: ${transaction.txID}`;
   return text;
 };
+export const influencerRejectsTransactionTextForAdmin = (transaction) => {
+  const text = `Influencer rejected transaction:\nProposal name: ${transaction.proposal.name}\nInfluencer: @${transaction.package.influencer.username}\nPackage: ${transaction.package.name}\nTxID: ${transaction.txID}`;
+  return text;
+};
 export const influencerRejectsProposalToAdmin = (ctx,proposal) => {
   const text = `❌❌
 Proposal token name: ${proposal.name}

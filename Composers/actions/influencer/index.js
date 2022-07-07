@@ -5,6 +5,7 @@ import {
   influencerAcceptTransactionTextForCustomer,
   influencerRejectsProposalToAdmin,
   influencerRejectsProposalToConsumer,
+  influencerRejectsTransactionTextForAdmin,
   postLinkInformation_reply,
 } from "./text.js";
 import { updateProposal } from "../../../api/utils/Bot/proposal/markup.js";
@@ -91,15 +92,8 @@ export const influencerAcceptTransaction = async (ctx) => {
 
     transaction.status = "VERIFIED-influencer";
     transaction.save();
-    await ctx.reply(postLinkInformation_reply())
-    // const proposal = await getProposalByID(transaction.proposal._id, {
-    //   lean: false,
-    //   populate: false,
-    // });
-    // proposal.packagesPayedToInfluencer.push(transaction.package._id);
-    // proposal.save();
 
-    // const admin = await getConsumerByID(transaction.proposal.approvedBy);
+    await ctx.reply(postLinkInformation_reply())
 
     await ctx.telegram.sendMessage(
       process.env.ADMIN_CHAT_ID,
@@ -117,7 +111,22 @@ export const influencerAcceptTransaction = async (ctx) => {
 };
 export const influencerRejectsTransaction = async (ctx) => {
   try {
-    // Influencer Rejects Transaction
+    const trId = ctx.callbackQuery.data.split(" ")[1];
+    const transaction = await getTransactionByID(trId);
+
+    if (transaction.status === "REJECTED-influencer")
+      return await ctx.answerCbQuery("Already rejected!");
+
+    transaction.status = "REJECTED-influencer";
+    transaction.save();
+    await ctx.reply('Please in case of problem contact our support group [link to suppot group]')
+    await ctx.answerCbQuery()
+
+    await ctx.telegram.sendMessage(
+      process.env.ADMIN_CHAT_ID,
+      influencerRejectsTransactionTextForAdmin(transaction)
+    );
+
   } catch (error) {
     throw error;
   }
