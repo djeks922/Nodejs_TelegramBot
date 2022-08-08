@@ -18,7 +18,7 @@ import {
 } from "../utils/Bot/proposal/markup.js";
 import Proposal from "../models/tg-consumerProposal.js";
 
-const proposalListener = Proposal.watch();
+export const proposalListener = Proposal.watch();
 
 const onStaged = async (data) => {
   try {

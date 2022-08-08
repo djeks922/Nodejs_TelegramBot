@@ -9,7 +9,7 @@ import {influencerRegistryText} from '../utils/Bot/registry/text.js'
 
 import checkFileExist from "../../helpers/checkFileExist.js";
 
-const influencerListener = Influencer.watch();
+export const influencerListener = Influencer.watch();
 
 
 influencerListener.on("change", async (data) => {

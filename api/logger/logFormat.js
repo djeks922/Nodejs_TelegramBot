@@ -48,7 +48,7 @@ export const infoFormat = combine(
 );
 export const combineFormat = combine(
   format((info,opt) => {
-    return info.level === 'info' || 'error' || 'warn' ? info : false;
+    return info.level === 'debug' ||'info' || 'error' || 'warn' ? info : false;
   })(),
   uncolorize()
 ) 
