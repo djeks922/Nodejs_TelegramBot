@@ -29,5 +29,6 @@ export const varifyTelegramWebAppData = async (telegramInitData)=> {
   
   // if hash are equal the data may be used on your server.
   // Complex data types are represented as JSON-serialized objects.
+  // console.log(_hash, hash)
   return _hash === hash;
 };

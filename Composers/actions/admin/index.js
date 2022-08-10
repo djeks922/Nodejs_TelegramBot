@@ -253,7 +253,7 @@ export const createInfluencerOnWebb = async (id) => {
       : "";
     //
     const res = await axios.post(
-      "http://localhost:3001/api/internal/influencer/",
+      `${process.env.CRYPTOENCERS_COM}/api/internal/influencer/`,
       form,
       {
         headers: {
@@ -261,12 +261,12 @@ export const createInfluencerOnWebb = async (id) => {
             "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NTU5MDM3NDh9.8__ByfMv9c6zi1A1OJLgjT94W2TN1XRq1rYU1hl5k-o",
           "Content-Type": "multipart/form-data",
         },
-      }
+      } 
     );
     // console.log(webInfluencer)
     for (let social of _influencer.socials) {
       await axios.post(
-        `http://localhost:3001/api/internal/social/${res.data._id}`,
+        `${process.env.CRYPTOENCERS_COM}/api/internal/social/${res.data._id}`,
         {
           link: social.url,
           platform: social.platform,

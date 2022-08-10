@@ -7,12 +7,18 @@ export const postProposal = async (req, res, next) => {
     // console.log(req.files)
     const proposal = req.body
     const { queryID, consumerChatID } = req.query;
-    const pImages = []
-    for(let file of req.files){
-        pImages.push(`${process.env.APITUNEL_URL}/${file.path.replace(/\\/g,"/")}`)
+    if(!queryID || !consumerChatID){
+      return res.status(400).send({message: 'Bad request'})
     }
-    proposal.pImages = pImages
-    const prop = await createProposal(req.body, consumerChatID);
+    if(req.files){
+      const pImages = []
+      for(let file of req.files){
+        pImages.push(`${process.env.APITUNEL_URL}/${file.path.replace(/\\/g,"/")}`)
+      }
+      proposal.pImages = pImages
+    }
+   
+    const prop = await createProposal(proposal, consumerChatID);
 //     await bot.telegram.answerWebAppQuery(queryID, {
 //       type: "article",
 //       id: "id",
@@ -46,7 +52,7 @@ export const postProposal = async (req, res, next) => {
           media: imgFile
         })
       }
-      await bot.telegram.sendMediaGroup(1316429545,mediaArr)
+      await bot.telegram.sendMediaGroup(consumerChatID,mediaArr)
     }
     
     res.send("nice");

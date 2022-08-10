@@ -17,6 +17,13 @@ export const socialScene = new WizardScene(
 socialScene.enter(enter);
 socialScene.leave(leave);
 
+socialScene.hears('exit', async (ctx) => {
+  try {
+    await ctx.scene.enter('influencer-scene-id')
+  } catch (error) {
+    throw error
+  }
+})
 socialScene.action(/ss +/, platformActions);
 
 socialScene.on("callback_query", onCallbackQr);

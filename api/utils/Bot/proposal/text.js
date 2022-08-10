@@ -1,9 +1,9 @@
 export const proposalToInfluencer = (proposal,pkg) => {
-  return `NEW PROMO REQUEST\nName: ${proposal.name}\nContract address: ${proposal.contractAddress}\nWebsite: ${proposal.website}\n\n\nDescription: ${proposal.description}\n\nDev: @${proposal.developerUsername}\npost time: ${proposal.createdAt}\n\nFor package: ${pkg.name}`;
+  return `NEW PROMO REQUEST\nName: ${proposal.name}\nContract address: ${proposal.contractAddress}\nWebsite: ${proposal.website}\n\n\nDescription: ${proposal.description}\nAdditional Information: ${proposal.additionalInfo}\n\nDev: @${proposal.developerUsername}\npost time: ${proposal.createdAt}\n\nFor package: ${pkg.name}`;
 };
 
 export const proposalToAdmin = (proposal) => {
-  let text = `NEW PROMO REQUEST:\nchatID: ${proposal.consumer.chatID}\nUsername: @${proposal.consumer.username}\nName: ${proposal.name}\nContract address: ${proposal.contractAddress}\nWebsite: ${proposal.website}\n\n\nDescription: ${proposal.description}\n\nDev: @${proposal.developerUsername}\npost time: ${proposal.createdAt} `;
+  let text = `NEW PROMO REQUEST:\nchatID: ${proposal.consumer.chatID}\nUsername: @${proposal.consumer.username}\nName: ${proposal.name}\nContract address: ${proposal.contractAddress}\nWebsite: ${proposal.website}\nTelegram: ${proposal.telegram}\nTwitter: ${proposal.twitter}\n\n\nDescription: ${proposal.description}\nAdditional Information: ${proposal.additionalInfo}\n\nDev: @${proposal.developerUsername}\npost time: ${proposal.createdAt} `;
   
   text = text.concat('\n\n\nFor Influencers:\n')
 

@@ -51,18 +51,29 @@ const onApprove = async (data) => {
     const proposal = await getProposalByID(data.documentKey._id, {
       populate: true,
     });
-
+    /** Consumer Part */
     const text = approveNotificationToConsumer(proposal);
     await bot.telegram.sendMessage(
       proposal.consumer.chatID,
       text,
       updateProposal()
     ); // notify user **Token approved**
-
+    /** Influencer Part */
+    const mediaArr = [];
+    if (proposal.pImages && proposal.pImages.length > 1) {
+      
+      for (let imgFile of proposal.pImages) {
+        mediaArr.push({
+          type: "photo",
+          media: imgFile,
+        });
+      }
+    }
     for (let pkg of proposal.packages) {
       //   notify influencers that ** NEW PROMO **
       let text = proposalToInfluencer(proposal, pkg);
       let buttons = influencerButtons(proposal, pkg);
+      mediaArr.length > 0 ? await bot.telegram.sendMediaGroup(pkg.influencer.chatID, mediaArr): ''
       await bot.telegram.sendMessage(pkg.influencer.chatID, text, buttons);
     }
   } catch (error) {
@@ -87,6 +98,20 @@ const onApproveIndividual = async (data, approvedForID) => {
       text,
       updateProposal()
     ); // notify user **Token approved**
+    
+    /** Influencer Part */
+    const mediaArr = [];
+    
+    if (proposal.pImages && proposal.pImages.length > 1) {
+      
+      for (let imgFile of proposal.pImages) {
+        mediaArr.push({
+          type: "photo",
+          media: imgFile,
+        });
+      }
+      await bot.telegram.sendMediaGroup(pkg.influencer.chatID, mediaArr);
+    }
 
     let infText = proposalToInfluencer(proposal, pkg);
     let buttons = influencerButtons(proposal, pkg);
