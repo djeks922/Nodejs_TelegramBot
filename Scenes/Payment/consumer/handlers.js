@@ -1,17 +1,19 @@
 import { getAdmins } from "../../../api/service/consumer.js";
 import { createTransaction } from "../../../api/service/transaction.js";
 import { consumerPaymentText,consumerRePaymentText } from "./text.js";
-import { adminPaymentButtons } from "../markup.js";
+import { adminPaymentButtons, exitButton, removeKeyboard } from "../markup.js";
 
 export const enter = async (ctx) => {
   try {
     if (ctx.scene.state.transaction) {
       await ctx.reply(
-        "Please enter VALID TXID of transaction for related package(influencer)"
+        "Please enter VALID TXID of transaction for related package(influencer)",
+        exitButton()
       );
     } else {
       await ctx.reply(
-        "Please enter TXID of transaction for related package(influencer)"
+        "Please enter TXID of transaction for related package(influencer)",
+        exitButton()
       );
       const proposal = ctx.session.proposals.find(
         (p) => `${p._id}` === ctx.scene.state.proposalID
@@ -27,6 +29,22 @@ export const enter = async (ctx) => {
     throw error;
   }
 };
+
+export const leave = async (ctx) => {
+  try {
+    ctx.reply('exited', removeKeyboard())
+  } catch (error) {
+    
+  }
+}
+
+export const onExit = async (ctx) => {
+  try {
+      await ctx.scene.leave();
+  } catch (error) {
+      throw error
+  }
+}
 
 export const onMessage = async (ctx, next) => {
   try {
