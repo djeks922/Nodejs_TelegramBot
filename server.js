@@ -11,7 +11,6 @@ import routes from "./api/routes/index.js";
 import dbConnection from "./api/config/db.js";
 import errorMiddleware from "./api/middlewares/errorMiddleware.js";
 import logger from "./api/logger/index.js";
-import mongoose from "mongoose";
 
 /************************ Secret Path for bot updates to assign to Express Server ***************************** */
 

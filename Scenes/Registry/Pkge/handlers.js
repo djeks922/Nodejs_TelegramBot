@@ -53,7 +53,7 @@ export const nameStep = async (ctx) => {
 export const detailStep = async (ctx) => {
   try {
     ctx.wizard.state.detail = ctx.message.text;
-    await ctx.reply("Enter package price", {
+    await ctx.reply("Enter package price (in $USD)", {
       reply_markup: {
         keyboard: [["exit"]],
         resize_keyboard: true,
@@ -68,8 +68,8 @@ export const detailStep = async (ctx) => {
 
 export const priceStep = async (ctx) => {
   try {
-    ctx.wizard.state.price = ctx.message.text;
-
+   
+    ctx.wizard.state.price = parseInt(ctx.message.text)+ '$'
     const _pkg = await createPackage(ctx.wizard.state);
     ctx.session.influencer.packages.push(_pkg);
     await ctx.reply("Package saved!", Markup.removeKeyboard());
