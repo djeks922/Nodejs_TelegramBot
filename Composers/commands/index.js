@@ -8,17 +8,20 @@ import {
   retrieveInfluencers,
   getTransactionTx,
   getTransactionKeyword,
-  add_webappversion
+  add_webappversion,
+  showproposals
 } from "./handlers.js";
 const composer = new Composer();
 
 // Add command
-// composer.command("add", add); //Telegram inline UI
-composer.command("add", add_webappversion); // Webapp version
+composer.command("add", add); //Telegram inline UI
+// composer.command("add", add_webappversion); // Webapp version
 
 composer.command("register", register);
 
-composer.command("myproposals", myproposals);
+// composer.command("myproposals", myproposals);
+composer.command("myproposals", showproposals);
+
 
 composer.command("verifiedtransactions", verifiedTransactions);
 

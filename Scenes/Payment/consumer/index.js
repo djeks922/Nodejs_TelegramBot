@@ -1,10 +1,13 @@
 import { Scenes } from "telegraf";
-import { enter, onCallbackQr, onMessage, onText } from "./handlers.js";
+import { enter, leave, onCallbackQr, onExit, onMessage, onText } from "./handlers.js";
 const { BaseScene } = Scenes;
 
 const paymentConsumerScene = new BaseScene("payment-scene-toAdmin-id");
 
 paymentConsumerScene.enter(enter);
+paymentConsumerScene.leave(leave);
+
+paymentConsumerScene.hears('exit', onExit)
 
 paymentConsumerScene.on("text", onText);
 paymentConsumerScene.on("message", onMessage);

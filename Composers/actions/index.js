@@ -19,7 +19,7 @@ import {
   influencerRejectsTransaction,
   rejectProposal_Influencer,
 } from "./influencer/index.js";
-import { updateProposals, payForPackage,rePayForPackage } from "./customer.js";
+import { updateProposals, payForPackage,rePayForPackage, showProposal } from "./customer/index.js";
 
 const composer = new Composer();
 
@@ -44,12 +44,17 @@ composer.action(/adminrt+/, adminRejectsTransaction);
 // composer.action(/rej+/, rejectAdminProposal_approvedCase)
 composer.action(/app+/, approveProposal_rejectCase)
 
+
+/************************** Consumer actions *******************************/
+composer.action(/prop+/, showProposal)
+
+
 composer.on("callback_query", async (ctx) => {
   const command = ctx.callbackQuery.data.split(" ")[0]; // Main action
 
   // PROPOSAL ACTIONS ONLY!!
   if (!["aa", "aai","rai","ra", "ai", "ri"].includes(command))
-    return await ctx.answerCbQuery("asds");
+    return await ctx.answerCbQuery();
 
   const pID = ctx.callbackQuery.data.split(" ")[1]; // proposal ID or registered influencer ID
   const refID = ctx.callbackQuery.data.split(" ")[2]; // refers to influencers or admin
