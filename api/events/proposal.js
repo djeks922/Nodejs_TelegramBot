@@ -29,7 +29,7 @@ const onStaged = async (data) => {
     const text = proposalToAdmin(proposal);
     const buttons = adminButtons(proposal);
 
-    if (proposal.pImages && proposal.pImages.length > 1) {
+    if (proposal.pImages && proposal.pImages.length >= 1) {
       const mediaArr = [];
       for (let imgFile of proposal.pImages) {
         mediaArr.push({
@@ -38,9 +38,11 @@ const onStaged = async (data) => {
         });
       }
       await bot.telegram.sendMediaGroup(process.env.ADMIN_CHAT_ID, mediaArr);
+      console.log('Proposal images send to admin!')
     }
 
     await bot.telegram.sendMessage(process.env.ADMIN_CHAT_ID, text, buttons);
+    console.log('Proposal send to admin!')
   } catch (error) {
     throw error;
   }
