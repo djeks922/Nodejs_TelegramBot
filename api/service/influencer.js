@@ -18,7 +18,7 @@ export const createOrUpdateInfluencer = async (influencer, updates = {}) => {
 
 export const updateInfluencer = async (id, updates = {}) => {
     try {
-        const updateInfo = await Influencer.updateOne({_id: id}, updates)
+        const updateInfo = await Influencer.updateOne({_id: id}, updates,{timestamps: false})
 
         return updateInfo
     } catch (error) {
