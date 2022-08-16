@@ -12,3 +12,13 @@ export const influencerPaymentButtons = (transaction) => {
     Markup.button.callback("Report a problem", `infrt ${transaction._id}`),
   ]);
 };
+
+export const exitButton = () => {
+  return Markup.keyboard([["exit"]])
+    .resize()
+    .oneTime();
+};
+
+export const removeKeyboard = () => {
+  return Markup.removeKeyboard()
+};

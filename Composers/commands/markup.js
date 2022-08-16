@@ -62,6 +62,16 @@ export const paymentButtons = async (proposals) => {
   return Markup.inlineKeyboard(payArr).resize().oneTime();
 };
 
+export const proposalButtons = (proposals) => {
+  let markupArr = []
+  
+  for (let [i, proposal] of proposals?.entries()) {
+    markupArr.push(Markup.button.callback(`${proposal.name}`,`prop ${proposal._id}`))
+  }
+
+  return Markup.inlineKeyboard([markupArr])
+}
+
 export const webapp_opener = () => {
   return Markup.inlineKeyboard([[Markup.button.webApp('Create proposal',process.env.WEBAPP_URL)]]).resize()
 }

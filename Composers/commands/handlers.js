@@ -1,3 +1,4 @@
+import { Markup } from "telegraf";
 import { getConsumerCount } from "../../api/service/consumer.js";
 import {
   getInfluencerCount,
@@ -11,7 +12,7 @@ import {
   getTransactionsByKeyword,
 } from "../../api/service/transaction.js";
 
-import { paymentButtons, webapp_opener } from "./markup.js";
+import { paymentButtons, proposalButtons, webapp_opener } from "./markup.js";
 
 export const add = async (ctx) => {
   try {
@@ -41,6 +42,22 @@ export const register = async (ctx) => {
     throw error;
   }
 };
+
+export const showproposals = async (ctx) => {
+  try {
+    if (ctx.message.chat.type === "supergroup") return;
+    await ctx.replyWithHTML(` <i>Reminder</i>: Make your payments to this address: <b>${process.env.Wallet}</b>`);
+
+    ctx.session.proposals = await ctx.session.proposals;
+
+    if (ctx.session.proposals?.length === 0)
+      return await ctx.reply("You do not have any proposal");
+
+    await ctx.reply('Proposals💡',proposalButtons(ctx.session.proposals))
+  } catch (error) {
+    throw error
+  }
+}
 
 export const myproposals = async (ctx) => {
   try {
