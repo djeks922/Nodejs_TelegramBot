@@ -14,8 +14,8 @@ import {
 const composer = new Composer();
 
 // Add command
-composer.command("add", add); //Telegram inline UI
-// composer.command("add", add_webappversion); // Webapp version
+// composer.command("add", add); //Telegram inline UI
+composer.command("add", add_webappversion); // Webapp version
 
 composer.command("register", register);
 

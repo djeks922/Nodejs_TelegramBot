@@ -315,7 +315,7 @@ export const rejectActivationInfluencer = async (ctx) => {
     const id = ctx.callbackQuery.data.split(" ")[1];
     const res = await updateInfluencer(id, { status: "rejected" });
     if (!res.modifiedCount)
-      return await ctx.answerCbQuery("Already activated!");
+      return await ctx.answerCbQuery("Already rejected!");
     await ctx.answerCbQuery("Rejected!");
   } catch (error) {
     throw error;
