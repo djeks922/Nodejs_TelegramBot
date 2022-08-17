@@ -35,9 +35,10 @@ Package: ${el.package.name}
 Price: ${el.package.price}\n`
     }
     webappDataText+=`Total Price: ${totalPrice}`
+    /** ANSWERING WEBAPP QUERY TO CLOSE THE APP */
     await bot.telegram.answerWebAppQuery(queryID, {
       type: "article",
-      id: "id",
+      id: Math.random().toString(),
       title: "proposal",
       input_message_content: {
         message_text: `Proposal Submited!
@@ -56,11 +57,11 @@ ${webappDataText}`,
       },
 
       // reply_markup?: InlineKeyboardMarkup;
-      thumb_url: proposal.pImages && proposal.pImages[0],
-      thumb_width: 50,
-      thumb_height: 50,
+      // thumb_url: proposal.pImages && proposal.pImages[0],
+      // thumb_width: 50,
+      // thumb_height: 50,
     });
-    console.log(proposal.pImages)
+    // console.log(proposal.pImages)
     if (proposal.pImages && proposal.pImages.length >= 1) {
       console.log(proposal.pImages,'IMAGES INCLUDES IN PROPOSAL')
       const mediaArr = [];
