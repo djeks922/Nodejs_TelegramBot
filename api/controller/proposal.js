@@ -29,7 +29,7 @@ export const postProposal = async (req, res, next) => {
     let webappDataText = `Packages: \n`
     let totalPrice = 0
     for(let el of webappData){
-      totalPrice += +el.package.price
+      totalPrice += parseInt(el.package.price)
       webappDataText+= `Influencer: ${el.influencer.name}
 Package: ${el.package.name}
 Price: ${el.package.price}\n`
