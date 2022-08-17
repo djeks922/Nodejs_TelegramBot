@@ -14,7 +14,7 @@ export const postProposal = async (req, res, next) => {
       const pImages = [];
       for (let file of req.files) {
         pImages.push(
-          `${process.env.APITUNEL_URL}/${file.path.replace(/\\/g, "/")}`
+          `${process.env.APP_URL}/${file.path.replace(/\\/g, "/")}`
         );
       }
       proposal.pImages = pImages;

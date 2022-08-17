@@ -35,13 +35,13 @@ app.listen(3002, async () => {
     const dropInfo = await bot.telegram.deleteWebhook({ drop_pending_updates: true });
     console.log({dropInfo})
     const ret = await bot.telegram.setWebhook(
-      `${process.env.APITUNEL_URL}${secretPath}`,
+      `${process.env.APP_URL}${secretPath}`,
       { drop_pending_updates: false }
     );
     console.log(ret);
   }else{
     const setWebhookInfo = await bot.telegram.setWebhook(
-      `${process.env.APITUNEL_URL}${secretPath}`,
+      `${process.env.APP_URL}${secretPath}`,
       { drop_pending_updates: false }
     );
     console.log({setWebhookInfo});
