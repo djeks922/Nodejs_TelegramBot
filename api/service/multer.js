@@ -18,7 +18,7 @@ let storageIMG = multer.diskStorage({
     },
     filename: (req, file, cb) => {
         const {consumerChatID} = req.query
-        cb(null,  Date.now()+'-'+'-'+consumerChatID+file.originalname.trim());
+        cb(null,  Date.now()+'-'+consumerChatID+'-'+file.originalname.trim());
     },
 });
 
