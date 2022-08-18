@@ -1,4 +1,5 @@
 import bot from "../../config/bot.config.js";
+import {TelegramError} from 'telegraf'
 import { createProposal } from "../service/proposal.js";
 
 export const postProposal = async (req, res, next) => {
@@ -83,8 +84,9 @@ Additional Info:
 
     res.send({ message: "ok" });
   } catch (error) {
-    if(error.status === 400){
+    if(error instanceof TelegramError){
       bot.telegram.sendMessage(consumerChatID, 'Proposal failed, query timeout, try again later.');
+      error.status = 400
     }
     next(error);
   }
