@@ -8,7 +8,7 @@ export const postProposal = async (req, res, next) => {
     const { queryID, consumerChatID } = req.query;
     // console.log({proposal,queryID,consumerChatID})
     if (!queryID || !consumerChatID) {
-      return res.status(400).send({ message: "Bad request" });
+      return res.status(400).send({ message: "Bad request, queryID not included or consumer not found." });
     }
     if (req.files) {
       const pImages = [];
@@ -52,7 +52,7 @@ Description:
     ${proposal.description}
 Additional Info: 
     ${proposal.additionalInfo}
-${webappDataText}`,
+\n\n${webappDataText}`,
         disable_web_page_preview: true,
       },
 
@@ -76,7 +76,7 @@ ${webappDataText}`,
       // console.log(mediaSentInfo)
     }
 
-    res.send("nice");
+    res.send({message:'ok'});
   } catch (error) {
     next(error);
   }
