@@ -62,7 +62,7 @@ const onApprove = async (data) => {
     ); // notify user **Token approved**
     /** Influencer Part */
     const mediaArr = [];
-    if (proposal.pImages && proposal.pImages.length > 1) {
+    if (proposal.pImages && proposal.pImages.length >= 1) {
       
       for (let imgFile of proposal.pImages) {
         mediaArr.push({
@@ -104,7 +104,7 @@ const onApproveIndividual = async (data, approvedForID) => {
     /** Influencer Part */
     const mediaArr = [];
     
-    if (proposal.pImages && proposal.pImages.length > 1) {
+    if (proposal.pImages && proposal.pImages.length >= 1) {
       
       for (let imgFile of proposal.pImages) {
         mediaArr.push({
